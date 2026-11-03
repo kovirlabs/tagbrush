@@ -1,5 +1,5 @@
 /*
- * Lite.css - A lightweight, no-build CSS library for static sites and Astro.js
+ * TagBrush.css - A lightweight, no-build CSS library for static sites and Astro.js
  */
 
 /* ==========================================================================
@@ -140,6 +140,7 @@ button, .button {
 
 button:hover, .button:hover {
   background-color: var(--color-primary-hover);
+  color: #ffffff;
   text-decoration: none;
 }
 
