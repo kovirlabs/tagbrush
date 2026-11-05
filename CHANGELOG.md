@@ -2,7 +2,7 @@
 
 All notable changes to TagBrush.css are listed here. This project follows [Semantic Versioning](https://semver.org/): variable names and the selectors you can rely on only change in a major release.
 
-## 1.0.0 (unreleased)
+## 1.0.0 (2026-11-04)
 
 First versioned release.
 

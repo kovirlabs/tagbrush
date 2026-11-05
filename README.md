@@ -15,7 +15,7 @@ One file, about 4 KB gzipped. No classes required. No PostCSS, bundler, or JavaS
 Add one line to your `<head>`:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kovirlabs/tagbrush@main/tagbrush.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
 ```
 
 Then write ordinary HTML:
@@ -28,13 +28,9 @@ Then write ordinary HTML:
 </main>
 ```
 
-### Pin a version for production
+### Versioning
 
-Use a versioned URL so updates never change your site unexpectedly. The `@1` form gets fixes and new features but never breaking changes:
-
-```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
-```
+The `@1` in the URL gets fixes and new features, but never breaking changes. To lock to one exact release, use the full version, for example `tagbrush@1.0.0`.
 
 ### Install with npm
 
