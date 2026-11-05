@@ -6,7 +6,7 @@
 
 One file, about 4 KB gzipped. No classes required. No PostCSS, bundler, or JavaScript. Dark mode built in. Theme it by overriding a few CSS variables, and your own CSS always wins. Works with any static site or framework: Astro, Next.js, React, Vue, Nuxt, Angular, SvelteKit, Web Components, and more.
 
-👉 **See it in action:** open [`index.html`](index.html) in your browser for a live demo of every styled element, plus a theme builder that writes your custom CSS for you.
+👉 **See it in action:** [kovirlabs.github.io/tagbrush](https://kovirlabs.github.io/tagbrush/) has a live demo of every styled element, plus a theme builder that writes your custom CSS for you.
 
 ---
 

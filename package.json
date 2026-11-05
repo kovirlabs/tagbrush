@@ -19,7 +19,7 @@
     "shadow-dom",
     "minimal"
   ],
-  "homepage": "https://github.com/kovirlabs/tagbrush#readme",
+  "homepage": "https://kovirlabs.github.io/tagbrush/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kovirlabs/tagbrush.git"
