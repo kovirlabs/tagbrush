@@ -40,6 +40,14 @@ test.describe('cascade and defaults', () => {
     expect(await style(page, 'button.outline', 'borderTopColor')).toBe('rgb(59, 130, 246)');
   });
 
+  test('nav lists, current page, and menu toolbars', async ({ page }) => {
+    expect(await style(page, 'nav[aria-label="Example site"] ul', 'display')).toBe('flex');
+    expect(await style(page, 'nav [aria-current="page"]', 'fontWeight')).toBe('600');
+    expect(await style(page, 'nav [aria-current="page"]', 'color')).toBe('rgb(31, 41, 55)');
+    expect(await style(page, '#nav-demo menu', 'display')).toBe('flex');
+    expect(await style(page, '#nav-demo menu', 'listStyleType')).toBe('none');
+  });
+
   test('validation states', async ({ page }) => {
     expect(await style(page, '#website', 'borderTopColor')).toBe('rgb(220, 38, 38)');
     expect(await style(page, '#username', 'borderTopColor')).toBe('rgb(22, 163, 74)');

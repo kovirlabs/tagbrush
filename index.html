@@ -13,6 +13,7 @@
          * by TagBrush.css itself.
          */
         .site-nav { padding: var(--spacing-md) 0; border-bottom: var(--border-width) solid var(--color-border); }
+        .demo-nav { margin-bottom: var(--spacing-lg); }
         .site-nav .brand { font-family: var(--font-family-mono); font-weight: 600; color: var(--color-text); }
         .site-nav select { width: auto; display: inline-block; padding-top: var(--spacing-xs); padding-bottom: var(--spacing-xs); }
         .hero, section, .site-footer { padding: var(--spacing-xl) 0; }
@@ -221,6 +222,25 @@ function greet(name) {
                 </dl>
             </div>
 
+            <h3>Navigation and menus</h3>
+            <p>Lists inside <code>&lt;nav&gt;</code> become a horizontal row. Mark the current page with <code>aria-current="page"</code>:</p>
+            <nav aria-label="Example site" class="demo-nav">
+                <ul>
+                    <li><a href="#nav-demo" aria-current="page">Home</a></li>
+                    <li><a href="#nav-demo">Docs</a></li>
+                    <li><a href="#nav-demo">Blog</a></li>
+                    <li><a href="#nav-demo">About</a></li>
+                </ul>
+            </nav>
+            <p>Use <code>&lt;menu&gt;</code> for a toolbar of actions:</p>
+            <nav aria-label="Example toolbar" id="nav-demo" class="demo-nav">
+                <menu>
+                    <li><button type="button" class="secondary">Copy</button></li>
+                    <li><button type="button" class="secondary">Share</button></li>
+                    <li><button type="button" class="outline">Delete</button></li>
+                </menu>
+            </nav>
+
             <h3>Articles and asides</h3>
             <article>
                 <h4>An article</h4>
@@ -234,6 +254,21 @@ function greet(name) {
             <figure>
                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='300' viewBox='0 0 1200 300'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='300' fill='url(%23g)'/%3E%3C/svg%3E" width="1200" height="300" alt="A blue to violet gradient">
                 <figcaption>Images scale down to fit their container. Wrap them in <code>&lt;figure&gt;</code> to add a caption.</figcaption>
+            </figure>
+            <figure>
+                <svg viewBox="0 0 600 150" role="img" aria-label="Bar chart drawn with the theme's primary and muted colors">
+                    <g style="fill: var(--color-primary)">
+                        <rect x="20" y="70" width="60" height="70" rx="4"/>
+                        <rect x="120" y="40" width="60" height="100" rx="4"/>
+                        <rect x="220" y="90" width="60" height="50" rx="4"/>
+                        <rect x="320" y="20" width="60" height="120" rx="4"/>
+                    </g>
+                    <g style="fill: var(--color-text-muted)">
+                        <rect x="420" y="60" width="60" height="80" rx="4"/>
+                        <rect x="520" y="100" width="60" height="40" rx="4"/>
+                    </g>
+                </svg>
+                <figcaption>Inline SVG scales down the same way and can use theme variables, so it follows your colors and dark mode.</figcaption>
             </figure>
             <hr>
 
@@ -299,6 +334,22 @@ function greet(name) {
                         <div>
                             <label for="date">Date</label>
                             <input type="date" id="date">
+                        </div>
+                        <div>
+                            <label for="password">Password</label>
+                            <input type="password" id="password" value="hunter22" autocomplete="off">
+                        </div>
+                        <div>
+                            <label for="quantity">Number</label>
+                            <input type="number" id="quantity" value="3" min="0">
+                        </div>
+                        <div>
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" placeholder="555-0100">
+                        </div>
+                        <div>
+                            <label for="time">Time</label>
+                            <input type="time" id="time" value="09:30">
                         </div>
                         <div>
                             <label for="disabled-input">Disabled</label>
