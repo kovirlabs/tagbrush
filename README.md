@@ -21,12 +21,16 @@ Add one line to your `<head>`:
 Then write ordinary HTML:
 
 ```html
-<main class="container">
+<header><nav><strong>My site</strong> <a href="/about">About</a></nav></header>
+<main>
   <h1>Hello, world</h1>
   <p>It already looks good.</p>
   <button>Click me</button>
 </main>
+<footer>© 2026 Me</footer>
 ```
+
+The content is centered and the footer stays at the bottom of the window, with no classes. See [Page layout](#page-layout).
 
 ### Versioning
 
@@ -50,6 +54,7 @@ Or just [download `tagbrush.css`](tagbrush.css) and host it yourself.
 ## Features
 
 - **No build step** – plain CSS you can link, copy, or import.
+- **Classless page layout** – `header`, `main`, and `footer` center themselves with full-width backgrounds, and the footer stays at the bottom of short pages. Markdown output without a `<main>` is centered too.
 - **Classless by default** – typography, lists, media, forms, tables, dialogs, and more are styled automatically.
 - **Themeable** – colors, fonts, type scale, spacing, and radius are semantic CSS custom properties. Hover and focus colors derive from `--color-primary`, so one variable re-themes everything.
 - **Easy to override** – everything lives in a `@layer`, so any CSS you write wins without `!important`.
@@ -79,7 +84,7 @@ TagBrush.css keeps classes to a minimum:
 
 | Class        | What it does                                                        |
 |--------------|---------------------------------------------------------------------|
-| `.container` | Centers content with a max width (`--container-max-width`) and horizontal padding |
+| `.container` | Centers content with a max width (`--container-max-width`) and horizontal padding. Optional: [page layout](#page-layout) already centers `header`, `main`, and `footer` |
 | `.button`    | Gives any element (usually an `<a>`) the button style               |
 | `.secondary` | Neutral button variant (also applied to `type="reset"` buttons)     |
 | `.outline`   | Transparent button with a primary-colored border                    |
@@ -88,6 +93,28 @@ TagBrush.css keeps classes to a minimum:
 | `role="group"` | Lays out buttons in a row. Put an input and a button inside for an inline form (e.g. a search bar) |
 | `.striped`   | Zebra-striped table rows                                            |
 | `.visually-hidden` | Hides content visually but keeps it available to screen readers |
+
+## Page layout
+
+Write the usual page landmarks and TagBrush.css lays them out:
+
+```html
+<body>
+  <header>…</header>
+  <main>…</main>
+  <footer>…</footer>
+</body>
+```
+
+- `header`, `main`, and `footer` stretch across the window, so a background color on them reaches the edges, while their content stays centered within `--container-max-width` (1200px) with `--container-padding` on the sides.
+- On short pages the footer sits at the bottom of the window.
+- A page without `<main>`, such as plain Markdown output, is centered as a whole.
+- A wrapper element without a class around the landmarks counts as the page too, so framework wrappers like `<div id="root">`, `<div id="__nuxt">`, and Angular's `<app-root>` work without changes.
+- Pages that already use `.container` look exactly as before.
+
+To lay out the page yourself, add `data-layout="full"` to `<body>` (or to the wrapper). To let just one landmark go edge to edge, for example a full-width hero, put it on that element: `<header data-layout="full">`. Giving the wrapper element a class also tells TagBrush.css it's your own layout.
+
+The scoped and Shadow DOM builds leave page layout out, because they style part of a page that something else lays out.
 
 ## Customization
 
@@ -225,7 +252,7 @@ TagBrush.css uses modern CSS (`@layer`, `light-dark()`, `color-mix()`, `:has()`,
 </div>
 ```
 
-Customize it on the wrapper: `.tagbrush { --color-primary: #10b981; }`.
+Customize it on the wrapper: `.tagbrush { --color-primary: #10b981; }`. The scoped build doesn't include [page layout](#page-layout), since the host site already lays out the page.
 
 The scoped build uses [`@scope`](https://developer.mozilla.org/en-US/docs/Web/CSS/@scope), which is newer than the rest of the library ([check support](https://caniuse.com/css-cascade-scope)). The host site's own global styles (for example a site-wide `button { … }` rule) still apply inside the wrapper, because unlayered CSS always wins.
 

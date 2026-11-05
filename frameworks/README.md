@@ -38,4 +38,5 @@ TagBrush.css is plain CSS, so the same file works in every framework. You don't 
    }
    ```
 
-4. **Tailwind needs a few extra lines**, and TagBrush.css should be imported from CSS rather than JavaScript. See the [Tailwind guide](tailwind/README.md).
+4. **Page layout works through the framework's wrapper.** Render `<header>`, `<main>`, and `<footer>` in your root component and they're centered automatically, even inside `<div id="root">`, `<div id="__nuxt">`, or `<app-root>`, as long as that wrapper has no class. To use your own layout, add `data-layout="full"` to `<body>` or the wrapper. See [Page layout](../README.md#page-layout).
+5. **Tailwind needs a few extra lines**, and TagBrush.css should be imported from CSS rather than JavaScript. See the [Tailwind guide](tailwind/README.md).

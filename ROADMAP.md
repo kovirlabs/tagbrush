@@ -26,12 +26,14 @@ The test for every change: **does it make more plain, semantic HTML look right w
 
 Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` looks like a finished page with no classes.
 
-- [ ] **Auto-centering:** the content of `body > header`, `body > main` and `body > footer` is centered and limited to `--container-max-width`, with `--container-padding` on the sides. `.container` keeps working the same.
-- [ ] **Sticky footer with flexbox:** `body` becomes a flex column at least as tall as the viewport, and `main` grows to fill it, so the footer sits at the bottom on short pages. This is the one place where flexbox by default helps everyone: it fixes a common layout problem and needs nothing from the user. (Everything in TagBrush only uses bottom margins, so losing margin collapsing between `body` children changes nothing.)
-- [ ] **Opt out of both** for full-width or app layouts with one variable or attribute (decide on `--container-max-width: none` versus something like `data-layout="full"` on `<body>`), and document it.
-- [ ] Decide how a full-width header background with a centered inner area works (for example, the header background spans the page while its content stays centered).
-- [ ] Check the scoped and Shadow DOM builds: `body >` already becomes `:scope >` / `:host >`, so the layout should work inside those wrappers too. Add tests for both.
-- [ ] Update the quick start so it no longer needs `class="container"`.
+- [x] **Auto-centering:** the content of `body > header`, `body > main` and `body > footer` is centered and limited to `--container-max-width`, with `--container-padding` on the sides. `.container` keeps working the same.
+- [x] **Sticky footer with flexbox:** `body` becomes a flex column at least as tall as the viewport, and `main` grows to fill it, so the footer sits at the bottom on short pages. This is the one place where flexbox by default helps everyone: it fixes a common layout problem and needs nothing from the user. (Everything in TagBrush only uses bottom margins, so losing margin collapsing between `body` children changes nothing.)
+- [x] **Opt out** with `data-layout="full"` on `<body>`, a wrapper, or a single landmark.
+- [x] Full-width backgrounds: landmarks span the page and center their content with padding, so backgrounds reach the edges.
+- [x] Framework wrappers: a class-free wrapper around the landmarks (`<div id="root">`, `<app-root>`) counts as the page.
+- [x] Scoped and Shadow DOM builds leave page layout out: they style part of a page that something else lays out.
+- [x] Quick start no longer needs `class="container"`.
+- [ ] To discuss: a narrower reading width (about 70 characters) for text-heavy pages such as Markdown output, for example a separate `--content-max-width`.
 
 **Not planned: flexbox on general elements** (`div`, `section`, `article`). Turning normal block flow into flex changes how all content lays out, and users would have to undo it more often than they'd want it. Rows and columns are already covered by `nav` (flex), `[role="group"]` (flex row) and `.grid`. To discuss: should a `<section>` that contains only `<article>`s lay them out as a responsive grid automatically?
 
