@@ -130,6 +130,20 @@ test.describe('build output', () => {
     expect(await snapshotStyles(page)).toEqual(source);
   });
 
+  test('inline SVGs keep their proportions when they shrink', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/svg.html'));
+    const size = (id) => page.locator(`#${id}`).evaluate((el) => {
+      const r = el.getBoundingClientRect();
+      return `${Math.round(r.width)}x${Math.round(r.height)}`;
+    });
+    expect(await size('wide')).toBe('360x90');
+    expect(await size('icon')).toBe('24x24');
+    expect(await size('height-only')).toBe('48x24');
+    expect(await size('no-viewbox')).toBe('360x300');
+    expect(await size('stretch')).toBe('360x120');
+    expect(await size('css')).toBe('48x12');
+  });
+
   test('scoped build only styles inside .tagbrush', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
     await page.goto(fileUrl('tests/fixtures/scoped.html'));
