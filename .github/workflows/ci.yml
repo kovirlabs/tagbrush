@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Check generated files are up to date
+        run: |
+          npm run build
+          git diff --exit-code || (echo "::error::Generated CSS is out of date. Run 'npm run build' and commit the result." && exit 1)
+
+      - run: npx playwright install --with-deps chromium firefox webkit
+
+      # Screenshot baselines are recorded on macOS, so CI skips the pixel
+      # comparison and runs every other check in all three browsers.
+      - run: npx playwright test --ignore-snapshots
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

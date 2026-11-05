@@ -6,7 +6,11 @@ TagBrush.css is a lightweight, no-build CSS library designed for static sites an
 
 ## Structure
 
-The library consists of a single CSS file (`tagbrush.css`) and an example HTML file (`index.html`) to demonstrate usage.
+The library is a single hand-written CSS file (`tagbrush.css`), plus `index.html` (demo page and theme builder). `scripts/build.mjs` generates `tagbrush.min.css`, `tagbrush.scoped.css` and `tagbrush.scoped.min.css` from it; those are committed so the GitHub CDN can serve them, and CI fails if they're stale. Never edit generated files directly.
+
+The scoped build is a text transform: it wraps the layer in `@scope (.tagbrush)` and rewrites `:root`, `html`, `body` and `body >` selectors to `:scope`. The build throws if the patterns it expects are missing, so update `scripts/build.mjs` when changing those selectors.
+
+`tests/tagbrush.spec.mjs` (Playwright) checks computed styles in Chromium, Firefox and WebKit, compares the min and scoped builds, and takes screenshot baselines (Chromium on macOS only; CI runs with `--ignore-snapshots`). When adding a feature, add a computed-style assertion for it.
 
 ### 1. Theming (CSS Variables)
 All rules live inside `@layer tagbrush { ... }` so unlayered user CSS always overrides them. Selectors that would otherwise carry class/attribute/pseudo-class specificity are wrapped in `:where()`; plain element selectors are left as-is (a `:where()` rule loses to an element rule like `p` or `ul`, so only use it where no element rule competes).
@@ -69,4 +73,4 @@ Using TagBrush.css in an Astro.js project is straightforward since it requires n
 ## Next Steps
 
 - Refine the spacing and typography scales based on user feedback.
-- Consider a minified build (`tagbrush.min.css`) for the CDN.
+- Variables come in three tiers: global tokens (`--color-*`, `--spacing`, `--border-radius`), component tokens defined on :root from the globals (`--button-*`, `--input-*`, `--card-*`), and derived values computed at the point of use with `var(--x, fallback)` so nested overrides work. Keep new variables in the right tier.
