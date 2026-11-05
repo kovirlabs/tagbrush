@@ -2,6 +2,11 @@
 
 All notable changes to TagBrush.css are listed here. This project follows [Semantic Versioning](https://semver.org/): variable names and the selectors you can rely on only change in a major release.
 
+## Unreleased
+
+### Fixed
+- Inline SVGs with `width`, `height`, and `viewBox` attributes keep their proportions when they shrink to fit a narrow container, instead of keeping their full height.
+
 ## 1.0.0 (2026-11-04)
 
 First versioned release.

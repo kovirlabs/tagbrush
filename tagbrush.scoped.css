@@ -372,6 +372,13 @@
     vertical-align: middle;
   }
 
+  /* An SVG with a width attribute and a viewBox keeps its proportions when
+     max-width shrinks it. SVGs without a viewBox have no ratio to keep, and
+     preserveAspectRatio="none" means the author wants it to stretch. */
+  :where(svg[viewBox][width]:not([preserveAspectRatio="none"])) {
+    height: auto;
+  }
+
   figure {
     margin: 0 0 var(--spacing-md) 0;
   }
