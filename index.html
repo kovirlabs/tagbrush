@@ -109,8 +109,8 @@
                 <form id="builder" onsubmit="event.preventDefault();">
                     <label for="b-primary">Primary color</label>
                     <div role="group" class="swatches" aria-label="Primary color presets">
-                        <input type="color" id="b-primary" value="#3b82f6">
-                        <button type="button" data-primary="#3b82f6" aria-pressed="true">Blue</button>
+                        <input type="color" id="b-primary" value="#2563eb">
+                        <button type="button" data-primary="#2563eb" aria-pressed="true">Blue</button>
                         <button type="button" data-primary="#10b981" aria-pressed="false">Emerald</button>
                         <button type="button" data-primary="#8b5cf6" aria-pressed="false">Violet</button>
                         <button type="button" data-primary="#f43f5e" aria-pressed="false">Rose</button>
@@ -365,7 +365,7 @@ function greet(name) {
                         </div>
                         <div>
                             <label for="color">Color</label>
-                            <input type="color" id="color" value="#3b82f6">
+                            <input type="color" id="color" value="#2563eb">
                         </div>
                         <label>Wrapped label
                             <input type="text" placeholder="Input inside its label">
@@ -477,7 +477,7 @@ function greet(name) {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td><code>--color-primary</code></td><td><code>#3b82f6</code></td><td>Links, buttons, focus states</td></tr>
+                    <tr><td><code>--color-primary</code></td><td><code>#2563eb</code></td><td>Links, buttons, focus states</td></tr>
                     <tr><td><code>--color-surface</code></td><td><code>#f3f4f6</code></td><td>Code, blockquotes</td></tr>
                     <tr><td><code>--font-family-base</code></td><td><code>system-ui, …</code></td><td>All body text</td></tr>
                     <tr><td><code>--border-radius</code></td><td><code>0.375rem</code></td><td>Buttons, inputs, code</td></tr>
@@ -524,7 +524,7 @@ function greet(name) {
         const root = document.documentElement;
         const code = document.getElementById('theme-code');
         const el = (id) => document.getElementById(id);
-        const defaults = { primary: '#3b82f6', radius: '0.375', spacing: '1' };
+        const defaults = { primary: '#2563eb', radius: '0.375', spacing: '1' };
         const swatches = document.querySelectorAll('[data-primary]');
 
         const updateTheme = () => {

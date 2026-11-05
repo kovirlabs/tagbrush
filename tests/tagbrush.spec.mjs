@@ -37,7 +37,7 @@ test.describe('cascade and defaults', () => {
   test('buttons and variants', async ({ page }) => {
     expect(await style(page, 'button.secondary', 'backgroundColor')).toBe('rgb(243, 244, 246)');
     expect(await style(page, 'button[type=reset]', 'backgroundColor')).toBe('rgb(243, 244, 246)');
-    expect(await style(page, 'button.outline', 'borderTopColor')).toBe('rgb(59, 130, 246)');
+    expect(await style(page, 'button.outline', 'borderTopColor')).toBe('rgb(37, 99, 235)');
   });
 
   test('nav lists, current page, and menu toolbars', async ({ page }) => {
@@ -83,7 +83,7 @@ test.describe('color schemes', () => {
     await page.emulateMedia({ colorScheme: 'light' });
     await page.goto(DEMO);
     expect(await style(page, '.card[data-theme=dark] .muted', 'color')).toBe('rgb(156, 163, 175)');
-    expect(await style(page, '.card[data-theme=light] .muted', 'color')).toBe('rgb(107, 114, 128)');
+    expect(await style(page, '.card[data-theme=light] .muted', 'color')).toBe('rgb(100, 107, 118)');
   });
 
   test('switcher on the demo page sets data-theme on <html>', async ({ page }) => {
@@ -155,10 +155,10 @@ test.describe('build output', () => {
   test('scoped build only styles inside .tagbrush', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
     await page.goto(fileUrl('tests/fixtures/scoped.html'));
-    expect(await style(page, '#inside', 'backgroundColor')).toBe('rgb(59, 130, 246)');
+    expect(await style(page, '#inside', 'backgroundColor')).toBe('rgb(37, 99, 235)');
     expect(await style(page, '#inside-input', 'display')).toBe('block');
     expect(await style(page, '#scope', 'fontFamily')).toContain('system-ui');
-    expect(await style(page, '#outside', 'backgroundColor')).not.toBe('rgb(59, 130, 246)');
+    expect(await style(page, '#outside', 'backgroundColor')).not.toBe('rgb(37, 99, 235)');
     expect(await style(page, 'body', 'marginTop')).toBe('8px');
   });
 
@@ -167,7 +167,7 @@ test.describe('build output', () => {
     await page.goto(fileUrl('tests/fixtures/shadow.html'));
     await page.evaluate(() => Promise.all([...document.querySelectorAll('tb-demo')].map((el) => el.ready)));
     // Playwright locators pierce open shadow roots.
-    expect(await style(page, '#light-host button', 'backgroundColor')).toBe('rgb(59, 130, 246)');
+    expect(await style(page, '#light-host button', 'backgroundColor')).toBe('rgb(37, 99, 235)');
     expect(await style(page, '#light-host input', 'display')).toBe('block');
     expect(await style(page, '#light-host main', 'paddingTop')).toBe('24px');
     expect(await style(page, '#light-host', 'display')).toBe('block');
@@ -177,8 +177,70 @@ test.describe('build output', () => {
     // Page CSS aimed at the host element beats the :host defaults inside the shadow root.
     await page.addStyleTag({ content: '#light-host { --color-primary: rgb(16, 185, 129); }' });
     expect(await style(page, '#light-host button', 'backgroundColor')).toBe('rgb(16, 185, 129)');
-    expect(await style(page, '#outside', 'backgroundColor')).not.toBe('rgb(59, 130, 246)');
+    expect(await style(page, '#outside', 'backgroundColor')).not.toBe('rgb(37, 99, 235)');
     expect(await style(page, 'body', 'marginTop')).toBe('8px');
+  });
+});
+
+test.describe('accessibility', () => {
+  // WCAG AA asks for 4.5:1 between normal-size text and its background.
+  const AA = 4.5;
+
+  for (const scheme of ['light', 'dark']) {
+    test(`default text colors meet WCAG AA contrast, ${scheme}`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' });
+      await page.goto(fileUrl('tests/fixtures/contrast.html'));
+      const results = await page.evaluate(() => {
+        // Let the browser convert any computed color (rgb, color(srgb …), …) to RGBA bytes.
+        const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+        const rgba = (color) => {
+          ctx.clearRect(0, 0, 1, 1);
+          ctx.fillStyle = color;
+          ctx.fillRect(0, 0, 1, 1);
+          const [r, g, b, a] = ctx.getImageData(0, 0, 1, 1).data;
+          return [r, g, b, a / 255];
+        };
+        const over = (top, bottom) => top.slice(0, 3).map((c, i) => c * top[3] + bottom[i] * (1 - top[3])).concat(1);
+        // Composite every translucent background from the element up to the first opaque one.
+        const backdrop = (el) => {
+          const layers = [];
+          for (let node = el; node; node = node.parentElement) {
+            const bg = rgba(getComputedStyle(node).backgroundColor);
+            if (bg[3] > 0) layers.push(bg);
+            if (bg[3] === 1) break;
+          }
+          return layers.reduceRight((below, layer) => over(layer, below), [255, 255, 255, 1]);
+        };
+        const luminance = ([r, g, b]) => {
+          const lin = (c) => ((c /= 255) <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+          return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+        };
+        return [...document.querySelectorAll('[data-check]')].map((el) => {
+          const bg = backdrop(el);
+          const fg = over(rgba(getComputedStyle(el).color), bg);
+          const [hi, lo] = [luminance(fg), luminance(bg)].sort((a, b) => b - a);
+          const label = `<${el.localName}${el.className ? `.${el.className}` : ''}> "${el.textContent.trim() || el.value}"`;
+          return { label, ratio: Math.round(((hi + 0.05) / (lo + 0.05)) * 100) / 100 };
+        });
+      });
+      expect(results.length).toBeGreaterThan(30);
+      const failing = results.filter((r) => r.ratio < AA);
+      expect(failing, `below ${AA}:1 in ${scheme} mode`).toEqual([]);
+    });
+  }
+});
+
+test.describe('size budget', () => {
+  // TagBrush.css favors covering more HTML over shaving bytes, but stays small.
+  const BUDGET = 10 * 1024;
+
+  test.skip(({ browserName }) => browserName !== 'chromium', 'File size is the same in every browser');
+
+  test(`tagbrush.min.css is at most ${BUDGET / 1024} KB gzipped`, async () => {
+    const { gzipSync } = await import('node:zlib');
+    const { readFileSync } = await import('node:fs');
+    const size = gzipSync(readFileSync('tagbrush.min.css'), { level: 9 }).length;
+    expect(size).toBeLessThanOrEqual(BUDGET);
   });
 });
 

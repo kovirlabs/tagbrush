@@ -2,7 +2,7 @@
  * SCOPED BUILD: styles apply only inside an element with class="tagbrush".
  * Generated from tagbrush.css by scripts/build.mjs. Do not edit directly.
  *
- * TagBrush.css v1.0.0 - A lightweight, no-build CSS library for static sites and any framework
+ * TagBrush.css v1.0.1 - A lightweight, no-build CSS library for static sites and any framework
  * https://github.com/kovirlabs/tagbrush
  *
  * Everything lives inside the `tagbrush` cascade layer, so any CSS you write
@@ -26,12 +26,12 @@
     color-scheme: light dark;
 
     /* Colors */
-    --color-primary: #3b82f6;
+    --color-primary: #2563eb;
     --color-on-primary: #ffffff; /* text on primary-colored buttons */
     --color-background: light-dark(#ffffff, #111827);
     --color-surface: light-dark(#f3f4f6, #1f2937);
     --color-text: light-dark(#1f2937, #f3f4f6);
-    --color-text-muted: light-dark(#6b7280, #9ca3af);
+    --color-text-muted: light-dark(#646b76, #9ca3af);
     --color-border: light-dark(#e5e7eb, #374151);
     --color-highlight: light-dark(#fef08a, #713f12);
     --color-error: light-dark(#dc2626, #f87171);
@@ -41,7 +41,7 @@
 
     /*
      * Optional, derived automatically when unset:
-     *   --color-link            (default: --color-primary)
+     *   --color-link            (default: --color-primary, lightened in dark mode for contrast)
      *   --color-link-hover      (default: link color, darkened in light mode / lightened in dark mode)
      *   --color-primary-hover   (default: primary mixed with 15% black)
      *   --focus-ring-color      (default: primary at 50% opacity)
@@ -175,13 +175,13 @@
   }
 
   :where(a) {
-    color: var(--color-link, var(--color-primary));
+    color: var(--color-link, light-dark(var(--color-primary), color-mix(in srgb, var(--color-primary), white 35%)));
     text-decoration: none;
     text-underline-offset: 0.15em;
   }
 
   :where(a:hover) {
-    color: var(--color-link-hover, color-mix(in srgb, var(--color-link, var(--color-primary)), light-dark(black, white) 20%));
+    color: var(--color-link-hover, color-mix(in srgb, var(--color-link, light-dark(var(--color-primary), color-mix(in srgb, var(--color-primary), white 35%))), light-dark(black, white) 20%));
     text-decoration: underline;
   }
 
@@ -606,8 +606,8 @@
 
   :where(.outline) {
     --_btn-bg: transparent;
-    --_btn-bg-hover: color-mix(in srgb, var(--color-primary) 10%, transparent);
-    --_btn-color: var(--color-primary);
+    --_btn-bg-hover: color-mix(in srgb, var(--color-primary) 8%, transparent);
+    --_btn-color: var(--color-link, light-dark(var(--color-primary), color-mix(in srgb, var(--color-primary), white 35%)));
     --_btn-border: var(--color-primary);
   }
 

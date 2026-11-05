@@ -2,9 +2,11 @@
 
 All notable changes to TagBrush.css are listed here. This project follows [Semantic Versioning](https://semver.org/): variable names and the selectors you can rely on only change in a major release.
 
-## Unreleased
+## 1.0.1 (unreleased)
 
 ### Fixed
+- Default colors now meet WCAG AA contrast (4.5:1) in light and dark mode. `--color-primary` is now `#2563eb` (was `#3b82f6`, 3.7:1 with white text), and the light `--color-text-muted` is now `#646b76` (was `#6b7280`, 4.4:1 on `--color-surface`). If you set your own colors, nothing changes for you.
+- Links and `.outline` button text use a lighter version of the primary color in dark mode, so they stay readable on dark backgrounds. Setting `--color-link` still overrides this.
 - Inline SVGs with `width`, `height`, and `viewBox` attributes keep their proportions when they shrink to fit a narrow container, instead of keeping their full height.
 
 ## 1.0.0 (2026-11-04)

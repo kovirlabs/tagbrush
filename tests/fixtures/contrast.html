@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Contrast fixture</title>
+    <link rel="stylesheet" href="../../tagbrush.css">
+</head>
+<body>
+    <!-- Every element marked data-check is text the contrast test measures
+         against whatever background is actually painted behind it. -->
+    <header>
+        <nav>
+            <ul>
+                <li><a data-check href="#">Home link</a></li>
+                <li><a data-check href="#" aria-current="page">Current page</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="container">
+        <hgroup>
+            <h1 data-check>Heading</h1>
+            <p data-check>Subtitle</p>
+        </hgroup>
+        <p data-check>Body text with <a data-check href="#">a link</a>, <code data-check>code</code>, <kbd data-check>Ctrl</kbd>, <mark data-check>marked</mark>, <del data-check>deleted</del>, <ins data-check>inserted</ins>, and <small data-check>small print</small>.</p>
+        <blockquote>
+            <p data-check>Quoted text</p>
+            <footer data-check>Attribution</footer>
+        </blockquote>
+        <pre data-check>preformatted</pre>
+        <article>
+            <aside><p data-check>Callout with <a data-check href="#">a link</a></p></aside>
+        </article>
+        <div class="card">
+            <p data-check>Card text with <a data-check href="#">a link</a></p>
+        </div>
+        <figure>
+            <table>
+                <caption data-check>Caption</caption>
+                <thead><tr><th data-check>Header</th></tr></thead>
+                <tbody><tr><td data-check>Cell</td></tr></tbody>
+            </table>
+            <figcaption data-check>Figure caption</figcaption>
+        </figure>
+        <label data-check for="f-name">Name</label>
+        <input data-check id="f-name" value="Typed text">
+        <small data-check>Help text</small>
+        <input data-check id="f-bad" aria-invalid="true" value="Bad value">
+        <small data-check>Error message</small>
+        <select data-check><option>Option</option></select>
+        <details open><summary data-check>Summary</summary><p data-check>Details body</p></details>
+        <div role="group">
+            <button data-check>Primary</button>
+            <button data-check class="secondary">Secondary</button>
+            <button data-check class="outline">Outline</button>
+            <button data-check type="reset">Reset</button>
+            <a data-check class="button" href="#">Link button</a>
+        </div>
+    </main>
+    <footer><p data-check>Page footer</p></footer>
+</body>
+</html>
