@@ -54,7 +54,7 @@ Or just [download `tagbrush.css`](tagbrush.css) and host it yourself.
 - **Themeable** – colors, fonts, type scale, spacing, and radius are semantic CSS custom properties. Hover and focus colors derive from `--color-primary`, so one variable re-themes everything.
 - **Easy to override** – everything lives in a `@layer`, so any CSS you write wins without `!important`.
 - **Dark mode** – follows the system setting automatically, or force it per page or per element with `data-theme`.
-- **Accessible** – visible keyboard focus rings, respects `prefers-reduced-motion`, and includes print styles.
+- **Accessible** – default colors meet WCAG AA contrast in light and dark mode (checked by the tests), visible keyboard focus rings, respects `prefers-reduced-motion`, and includes print styles.
 - **Layout helpers included** – `.grid`, `.card`, and `role="group"` cover the layouts most sites need.
 - **Tiny and dependency-free** – about 4 KB minified and gzipped.
 - **Works with any framework** – import it once in your root layout. [Setup guides](frameworks/README.md) cover Astro, Next.js, React, Vue, Nuxt, Angular, SvelteKit, Solid, Web Components, and Tailwind.
@@ -168,16 +168,16 @@ Button variants only change a few private variables, so you can add your own in 
 
 | Variable                | Default      | Used for                                  |
 |-------------------------|--------------|-------------------------------------------|
-| `--color-primary`       | `#3b82f6`    | Links, buttons, focus rings, checkboxes, progress bars |
+| `--color-primary`       | `#2563eb`    | Links, buttons, focus rings, checkboxes, progress bars |
 | `--color-on-primary`    | `#ffffff`    | Text on primary buttons                   |
 | `--color-primary-hover` | *derived*    | Button hover (primary + 15% black)        |
-| `--color-link`          | *derived*    | Link color (defaults to primary)          |
+| `--color-link`          | *derived*    | Link and outline-button text (primary, lightened 35% in dark mode so it stays readable) |
 | `--color-link-hover`    | *derived*    | Link hover (link color, darkened in light mode, lightened in dark mode) |
 | `--color-background`    | white / `#111827` | Page, input, and dialog backgrounds  |
 | `--color-surface`       | `#f3f4f6` / `#1f2937` | Code, blockquotes, secondary buttons |
 | `--color-text`          | `#1f2937` / `#f3f4f6` | Body text                       |
 | `--color-heading`       | `--color-text` | Headings                                |
-| `--color-text-muted`    | `#6b7280` / `#9ca3af` | Captions, help text, placeholders, footers |
+| `--color-text-muted`    | `#646b76` / `#9ca3af` | Captions, help text, placeholders, footers |
 | `--color-border`        | `#e5e7eb` / `#374151` | Inputs, tables, rules, details  |
 | `--color-highlight`     | `#fef08a` / `#713f12` | `<mark>` background             |
 | `--color-error`         | `#dc2626` / `#f87171` | Invalid fields and their help text |
@@ -267,6 +267,7 @@ Step-by-step guides with copy-paste snippets:
 | `scripts/build.mjs`       | Generates the files above                            |
 | `tests/`                  | Cross-browser tests and screenshot baselines         |
 | `CHANGELOG.md`            | Release history                                      |
+| `ROADMAP.md`              | Planned work, one chunk per pull request             |
 | `AGENT.md`                | Design notes and development plan                    |
 
 ## Contributing

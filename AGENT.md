@@ -47,5 +47,7 @@ See `frameworks/README.md`. Each framework imports the same file once in its roo
 
 ## Next Steps
 
+- Planned work lives in `ROADMAP.md`, one chunk per pull request. Read its guiding principle before adding features, and tick items off as they merge.
+
 - Refine the spacing and typography scales based on user feedback.
 - Variables come in three tiers: global tokens (`--color-*`, `--spacing`, `--border-radius`), component tokens defined on :root from the globals (`--button-*`, `--input-*`, `--card-*`), and derived values computed at the point of use with `var(--x, fallback)` so nested overrides work. Keep new variables in the right tier.
