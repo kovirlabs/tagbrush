@@ -452,6 +452,49 @@
     margin-bottom: 0;
   }
 
+  /* Page layout: start */
+  /* ==========================================================================
+     Page Layout
+     --------------------------------------------------------------------------
+     No classes needed. With <body><header/><main/><footer/></body>:
+     - header, main and footer stretch edge to edge (so their backgrounds do)
+       while their content is centered within --container-max-width;
+     - the footer sits at the bottom of the window on short pages.
+     A page without <main> (for example Markdown output) is centered as a
+     whole. A wrapper without a class around header/main/footer, like a
+     framework's <div id="root"> or <app-root>, counts as the page too.
+
+     Opt out with data-layout="full" on <body>, the wrapper, or any one of
+     header, main or footer. Pages that already use .container are left as
+     they are. Not included in the scoped and Shadow DOM builds.
+     ========================================================================== */
+  :where(body:has(> main, > :not([class]) > main), body > :not([class]):has(> main)):where(:not([data-layout="full"], [data-layout="full"] *)) {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+
+  :where(body, body > :not([class])) > :where(main) {
+    flex-grow: 1;
+  }
+
+  :where(body:has(> main), body > :not([class]):has(> main)) > :where(header, main, footer):where(:not([data-layout="full"], [data-layout="full"] *, :has(> .container))) {
+    padding-right: max(var(--container-padding), (100% - var(--container-max-width)) / 2 + var(--container-padding));
+    padding-left: max(var(--container-padding), (100% - var(--container-max-width)) / 2 + var(--container-padding));
+  }
+
+  /* Same vertical spacing as body > header/main/footer get, inside a wrapper */
+  :where(body > :not([class]):has(> main)) > :where(header, main, footer) {
+    padding-top: var(--spacing-lg);
+    padding-bottom: var(--spacing-lg);
+  }
+
+  :where(body:not([data-layout="full"], :has(main, > .container))) {
+    padding-right: max(var(--container-padding), (100% - var(--container-max-width)) / 2 + var(--container-padding));
+    padding-left: max(var(--container-padding), (100% - var(--container-max-width)) / 2 + var(--container-padding));
+  }
+  /* Page layout: end */
+
   /* ==========================================================================
      Interactive Elements
      ========================================================================== */

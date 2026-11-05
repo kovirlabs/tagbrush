@@ -26,7 +26,7 @@ Then write plain elements in your components, with no class names needed:
 ```jsx
 export default function App() {
   return (
-    <main className="container">
+    <main>
       <h1>Hello, world</h1>
       <button>Click me</button>
     </main>

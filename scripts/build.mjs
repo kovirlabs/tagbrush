@@ -46,7 +46,16 @@ const replaceExactly = (css, search, replacement, expectedCount) => {
   return css.split(search).join(replacement);
 };
 
-let scoped = source;
+// The page layout section centers top-level landmarks on a whole page. A scoped
+// wrapper or a component sits inside a page someone else lays out, so those
+// builds leave it out.
+const layoutPattern = /\n {2}\/\* Page layout: start \*\/\n[\s\S]*?\n {2}\/\* Page layout: end \*\/\n/;
+if (!layoutPattern.test(source)) {
+  throw new Error('Could not find the "Page layout: start/end" markers in tagbrush.css. Update scripts/build.mjs.');
+}
+const withoutPageLayout = source.replace(layoutPattern, '\n');
+
+let scoped = withoutPageLayout;
 scoped = replaceExactly(scoped, '@layer tagbrush {\n', '@layer tagbrush {\n@scope (.tagbrush) {\n', 1);
 scoped = scoped.replace(/\}\s*$/, '}\n}\n');
 scoped = scoped.replaceAll(':root', ':scope');
@@ -72,7 +81,7 @@ for (const leftover of [':root', '\n  html', '\n  body', 'body >']) {
 // selectors point at the shadow host, and data-theme on the host element is
 // matched with :host(), because the host is featureless inside its own tree.
 // ---------------------------------------------------------------------------
-let shadow = source;
+let shadow = withoutPageLayout;
 shadow = shadow.replaceAll(':root', ':host');
 shadow = replaceExactly(shadow, '\n  html {', '\n  :host {', 1);
 shadow = replaceExactly(shadow, '\n    html {', '\n    :host {', 1);

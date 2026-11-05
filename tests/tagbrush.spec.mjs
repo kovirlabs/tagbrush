@@ -182,6 +182,117 @@ test.describe('build output', () => {
   });
 });
 
+test.describe('page layout', () => {
+  // At 1280px wide, centered content starts (1280 - 1200) / 2 + 16 = 56px from each side.
+  const WIDE = { width: 1280, height: 800 };
+  const PAGE = '<header><nav><a href="#">Site</a></nav></header><main><h1>Title</h1><p>Text</p></main><footer><p>Footer</p></footer>';
+
+  const load = async (page, html, { size = WIDE, bodyAttrs = {} } = {}) => {
+    await page.setViewportSize(size);
+    await page.goto(fileUrl('tests/fixtures/layout.html'));
+    await page.evaluate(([html, attrs]) => {
+      document.body.innerHTML = html;
+      for (const [name, value] of Object.entries(attrs)) document.body.setAttribute(name, value);
+    }, [html, bodyAttrs]);
+  };
+  const rect = (page, selector) => page.locator(selector).first().evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    return { left: Math.round(r.left), width: Math.round(r.width), bottom: Math.round(r.bottom) };
+  });
+
+  test('header, main and footer span the page and center their content', async ({ page }) => {
+    await load(page, PAGE);
+    for (const sel of ['body > header', 'body > main', 'body > footer']) {
+      expect(await rect(page, sel)).toMatchObject({ left: 0, width: 1280 });
+      expect(await style(page, sel, 'paddingLeft')).toBe('56px');
+      expect(await style(page, sel, 'paddingRight')).toBe('56px');
+    }
+    expect(await style(page, 'body', 'paddingLeft')).toBe('0px');
+  });
+
+  test('narrow screens keep the container padding', async ({ page }) => {
+    await load(page, PAGE, { size: { width: 360, height: 800 } });
+    expect(await style(page, 'body > main', 'paddingLeft')).toBe('16px');
+  });
+
+  test('--container-max-width and --container-padding still control the width', async ({ page }) => {
+    await load(page, PAGE);
+    await page.addStyleTag({ content: ':root { --container-max-width: 800px; --container-padding: 2rem; }' });
+    // (1280 - 800) / 2 + 32
+    expect(await style(page, 'body > main', 'paddingLeft')).toBe('272px');
+  });
+
+  test('the footer sits at the bottom of a short page', async ({ page }) => {
+    await load(page, PAGE);
+    expect(await style(page, 'body', 'display')).toBe('flex');
+    expect((await rect(page, 'body > footer')).bottom).toBe(WIDE.height);
+  });
+
+  test('a page without <main> is centered as a whole', async ({ page }) => {
+    await load(page, '<h1>Markdown title</h1><p>Paragraph</p><pre>code</pre>');
+    expect(await style(page, 'body', 'paddingLeft')).toBe('56px');
+    expect(await style(page, 'body', 'display')).toBe('block');
+    expect(await rect(page, 'pre')).toMatchObject({ left: 56, width: 1168 });
+  });
+
+  test('a classless framework wrapper counts as the page', async ({ page }) => {
+    await load(page, `<div id="root">${PAGE}</div><script></script>`);
+    expect(await style(page, '#root > main', 'paddingLeft')).toBe('56px');
+    expect(await style(page, '#root > main', 'paddingTop')).toBe('24px');
+    expect(await style(page, 'body', 'paddingLeft')).toBe('0px');
+    expect((await rect(page, '#root > footer')).bottom).toBe(WIDE.height);
+  });
+
+  test('a custom element wrapper such as Angular\'s <app-root> counts as the page', async ({ page }) => {
+    await load(page, `<app-root>${PAGE}</app-root>`);
+    expect(await style(page, 'app-root > main', 'paddingLeft')).toBe('56px');
+    expect((await rect(page, 'app-root > footer')).bottom).toBe(WIDE.height);
+  });
+
+  test('a wrapper made invisible with display: contents still works', async ({ page }) => {
+    await load(page, `<div style="display: contents">${PAGE}</div>`);
+    expect(await style(page, 'main', 'paddingLeft')).toBe('56px');
+    expect((await rect(page, 'footer')).bottom).toBe(WIDE.height);
+  });
+
+  test('existing .container markup looks the same as before', async ({ page }) => {
+    await load(page, '<header><nav class="container"><a href="#">Site</a></nav></header><main class="container"><p>Text</p></main>');
+    expect(await style(page, 'body > header', 'paddingLeft')).toBe('0px');
+    expect(await rect(page, 'nav')).toMatchObject({ left: 40, width: 1200 });
+    expect(await rect(page, 'main')).toMatchObject({ left: 40, width: 1200 });
+    expect(await style(page, 'main', 'paddingLeft')).toBe('16px');
+
+    await load(page, '<div class="container"><h1>Title</h1></div>');
+    expect(await style(page, 'body', 'paddingLeft')).toBe('0px');
+  });
+
+  test('nested header and footer elements are not treated as the page header', async ({ page }) => {
+    await load(page, '<main><article><header><h2>Post</h2></header><footer>Posted today</footer></article><blockquote><p>Quote</p><footer>Someone</footer></blockquote></main>');
+    expect(await style(page, 'article > header', 'paddingLeft')).toBe('0px');
+    expect(await style(page, 'article > footer', 'paddingLeft')).toBe('0px');
+    expect(await style(page, 'blockquote > footer', 'paddingLeft')).toBe('0px');
+  });
+
+  test('data-layout="full" turns the layout off for the page or one landmark', async ({ page }) => {
+    await load(page, PAGE, { bodyAttrs: { 'data-layout': 'full' } });
+    expect(await style(page, 'body', 'display')).toBe('block');
+    expect(await style(page, 'body > main', 'paddingLeft')).toBe('0px');
+
+    await load(page, '<p>Loose content</p>', { bodyAttrs: { 'data-layout': 'full' } });
+    expect(await style(page, 'body', 'paddingLeft')).toBe('0px');
+
+    await load(page, PAGE.replace('<header>', '<header data-layout="full">'));
+    expect(await style(page, 'body > header', 'paddingLeft')).toBe('0px');
+    expect(await style(page, 'body > main', 'paddingLeft')).toBe('56px');
+  });
+
+  test('a class on the wrapper means it is the author\'s own layout', async ({ page }) => {
+    await load(page, `<div class="grid">${PAGE}</div>`);
+    expect(await style(page, 'main', 'paddingLeft')).toBe('0px');
+    expect(await style(page, '.grid', 'display')).toBe('grid');
+  });
+});
+
 test.describe('accessibility', () => {
   // WCAG AA asks for 4.5:1 between normal-size text and its background.
   const AA = 4.5;
