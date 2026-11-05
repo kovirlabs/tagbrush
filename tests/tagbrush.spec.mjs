@@ -139,6 +139,25 @@ test.describe('build output', () => {
     expect(await style(page, '#outside', 'backgroundColor')).not.toBe('rgb(59, 130, 246)');
     expect(await style(page, 'body', 'marginTop')).toBe('8px');
   });
+
+  test('shadow build styles a shadow root through :host', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+    await page.goto(fileUrl('tests/fixtures/shadow.html'));
+    await page.evaluate(() => Promise.all([...document.querySelectorAll('tb-demo')].map((el) => el.ready)));
+    // Playwright locators pierce open shadow roots.
+    expect(await style(page, '#light-host button', 'backgroundColor')).toBe('rgb(59, 130, 246)');
+    expect(await style(page, '#light-host input', 'display')).toBe('block');
+    expect(await style(page, '#light-host main', 'paddingTop')).toBe('24px');
+    expect(await style(page, '#light-host', 'display')).toBe('block');
+    expect(await style(page, '#light-host', 'fontFamily')).toContain('system-ui');
+    expect(await style(page, '#light-host', 'backgroundColor')).toBe('rgb(255, 255, 255)');
+    expect(await style(page, '#dark-host', 'backgroundColor')).toBe('rgb(17, 24, 39)');
+    // Page CSS aimed at the host element beats the :host defaults inside the shadow root.
+    await page.addStyleTag({ content: '#light-host { --color-primary: rgb(16, 185, 129); }' });
+    expect(await style(page, '#light-host button', 'backgroundColor')).toBe('rgb(16, 185, 129)');
+    expect(await style(page, '#outside', 'backgroundColor')).not.toBe('rgb(59, 130, 246)');
+    expect(await style(page, 'body', 'marginTop')).toBe('8px');
+  });
 });
 
 test.describe('visual', () => {

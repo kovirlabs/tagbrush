@@ -2,6 +2,8 @@
 //   tagbrush.min.css          minified
 //   tagbrush.scoped.css       only styles inside an element with class="tagbrush"
 //   tagbrush.scoped.min.css   minified scoped build
+//   tagbrush.shadow.css       for use inside a shadow root (Web Components)
+//   tagbrush.shadow.min.css   minified shadow build
 //
 // tagbrush.css remains the hand-written source of truth and works without this
 // step; the build only exists for maintainers. Run with `npm run build`.
@@ -64,11 +66,43 @@ for (const leftover of [':root', '\n  html', '\n  body', 'body >']) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Shadow DOM build: for stylesheets adopted inside a shadow root (Lit, Stencil,
+// vanilla Web Components, Angular ViewEncapsulation.ShadowDom). Page-level
+// selectors point at the shadow host, and data-theme on the host element is
+// matched with :host(), because the host is featureless inside its own tree.
+// ---------------------------------------------------------------------------
+let shadow = source;
+shadow = shadow.replaceAll(':root', ':host');
+shadow = replaceExactly(shadow, '\n  html {', '\n  :host {', 1);
+shadow = replaceExactly(shadow, '\n    html {', '\n    :host {', 1);
+shadow = replaceExactly(shadow, '\n  body {\n    margin: 0;', '\n  :host {\n    display: block;\n    margin: 0;', 1);
+shadow = replaceExactly(shadow, 'body > header, body > main, body > footer', ':host > header, :host > main, :host > footer', 1);
+shadow = replaceExactly(shadow,
+  '  [data-theme="light"] { color-scheme: light; }\n  [data-theme="dark"] { color-scheme: dark; }\n\n  [data-theme] {',
+  '  [data-theme="light"], :host([data-theme="light"]) { color-scheme: light; }\n' +
+  '  [data-theme="dark"], :host([data-theme="dark"]) { color-scheme: dark; }\n\n  [data-theme], :host([data-theme]) {',
+  1);
+shadow = shadow.replace(
+  /^\/\*\n \* TagBrush\.css/,
+  '/*\n * SHADOW DOM BUILD: for use inside a shadow root (Web Components, Lit, Stencil,\n' +
+  ' * Angular ShadowDom). Page-level styles apply to :host instead of html/body.\n' +
+  ' * Generated from tagbrush.css by scripts/build.mjs. Do not edit directly.\n *\n * TagBrush.css'
+);
+
+for (const leftover of ['\n  html', '\n  body', 'body >']) {
+  if (shadow.includes(leftover)) {
+    throw new Error(`Shadow build still contains "${leftover.trim()}". Update scripts/build.mjs.`);
+  }
+}
+
 write('tagbrush.min.css', minify(source, 'tagbrush.css'));
 write('tagbrush.scoped.css', scoped);
 write('tagbrush.scoped.min.css', minify(scoped, 'tagbrush.scoped.css'));
+write('tagbrush.shadow.css', shadow);
+write('tagbrush.shadow.min.css', minify(shadow, 'tagbrush.shadow.css'));
 
-for (const file of ['tagbrush.css', 'tagbrush.min.css', 'tagbrush.scoped.css', 'tagbrush.scoped.min.css']) {
+for (const file of ['tagbrush.css', 'tagbrush.min.css', 'tagbrush.scoped.css', 'tagbrush.scoped.min.css', 'tagbrush.shadow.css', 'tagbrush.shadow.min.css']) {
   const size = Buffer.byteLength(read(file));
   console.log(`${file.padEnd(26)} ${(size / 1024).toFixed(1)} KB`);
 }

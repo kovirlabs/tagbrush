@@ -4,7 +4,7 @@
 
 **A tiny, no-build CSS library that makes plain semantic HTML look clean and modern.**
 
-One file, about 4 KB gzipped. No classes required. No PostCSS, bundler, or JavaScript. Dark mode built in. Theme it by overriding a few CSS variables, and your own CSS always wins. Works with any static site and drops straight into Astro.
+One file, about 4 KB gzipped. No classes required. No PostCSS, bundler, or JavaScript. Dark mode built in. Theme it by overriding a few CSS variables, and your own CSS always wins. Works with any static site or framework: Astro, Next.js, React, Vue, Nuxt, Angular, SvelteKit, Web Components, and more.
 
 👉 **See it in action:** open [`index.html`](index.html) in your browser for a live demo of every styled element, plus a theme builder that writes your custom CSS for you.
 
@@ -46,6 +46,7 @@ npm install tagbrush
 import 'tagbrush';              // tagbrush.css
 import 'tagbrush/min';          // minified
 import 'tagbrush/scoped';       // only styles inside .tagbrush (see below)
+import 'tagbrush/shadow';       // for use inside a shadow root (Web Components)
 ```
 
 Or just [download `tagbrush.css`](tagbrush.css) and host it yourself.
@@ -60,7 +61,7 @@ Or just [download `tagbrush.css`](tagbrush.css) and host it yourself.
 - **Accessible** – visible keyboard focus rings, respects `prefers-reduced-motion`, and includes print styles.
 - **Layout helpers included** – `.grid`, `.card`, and `role="group"` cover the layouts most sites need.
 - **Tiny and dependency-free** – about 4 KB minified and gzipped.
-- **Astro friendly** – import once in your layout and every page picks it up.
+- **Works with any framework** – import it once in your root layout. [Setup guides](frameworks/README.md) cover Astro, Next.js, React, Vue, Nuxt, Angular, SvelteKit, Solid, Web Components, and Tailwind.
 
 ## What gets styled
 
@@ -232,46 +233,28 @@ Customize it on the wrapper: `.tagbrush { --color-primary: #10b981; }`.
 
 The scoped build uses [`@scope`](https://developer.mozilla.org/en-US/docs/Web/CSS/@scope), which is newer than the rest of the library ([check support](https://caniuse.com/css-cascade-scope)). The host site's own global styles (for example a site-wide `button { … }` rule) still apply inside the wrapper, because unlayered CSS always wins.
 
-## Using with Astro
+## Using with a framework
 
-Pick whichever approach fits your project.
+TagBrush.css is plain CSS, so the same file works everywhere. Import it once in your root layout or entry file:
 
-**Option A – install from npm (recommended).** Run `npm install tagbrush`, then import it in your layout:
-
-```astro
----
-// src/layouts/Layout.astro
+```js
 import 'tagbrush';
----
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-  </head>
-  <body>
-    <slot />
-  </body>
-</html>
 ```
 
-**Option B – copy the file.** Save it as `src/styles/tagbrush.css` and `import '../styles/tagbrush.css'` instead.
+Your component styles (Astro, Vue `scoped`, Svelte, CSS Modules, Angular) are unlayered, so they always override it.
 
-**Option C – serve it as a static file.** Save the file as `public/tagbrush.css` and link it:
+Step-by-step guides with copy-paste snippets:
 
-```astro
-<link rel="stylesheet" href="/tagbrush.css" />
-```
+| | | |
+|---|---|---|
+| [Astro](frameworks/astro/README.md) | [Next.js](frameworks/nextjs/README.md) | [React (Vite, Gatsby)](frameworks/react/README.md) |
+| [React Router / Remix](frameworks/react-router/README.md) | [Vue](frameworks/vue/README.md) | [Nuxt](frameworks/nuxt/README.md) |
+| [Angular](frameworks/angular/README.md) | [SvelteKit](frameworks/sveltekit/README.md) | [Solid](frameworks/solid/README.md) |
+| [Web Components / Lit](frameworks/web-components/README.md) | [Tailwind CSS](frameworks/tailwind/README.md) | [Eleventy, Hugo, Jekyll](frameworks/static-sites/README.md) |
 
-To customize the theme, add a global style block to the same layout:
+**Using Tailwind?** It needs a few extra lines so Tailwind's Preflight reset doesn't erase TagBrush.css. See the [Tailwind guide](frameworks/tailwind/README.md).
 
-```astro
-<style is:global>
-  :root {
-    --color-primary: #10b981;
-  }
-</style>
-```
-
-Astro's scoped component styles are unlayered, so they always override TagBrush.css too.
+**Using Shadow DOM?** Page stylesheets can't reach inside a shadow root, so use `tagbrush.shadow.css` there. It targets `:host` instead of `html` and `body`. See the [Web Components guide](frameworks/web-components/README.md).
 
 ## Project files
 
@@ -281,6 +264,9 @@ Astro's scoped component styles are unlayered, so they always override TagBrush.
 | `tagbrush.min.css`        | Minified build *(generated)*                         |
 | `tagbrush.scoped.css`     | Scoped build that only styles inside `.tagbrush` *(generated)* |
 | `tagbrush.scoped.min.css` | Minified scoped build *(generated)*                  |
+| `tagbrush.shadow.css`     | Shadow DOM build for Web Components, styles `:host` *(generated)* |
+| `tagbrush.shadow.min.css` | Minified Shadow DOM build *(generated)*              |
+| `frameworks/`             | Setup guides for each framework                      |
 | `index.html`              | Landing page, live demo, and theme builder           |
 | `scripts/build.mjs`       | Generates the files above                            |
 | `tests/`                  | Cross-browser tests and screenshot baselines         |
