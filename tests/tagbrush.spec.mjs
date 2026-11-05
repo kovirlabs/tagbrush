@@ -117,7 +117,9 @@ test.describe('build output', () => {
     })), [SELECTORS, PROPS]);
 
   test('minified file renders identically to the source', async ({ page }) => {
-    await page.emulateMedia({ colorScheme: 'light' });
+    // Reduced motion makes transitions instant, so swapping stylesheets doesn't
+    // leave buttons and inputs mid-transition from the browser's default colors.
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
     await page.goto(DEMO);
     const source = await snapshotStyles(page);
     await page.evaluate(() => new Promise((done) => {
@@ -129,7 +131,7 @@ test.describe('build output', () => {
   });
 
   test('scoped build only styles inside .tagbrush', async ({ page }) => {
-    await page.emulateMedia({ colorScheme: 'light' });
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
     await page.goto(fileUrl('tests/fixtures/scoped.html'));
     expect(await style(page, '#inside', 'backgroundColor')).toBe('rgb(59, 130, 246)');
     expect(await style(page, '#inside-input', 'display')).toBe('block');
