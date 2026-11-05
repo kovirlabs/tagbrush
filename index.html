@@ -15,25 +15,21 @@
         .site-nav { padding: var(--spacing-md) 0; border-bottom: var(--border-width) solid var(--color-border); }
         .site-nav .brand { font-family: var(--font-family-mono); font-weight: 600; color: var(--color-text); }
         .site-nav select { width: auto; display: inline-block; padding-top: var(--spacing-xs); padding-bottom: var(--spacing-xs); }
-        header, section, footer { padding: var(--spacing-xl) 0; }
-        section + section, footer { border-top: var(--border-width) solid var(--color-border); }
+        .hero, section, .site-footer { padding: var(--spacing-xl) 0; }
+        section + section, .site-footer { border-top: var(--border-width) solid var(--color-border); }
         .hero { text-align: center; padding: 4rem 0 var(--spacing-xl); }
         .hero h1 { font-size: 3rem; margin-bottom: var(--spacing-sm); font-family: var(--font-family-mono); letter-spacing: -0.02em; }
         .hero h1 .bracket { color: var(--color-primary); }
         .lead { font-size: 1.25rem; color: var(--color-text-muted); max-width: 40rem; margin-left: auto; margin-right: auto; }
-        .actions { display: flex; flex-wrap: wrap; gap: var(--spacing-sm); justify-content: center; margin-bottom: var(--spacing-lg); }
+        .hero [role="group"] { justify-content: center; margin-bottom: var(--spacing-lg); }
         .hero pre { display: inline-block; text-align: left; max-width: 100%; }
-        .grid { display: grid; gap: var(--spacing-lg); grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
-        .card { padding: var(--spacing-lg); background-color: var(--color-surface); border-radius: var(--border-radius); }
         .card h3 { font-size: 1.125rem; margin-bottom: var(--spacing-sm); }
-        .card p { margin-bottom: 0; color: var(--color-text-muted); }
+        .card p { color: var(--color-text-muted); }
         .muted { color: var(--color-text-muted); }
-        .swatches { display: flex; flex-wrap: wrap; gap: var(--spacing-sm); margin-bottom: var(--spacing-md); }
         .swatches button[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--color-text); }
-        .themed-box { padding: var(--spacing-lg); border-radius: var(--border-radius); margin-bottom: var(--spacing-md); border: var(--border-width) solid var(--color-border); }
-        .field { margin-bottom: var(--spacing-md); }
-        footer { text-align: center; }
-        .stack > * + * { margin-top: var(--spacing-sm); }
+        .builder-output { position: relative; }
+        .builder-output button { position: absolute; top: var(--spacing-sm); right: var(--spacing-sm); }
+        .site-footer { text-align: center; }
     </style>
 </head>
 <body>
@@ -43,6 +39,7 @@
             <a class="brand" href="#">&lt;tagbrush&gt;</a>
             <ul>
                 <li><a href="#why">Why</a></li>
+                <li><a href="#theming">Theme builder</a></li>
                 <li><a href="#showcase">Elements</a></li>
                 <li><a href="#get-started">Get started</a></li>
                 <li>
@@ -59,7 +56,7 @@
         <header class="hero">
             <h1 aria-label="TagBrush.css"><span class="bracket">&lt;</span>tagbrush<span class="bracket">&gt;</span></h1>
             <p class="lead">A tiny, no-build CSS library that makes plain semantic HTML look clean and modern. One file. No classes required. Themeable with CSS variables, with dark mode built in.</p>
-            <div class="actions">
+            <div role="group">
                 <a class="button" href="#get-started">Get started</a>
                 <a class="button secondary" href="https://github.com/kovirlabs/tagbrush">View on GitHub</a>
             </div>
@@ -105,28 +102,65 @@
         </section>
 
         <section aria-labelledby="theming">
-            <h2 id="theming">Try the theming</h2>
-            <p>Every component on this page reads from a handful of CSS variables. Pick a primary color and watch the buttons, links, checkboxes and focus rings update. Hover colors and focus rings are derived from <code>--color-primary</code> automatically, so one variable is all you need.</p>
-            <div class="swatches" role="group" aria-label="Primary color">
-                <button type="button" data-primary="#3b82f6" aria-pressed="true">Blue</button>
-                <button type="button" data-primary="#10b981" aria-pressed="false">Emerald</button>
-                <button type="button" data-primary="#8b5cf6" aria-pressed="false">Violet</button>
-                <button type="button" data-primary="#f43f5e" aria-pressed="false">Rose</button>
-                <button type="button" data-primary="#f59e0b" aria-pressed="false">Amber</button>
+            <h2 id="theming">Build your theme</h2>
+            <p>Every component on this page reads from a handful of CSS variables. Change them here and the whole page updates live, then copy the CSS into your site. Hover colors and focus rings are derived from <code>--color-primary</code> automatically.</p>
+            <div class="grid">
+                <form id="builder" onsubmit="event.preventDefault();">
+                    <label for="b-primary">Primary color</label>
+                    <div role="group" class="swatches" aria-label="Primary color presets">
+                        <input type="color" id="b-primary" value="#3b82f6">
+                        <button type="button" data-primary="#3b82f6" aria-pressed="true">Blue</button>
+                        <button type="button" data-primary="#10b981" aria-pressed="false">Emerald</button>
+                        <button type="button" data-primary="#8b5cf6" aria-pressed="false">Violet</button>
+                        <button type="button" data-primary="#f43f5e" aria-pressed="false">Rose</button>
+                        <button type="button" data-primary="#f59e0b" aria-pressed="false">Amber</button>
+                    </div>
+                    <div class="grid" style="--grid-min-column: 12rem; --grid-gap: var(--spacing-md); margin-bottom: 0;">
+                        <label>Body font
+                            <select id="b-font">
+                                <option value="">System sans-serif</option>
+                                <option value='ui-serif, Georgia, Cambria, "Times New Roman", serif'>Serif</option>
+                                <option value='ui-rounded, "SF Pro Rounded", "Hiragino Maru Gothic ProN", Quicksand, Comfortaa, Manjari, "Arial Rounded MT", Calibri, sans-serif'>Rounded</option>
+                                <option value='Seravek, "Gill Sans Nova", Ubuntu, Calibri, "DejaVu Sans", source-sans-pro, sans-serif'>Humanist</option>
+                                <option value='ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace'>Monospace</option>
+                            </select>
+                        </label>
+                        <label>Heading font
+                            <select id="b-heading-font">
+                                <option value="">Same as body</option>
+                                <option value='ui-serif, Georgia, Cambria, "Times New Roman", serif'>Serif</option>
+                                <option value='ui-rounded, "SF Pro Rounded", "Hiragino Maru Gothic ProN", Quicksand, Comfortaa, Manjari, "Arial Rounded MT", Calibri, sans-serif'>Rounded</option>
+                                <option value='Seravek, "Gill Sans Nova", Ubuntu, Calibri, "DejaVu Sans", source-sans-pro, sans-serif'>Humanist</option>
+                                <option value='ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace'>Monospace</option>
+                            </select>
+                        </label>
+                        <label>Corner radius: <output id="b-radius-out">0.375rem</output>
+                            <input type="range" id="b-radius" min="0" max="1.5" step="0.125" value="0.375">
+                        </label>
+                        <label>Spacing: <output id="b-spacing-out">1rem</output>
+                            <input type="range" id="b-spacing" min="0.75" max="1.5" step="0.125" value="1">
+                        </label>
+                    </div>
+                    <label><input type="checkbox" id="b-pill"> Pill-shaped buttons</label>
+                    <div role="group">
+                        <button type="button" class="secondary" id="b-reset">Reset to defaults</button>
+                    </div>
+                </form>
+                <div class="builder-output">
+                    <pre><code id="theme-code">/* Using the defaults */</code></pre>
+                    <button type="button" class="secondary" id="b-copy">Copy</button>
+                </div>
             </div>
-            <pre><code id="theme-code">:root {
-  --color-primary: #3b82f6;
-}</code></pre>
 
             <h3>Dark mode</h3>
             <p>TagBrush.css follows the visitor's system preference. Use the switcher at the top of the page, or set <code>data-theme</code> on any element to force a scheme for just that part of the page:</p>
             <div class="grid">
-                <div class="themed-box" data-theme="light">
+                <div class="card" data-theme="light">
                     <strong>data-theme="light"</strong>
                     <p class="muted">Always light, whatever the system setting.</p>
                     <button type="button">Button</button>
                 </div>
-                <div class="themed-box" data-theme="dark">
+                <div class="card" data-theme="dark">
                     <strong>data-theme="dark"</strong>
                     <p class="muted">Always dark, whatever the system setting.</p>
                     <button type="button">Button</button>
@@ -147,7 +181,16 @@
             <h6>Heading 6</h6>
             <p>Body text is set in your system font with a comfortable line height. It supports <a href="#showcase">links</a>, <strong>bold</strong>, <em>italics</em> and <code>inline code</code>.</p>
             <p>Inline elements are covered too: <mark>highlighted text</mark>, keyboard shortcuts like <kbd>Ctrl</kbd> + <kbd>K</kbd>, <abbr title="Cascading Style Sheets">CSS</abbr> abbreviations, H<sub>2</sub>O, E = mc<sup>2</sup>, sample output like <samp>Build succeeded</samp>, and <small>small print</small>.</p>
-            <blockquote>Blockquotes are great for callouts, notes, and quotes worth highlighting.</blockquote>
+            <p>Edits show up as <del>removed</del> and <ins>inserted</ins> text, <s>outdated</s> text is muted, a <dfn>definition</dfn> stands out, and <q>inline quotes</q> get curly quote marks. <output>42</output> is an <code>&lt;output&gt;</code>.</p>
+            <hgroup>
+                <h4>A heading with a subtitle</h4>
+                <p>Wrap them in <code>&lt;hgroup&gt;</code> and the subtitle is muted automatically.</p>
+            </hgroup>
+            <blockquote>
+                <p>Blockquotes are great for callouts, notes, and quotes worth highlighting.</p>
+                <footer><cite>Someone wise</cite></footer>
+            </blockquote>
+            <address>Kovir Labs<br>123 Example Street<br><a href="mailto:hello@example.com">hello@example.com</a></address>
             <pre><code>// Code blocks scroll horizontally when they overflow
 function greet(name) {
   console.log(`Hello, ${name}!`);
@@ -178,6 +221,15 @@ function greet(name) {
                 </dl>
             </div>
 
+            <h3>Articles and asides</h3>
+            <article>
+                <h4>An article</h4>
+                <p>Long-form content goes in an <code>&lt;article&gt;</code>. An <code>&lt;aside&gt;</code> inside it becomes a callout:</p>
+                <aside>
+                    <p><strong>Note:</strong> Asides are perfect for tips, warnings, and side notes.</p>
+                </aside>
+            </article>
+
             <h3>Media</h3>
             <figure>
                 <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='300' viewBox='0 0 1200 300'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='300' fill='url(%23g)'/%3E%3C/svg%3E" width="1200" height="300" alt="A blue to violet gradient">
@@ -186,30 +238,38 @@ function greet(name) {
             <hr>
 
             <h3>Buttons</h3>
-            <p class="actions" style="justify-content: flex-start;">
+            <div role="group">
                 <button type="button">Button</button>
                 <button type="button" class="secondary">Secondary</button>
                 <button type="button" class="outline">Outline</button>
                 <a href="#showcase" class="button">Link styled as button</a>
                 <button type="button" disabled>Disabled</button>
                 <a href="#showcase" class="button outline" aria-disabled="true">Disabled link</a>
-            </p>
+            </div>
+            <p>Wrap buttons in <code>&lt;div role="group"&gt;</code> to lay them out in a row. It works for inline forms too:</p>
+            <search>
+                <form role="group" onsubmit="event.preventDefault();">
+                    <label class="visually-hidden" for="site-search">Search</label>
+                    <input type="search" id="site-search" placeholder="Search the docs">
+                    <button type="submit">Search</button>
+                </form>
+            </search>
 
             <h3>Forms</h3>
             <form onsubmit="event.preventDefault();">
                 <fieldset>
                     <legend>Contact us</legend>
                     <div class="grid">
-                        <div class="field">
+                        <div>
                             <label for="name">Name</label>
                             <input type="text" id="name" name="name" placeholder="Ada Lovelace">
                         </div>
-                        <div class="field">
+                        <div>
                             <label for="email">Email</label>
                             <input type="email" id="email" name="email" placeholder="you@example.com">
                         </div>
                     </div>
-                    <div class="field">
+                    <div>
                         <label for="topic">Topic</label>
                         <select id="topic" name="topic">
                             <option>General question</option>
@@ -217,7 +277,7 @@ function greet(name) {
                             <option>Feature request</option>
                         </select>
                     </div>
-                    <div class="field">
+                    <div>
                         <label for="message">Message</label>
                         <textarea id="message" name="message" rows="4" placeholder="Your message..."></textarea>
                         <small>Help text: put a <code>&lt;small&gt;</code> right after any field.</small>
@@ -226,54 +286,92 @@ function greet(name) {
                 <fieldset>
                     <legend>More inputs</legend>
                     <div class="grid">
-                        <div class="field">
+                        <div>
                             <label for="website">Website (invalid example)</label>
                             <input type="url" id="website" value="not a url" aria-invalid="true">
                             <small>Please enter a full URL, including https://</small>
                         </div>
-                        <div class="field">
+                        <div>
                             <label for="username">Username (valid example)</label>
                             <input type="text" id="username" value="ada" aria-invalid="false">
                             <small>That username is available.</small>
                         </div>
-                        <div class="field">
+                        <div>
                             <label for="date">Date</label>
                             <input type="date" id="date">
                         </div>
-                        <div class="field">
+                        <div>
                             <label for="disabled-input">Disabled</label>
                             <input type="text" id="disabled-input" value="Can't edit me" disabled>
                         </div>
-                        <div class="field">
+                        <div>
                             <label for="volume">Range</label>
                             <input type="range" id="volume" value="60">
                         </div>
-                        <div class="field">
+                        <div>
                             <label for="file">File</label>
                             <input type="file" id="file">
                         </div>
-                        <div class="field">
+                        <div>
                             <label for="color">Color</label>
                             <input type="color" id="color" value="#3b82f6">
                         </div>
-                        <div class="field stack">
+                        <label>Wrapped label
+                            <input type="text" placeholder="Input inside its label">
+                        </label>
+                        <div>
+                            <label for="framework">Grouped options</label>
+                            <select id="framework">
+                                <optgroup label="Static">
+                                    <option>Astro</option>
+                                    <option>Eleventy</option>
+                                </optgroup>
+                                <optgroup label="App">
+                                    <option>Next.js</option>
+                                    <option>SvelteKit</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="toppings">Multiple select</label>
+                            <select id="toppings" multiple>
+                                <option selected>Typography</option>
+                                <option>Forms</option>
+                                <option selected>Tables</option>
+                                <option>Dialogs</option>
+                            </select>
+                        </div>
+                        <div>
                             <label><input type="checkbox" checked> Subscribe to updates</label>
                             <label><input type="radio" name="plan" checked> Free plan</label>
                             <label><input type="radio" name="plan"> Pro plan</label>
                         </div>
                     </div>
                 </fieldset>
-                <p class="actions" style="justify-content: flex-start;">
+                <div role="group">
                     <button type="submit">Send message</button>
                     <button type="reset">Reset</button>
-                </p>
+                </div>
             </form>
 
             <h3>Progress and meter</h3>
             <label for="upload-progress">Upload progress</label>
             <progress id="upload-progress" value="70" max="100">70%</progress>
-            <label for="disk">Disk usage</label>
-            <meter id="disk" value="0.4" low="0.6" high="0.8" max="1">40%</meter>
+            <p class="muted">Meters turn green, amber, or red based on their <code>low</code>, <code>high</code> and <code>optimum</code> attributes:</p>
+            <div class="grid" style="--grid-min-column: 12rem;">
+                <div>
+                    <label for="disk">Disk usage: 40%</label>
+                    <meter id="disk" value="0.4" low="0.6" high="0.8" optimum="0.2" max="1">40%</meter>
+                </div>
+                <div>
+                    <label for="disk2">Disk usage: 70%</label>
+                    <meter id="disk2" value="0.7" low="0.6" high="0.8" optimum="0.2" max="1">70%</meter>
+                </div>
+                <div>
+                    <label for="disk3">Disk usage: 95%</label>
+                    <meter id="disk3" value="0.95" low="0.6" high="0.8" optimum="0.2" max="1">95%</meter>
+                </div>
+            </div>
 
             <h3>Disclosure and dialogs</h3>
             <details>
@@ -284,7 +382,13 @@ function greet(name) {
                 <summary>Does it need any classes?</summary>
                 <p>Nope. Just write the HTML.</p>
             </details>
-            <p><button type="button" class="outline" id="open-dialog">Open a dialog</button></p>
+            <div role="group">
+                <button type="button" class="outline" id="open-dialog">Open a dialog</button>
+                <button type="button" class="outline" popovertarget="demo-popover">Toggle a popover</button>
+            </div>
+            <div popover id="demo-popover">
+                <p><strong>Native popover.</strong> Opened with the <code>popovertarget</code> attribute, no JavaScript needed. Click outside or press <kbd>Esc</kbd> to close.</p>
+            </div>
             <dialog id="demo-dialog">
                 <h3>Native &lt;dialog&gt;</h3>
                 <p>Opened with <code>showModal()</code>. Press <kbd>Esc</kbd> or use the button to close it.</p>
@@ -293,9 +397,26 @@ function greet(name) {
                 </form>
             </dialog>
 
+            <h3>Layout helpers</h3>
+            <p>A few optional classes cover the layouts almost every site needs: <code>.grid</code> for responsive columns, <code>.card</code> for boxed content, and <code>role="group"</code> for rows of buttons.</p>
+            <div class="grid">
+                <div class="card">
+                    <h4>.card</h4>
+                    <p>Cards sit in a <code>.grid</code> that wraps to one column on small screens.</p>
+                </div>
+                <div class="card">
+                    <h4>Tunable</h4>
+                    <p>Set <code>--grid-min-column</code> on a grid to change when it wraps.</p>
+                </div>
+                <div class="card">
+                    <h4>Themeable</h4>
+                    <p><code>--card-padding</code> and <code>--card-radius</code> adjust every card at once.</p>
+                </div>
+            </div>
+
             <h3>Tables</h3>
             <figure>
-            <table>
+            <table class="striped">
                 <caption>A few of the theme variables. Wrap a table in a figure to make it scroll on small screens.</caption>
                 <thead>
                     <tr>
@@ -341,24 +462,60 @@ function greet(name) {
             <p>Because TagBrush.css lives in its own cascade layer, any rule you write wins, even a plain <code>button { … }</code> selector. No <code>!important</code> needed.</p>
         </section>
 
-        <footer>
+        <footer class="site-footer">
             <p class="muted">TagBrush.css is open source under the Apache 2.0 license. <a href="https://github.com/kovirlabs/tagbrush">Source on GitHub</a>.</p>
         </footer>
 
     </div>
 
     <script>
-        // Live theming demo: swap the primary color variable on :root.
-        // Hover and focus colors are derived from it by TagBrush.css.
+        // Theme builder: sets variables on :root and prints the CSS to copy.
         const root = document.documentElement;
         const code = document.getElementById('theme-code');
-        document.querySelectorAll('[data-primary]').forEach((btn) => {
+        const el = (id) => document.getElementById(id);
+        const defaults = { primary: '#3b82f6', radius: '0.375', spacing: '1' };
+        const swatches = document.querySelectorAll('[data-primary]');
+
+        const updateTheme = () => {
+            const vars = {};
+            const primary = el('b-primary').value;
+            if (primary !== defaults.primary) vars['--color-primary'] = primary;
+            if (el('b-font').value) vars['--font-family-base'] = el('b-font').value;
+            if (el('b-heading-font').value) vars['--font-family-heading'] = el('b-heading-font').value;
+            if (el('b-radius').value !== defaults.radius) vars['--border-radius'] = el('b-radius').value + 'rem';
+            if (el('b-spacing').value !== defaults.spacing) vars['--spacing'] = el('b-spacing').value + 'rem';
+            if (el('b-pill').checked) vars['--button-radius'] = '999px';
+
+            ['--color-primary', '--font-family-base', '--font-family-heading', '--border-radius', '--spacing', '--button-radius']
+                .forEach((name) => root.style.removeProperty(name));
+            Object.entries(vars).forEach(([name, value]) => root.style.setProperty(name, value));
+
+            el('b-radius-out').textContent = el('b-radius').value + 'rem';
+            el('b-spacing-out').textContent = el('b-spacing').value + 'rem';
+            swatches.forEach((b) => b.setAttribute('aria-pressed', b.dataset.primary === primary));
+
+            const lines = Object.entries(vars).map(([name, value]) => `  ${name}: ${value};`);
+            code.textContent = lines.length ? `:root {\n${lines.join('\n')}\n}` : '/* Using the defaults */';
+        };
+
+        swatches.forEach((btn) => {
             btn.style.backgroundColor = btn.dataset.primary;
-            btn.addEventListener('click', () => {
-                root.style.setProperty('--color-primary', btn.dataset.primary);
-                document.querySelectorAll('[data-primary]').forEach((b) => b.setAttribute('aria-pressed', b === btn));
-                code.textContent = `:root {\n  --color-primary: ${btn.dataset.primary};\n}`;
-            });
+            btn.addEventListener('click', () => { el('b-primary').value = btn.dataset.primary; updateTheme(); });
+        });
+        el('builder').addEventListener('input', updateTheme);
+        el('builder').addEventListener('change', updateTheme);
+        el('b-reset').addEventListener('click', () => {
+            el('builder').reset();
+            updateTheme();
+        });
+        el('b-copy').addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(code.textContent);
+                el('b-copy').textContent = 'Copied!';
+            } catch (e) {
+                el('b-copy').textContent = 'Select and copy';
+            }
+            setTimeout(() => { el('b-copy').textContent = 'Copy'; }, 1500);
         });
 
         // Color scheme switcher: sets data-theme on <html> and remembers it.

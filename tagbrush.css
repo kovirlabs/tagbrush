@@ -1,5 +1,5 @@
 /*
- * TagBrush.css - A lightweight, no-build CSS library for static sites and Astro.js
+ * TagBrush.css v1.0.0 - A lightweight, no-build CSS library for static sites and Astro.js
  * https://github.com/kovirlabs/tagbrush
  *
  * Everything lives inside the `tagbrush` cascade layer, so any CSS you write
@@ -32,16 +32,22 @@
     --color-highlight: light-dark(#fef08a, #713f12);
     --color-error: light-dark(#dc2626, #f87171);
     --color-success: light-dark(#16a34a, #4ade80);
+    --color-warning: light-dark(#d97706, #fbbf24);
+    --color-heading: var(--color-text);
 
     /*
-     * Optional, derived automatically from --color-primary when unset:
+     * Optional, derived automatically when unset:
+     *   --color-link            (default: --color-primary)
+     *   --color-link-hover      (default: link color, darkened in light mode / lightened in dark mode)
      *   --color-primary-hover   (default: primary mixed with 15% black)
      *   --focus-ring-color      (default: primary at 50% opacity)
+     *   --color-marker          (default: --color-text-muted; list bullets and numbers)
      */
 
     /* Typography */
     --font-family-base: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --font-family-heading: var(--font-family-base);
     --font-size-base: 1rem;
     --font-size-sm: 0.875rem;
     --font-size-h1: 2.25rem;
@@ -54,14 +60,17 @@
     --line-height: 1.6;
     --line-height-heading: 1.2;
 
-    /* Sizing & Spacing */
-    --spacing-xs: 0.25rem;
-    --spacing-sm: 0.5rem;
-    --spacing-md: 1rem;
-    --spacing-lg: 1.5rem;
-    --spacing-xl: 2rem;
+    /* Sizing & Spacing: change --spacing to scale every gap at once */
+    --spacing: 1rem;
+    --spacing-xs: calc(var(--spacing) * 0.25);
+    --spacing-sm: calc(var(--spacing) * 0.5);
+    --spacing-md: var(--spacing);
+    --spacing-lg: calc(var(--spacing) * 1.5);
+    --spacing-xl: calc(var(--spacing) * 2);
     --container-max-width: 1200px;
     --container-padding: var(--spacing-md);
+    --grid-min-column: 16rem;
+    --grid-gap: var(--spacing-lg);
 
     /* Borders & Effects */
     --border-radius: 0.375rem;
@@ -70,6 +79,15 @@
     --shadow: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px rgb(0 0 0 / 0.06);
     --shadow-lg: 0 10px 25px rgb(0 0 0 / 0.15), 0 4px 10px rgb(0 0 0 / 0.1);
     --transition-duration: 0.15s;
+
+    /* Components: default to the global tokens above */
+    --button-padding: var(--spacing-sm) var(--spacing-md);
+    --button-radius: var(--border-radius);
+    --button-font-weight: 500;
+    --input-padding: var(--spacing-sm) var(--spacing-md);
+    --input-radius: var(--border-radius);
+    --card-padding: var(--spacing-lg);
+    --card-radius: var(--border-radius);
   }
 
   /* Force a color scheme for the whole page or any subtree:
@@ -127,9 +145,10 @@
   h1, h2, h3, h4, h5, h6 {
     margin-top: 0;
     margin-bottom: var(--spacing-md);
+    font-family: var(--font-family-heading);
     font-weight: var(--font-weight-heading);
     line-height: var(--line-height-heading);
-    color: var(--color-text);
+    color: var(--color-heading);
     text-wrap: balance;
   }
 
@@ -141,7 +160,7 @@
   h6 { font-size: var(--font-size-h6); }
 
   /* Give headings breathing room when they follow body content */
-  :not(h1, h2, h3, h4, h5, h6) + :is(h2, h3, h4, h5, h6) {
+  :not(h1, h2, h3, h4, h5, h6, hgroup > *) + :is(h2, h3, h4, h5, h6) {
     margin-top: var(--spacing-xl);
   }
 
@@ -152,13 +171,13 @@
   }
 
   :where(a) {
-    color: var(--color-primary);
+    color: var(--color-link, var(--color-primary));
     text-decoration: none;
     text-underline-offset: 0.15em;
   }
 
   :where(a:hover) {
-    color: var(--color-primary-hover, color-mix(in srgb, var(--color-primary), black 15%));
+    color: var(--color-link-hover, color-mix(in srgb, var(--color-link, var(--color-primary)), light-dark(black, white) 20%));
     text-decoration: underline;
   }
 
@@ -175,6 +194,34 @@
     border-radius: 0.2em;
     background-color: var(--color-highlight);
     color: inherit;
+  }
+
+  del {
+    background-color: color-mix(in srgb, var(--color-error) 15%, transparent);
+    text-decoration-color: var(--color-error);
+  }
+
+  ins {
+    background-color: color-mix(in srgb, var(--color-success) 15%, transparent);
+    text-decoration: none;
+  }
+
+  s {
+    color: var(--color-text-muted);
+  }
+
+  dfn {
+    font-weight: 600;
+  }
+
+  output {
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  address {
+    margin-bottom: var(--spacing-md);
+    font-style: normal;
   }
 
   :where(abbr[title]) {
@@ -211,6 +258,29 @@
 
   blockquote > :last-child {
     margin-bottom: 0;
+  }
+
+  :where(blockquote) footer {
+    margin-top: var(--spacing-sm);
+  }
+
+  :where(blockquote footer)::before {
+    content: "— ";
+  }
+
+  /* Heading with a subtitle: <hgroup><h2>Title</h2><p>Subtitle</p></hgroup> */
+  hgroup {
+    margin-bottom: var(--spacing-md);
+  }
+
+  hgroup > * {
+    margin-bottom: 0;
+  }
+
+  hgroup > :not(:first-child) {
+    margin-top: var(--spacing-xs);
+    color: var(--color-text-muted);
+    font-weight: 400;
   }
 
   code, pre, kbd, samp {
@@ -253,7 +323,7 @@
   /* ==========================================================================
      Lists
      ========================================================================== */
-  ul, ol {
+  ul, ol, menu {
     margin-top: 0;
     margin-bottom: var(--spacing-md);
     padding-left: var(--spacing-xl);
@@ -261,6 +331,10 @@
 
   li > ul, li > ol {
     margin-bottom: 0;
+  }
+
+  li::marker {
+    color: var(--color-marker, var(--color-text-muted));
   }
 
   dl {
@@ -279,8 +353,14 @@
   /* ==========================================================================
      Media
      ========================================================================== */
-  img, picture, video, canvas, svg, iframe {
+  img, picture, video, canvas, svg, iframe, object, embed {
     max-width: 100%;
+  }
+
+  audio {
+    display: block;
+    width: 100%;
+    margin-bottom: var(--spacing-md);
   }
 
   img, video {
@@ -319,7 +399,7 @@
     gap: var(--spacing-md);
   }
 
-  nav ul, nav ol {
+  nav ul, nav ol, nav menu {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -327,6 +407,10 @@
     margin: 0;
     padding: 0;
     list-style: none;
+  }
+
+  nav :is(input, select, textarea, label) {
+    margin-bottom: 0;
   }
 
   :where(nav [aria-current]:not([aria-current="false"])) {
@@ -344,6 +428,23 @@
     font-size: var(--font-size-sm);
   }
 
+  search {
+    display: block;
+  }
+
+  /* An <aside> inside an article reads as a callout */
+  :where(article aside) {
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md);
+    border-left: 4px solid var(--color-primary);
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    background-color: var(--color-surface);
+  }
+
+  :where(article aside) > :last-child {
+    margin-bottom: 0;
+  }
+
   /* ==========================================================================
      Interactive Elements
      ========================================================================== */
@@ -357,6 +458,10 @@
   summary {
     font-weight: 500;
     cursor: pointer;
+  }
+
+  summary::marker {
+    color: var(--color-marker, var(--color-text-muted));
   }
 
   :where(details[open] > summary) {
@@ -392,6 +497,43 @@
     accent-color: var(--color-primary);
   }
 
+  /* Meter: success / warning / error colors follow its low, high and optimum attributes */
+  meter {
+    height: 0.75rem;
+    border-radius: 999px;
+    background: var(--color-surface);
+    appearance: none;
+  }
+
+  meter::-webkit-meter-bar {
+    height: 0.75rem;
+    border: 0;
+    border-radius: 999px;
+    background: var(--color-surface);
+  }
+
+  meter::-webkit-meter-optimum-value { border-radius: 999px; background: var(--color-success); }
+  meter::-webkit-meter-suboptimum-value { border-radius: 999px; background: var(--color-warning); }
+  meter::-webkit-meter-even-less-good-value { border-radius: 999px; background: var(--color-error); }
+  meter:-moz-meter-optimum::-moz-meter-bar { border-radius: 999px; background: var(--color-success); }
+  meter:-moz-meter-sub-optimum::-moz-meter-bar { border-radius: 999px; background: var(--color-warning); }
+  meter:-moz-meter-sub-sub-optimum::-moz-meter-bar { border-radius: 999px; background: var(--color-error); }
+
+  /* Native popovers: <div popover id="tip">…</div> + <button popovertarget="tip"> */
+  :where([popover]) {
+    max-width: min(100% - 2 * var(--spacing-md), 24rem);
+    padding: var(--spacing-md);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--border-radius);
+    background-color: var(--color-background);
+    color: var(--color-text);
+    box-shadow: var(--shadow-lg);
+  }
+
+  :where([popover]) > :last-child {
+    margin-bottom: 0;
+  }
+
   /* ==========================================================================
      Buttons
      --------------------------------------------------------------------------
@@ -408,14 +550,14 @@
     display: inline-block;
     font-family: inherit;
     font-size: var(--font-size-base);
-    font-weight: 500;
+    font-weight: var(--button-font-weight);
     line-height: 1.5;
     text-align: center;
     text-decoration: none;
     cursor: pointer;
     border: var(--border-width) solid var(--_btn-border);
-    border-radius: var(--border-radius);
-    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--button-radius);
+    padding: var(--button-padding);
     background-color: var(--_btn-bg);
     color: var(--_btn-color);
     transition: background-color var(--transition-duration) ease-in-out,
@@ -496,7 +638,8 @@
   ) {
     display: block;
     width: 100%;
-    padding: var(--spacing-sm) var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    padding: var(--input-padding);
     font-family: inherit;
     font-size: var(--font-size-base);
     font-weight: 400;
@@ -505,7 +648,7 @@
     background-color: var(--color-background);
     background-clip: padding-box;
     border: var(--border-width) solid var(--color-border);
-    border-radius: var(--border-radius);
+    border-radius: var(--input-radius);
     transition: border-color var(--transition-duration) ease-in-out,
                 box-shadow var(--transition-duration) ease-in-out;
   }
@@ -536,6 +679,36 @@
     resize: vertical;
   }
 
+  /* Consistent dropdown arrow on single-line selects */
+  :where(select:not([multiple], [size])) {
+    padding-right: calc(var(--spacing-md) * 2.5);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238b929c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right var(--spacing-md) center;
+    background-size: 1rem;
+    cursor: pointer;
+  }
+
+  :where(select[multiple], select[size]) option {
+    padding: var(--spacing-xs) var(--spacing-sm);
+  }
+
+  optgroup {
+    font-weight: 600;
+  }
+
+  /* Wrapped labels: <label>Email <input type="email"></label> */
+  label:has(> :is(input:not([type="checkbox"], [type="radio"]), select, textarea)) {
+    display: block;
+    margin-bottom: 0;
+  }
+
+  :where(label) > :where(input:not([type="checkbox"], [type="radio"]), select, textarea) {
+    margin-top: var(--spacing-xs);
+    font-weight: 400;
+  }
+
   :where(input, textarea, select):where(:disabled) {
     background-color: var(--color-surface);
     color: var(--color-text-muted);
@@ -556,9 +729,14 @@
   }
 
   /* Help text: <small> directly after a field */
+  :where(input, textarea, select):has(+ small) {
+    margin-bottom: 0;
+  }
+
   :where(input, textarea, select) + small {
     display: block;
     margin-top: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
     color: var(--color-text-muted);
   }
 
@@ -577,6 +755,7 @@
 
   label:has(> input:is([type="checkbox"], [type="radio"])) {
     display: flex;
+    margin-bottom: var(--spacing-sm);
     align-items: center;
     gap: var(--spacing-sm);
     width: fit-content;
@@ -587,6 +766,7 @@
   :where(input[type="range"]) {
     display: block;
     width: 100%;
+    margin-bottom: var(--spacing-md);
     accent-color: var(--color-primary);
     cursor: pointer;
   }
@@ -595,9 +775,10 @@
     display: block;
     width: 3rem;
     height: 2.5rem;
+    margin-bottom: var(--spacing-md);
     padding: 0.125rem;
     border: var(--border-width) solid var(--color-border);
-    border-radius: var(--border-radius);
+    border-radius: var(--input-radius);
     background-color: var(--color-background);
     cursor: pointer;
   }
@@ -605,6 +786,7 @@
   :where(input[type="file"]) {
     display: block;
     width: 100%;
+    margin-bottom: var(--spacing-md);
     font-family: inherit;
     font-size: var(--font-size-base);
     color: var(--color-text-muted);
@@ -612,12 +794,12 @@
 
   ::file-selector-button {
     margin-right: var(--spacing-md);
-    padding: var(--spacing-sm) var(--spacing-md);
+    padding: var(--button-padding);
     font-family: inherit;
     font-size: var(--font-size-base);
-    font-weight: 500;
+    font-weight: var(--button-font-weight);
     border: var(--border-width) solid var(--color-border);
-    border-radius: var(--border-radius);
+    border-radius: var(--button-radius);
     background-color: var(--color-surface);
     color: var(--color-text);
     cursor: pointer;
@@ -626,6 +808,11 @@
 
   ::file-selector-button:hover {
     background-color: var(--color-border);
+  }
+
+  :where(input[type="image"]) {
+    border-radius: var(--button-radius);
+    cursor: pointer;
   }
 
   /* ==========================================================================
@@ -671,6 +858,10 @@
     font-weight: 600;
   }
 
+  :where(.striped tbody tr:nth-child(odd)) {
+    background-color: color-mix(in srgb, var(--color-surface) 60%, transparent);
+  }
+
   /* ==========================================================================
      Utilities
      ========================================================================== */
@@ -681,6 +872,54 @@
     padding-left: var(--container-padding);
     margin-right: auto;
     margin-left: auto;
+  }
+
+  /* Responsive columns that wrap on small screens.
+     Tune per grid: <div class="grid" style="--grid-min-column: 10rem"> */
+  .grid {
+    display: grid;
+    gap: var(--grid-gap);
+    grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-min-column), 100%), 1fr));
+    margin-bottom: var(--spacing-md);
+  }
+
+  :where(.grid) > * {
+    min-width: 0;
+  }
+
+  .card {
+    margin-bottom: var(--spacing-md);
+    padding: var(--card-padding);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--card-radius);
+    background-color: var(--color-surface);
+  }
+
+  :where(.grid) > .card {
+    margin-bottom: 0;
+  }
+
+  .card > :last-child {
+    margin-bottom: 0;
+  }
+
+  /* Button groups and inline forms: <div role="group">…</div> */
+  :where([role="group"]) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+  }
+
+  :where([role="group"]) > * {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  :where([role="group"]) > :where(input:not([type="checkbox"], [type="radio"], [type="color"]), select) {
+    flex: 1 1 12rem;
+    width: auto;
   }
 
   /* Hide visually but keep available to screen readers */
