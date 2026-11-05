@@ -9,7 +9,9 @@ TagBrush.css is a lightweight, no-build CSS library designed for static sites an
 The library consists of a single CSS file (`tagbrush.css`) and an example HTML file (`index.html`) to demonstrate usage.
 
 ### 1. Theming (CSS Variables)
-Theme colors and design tokens are defined in the `:root` pseudo-class using CSS variables. This allows users to easily customize the look and feel of their site by overriding these variables in their own stylesheets or `<style>` blocks.
+All rules live inside `@layer tagbrush { ... }` so unlayered user CSS always overrides them. Selectors that would otherwise carry class/attribute/pseudo-class specificity are wrapped in `:where()`; plain element selectors are left as-is (a `:where()` rule loses to an element rule like `p` or `ul`, so only use it where no element rule competes).
+
+Theme colors and design tokens are defined in the `:root` pseudo-class using CSS variables. Color tokens use `light-dark()` for automatic dark mode; `[data-theme="light|dark"]` sets `color-scheme` on any element. Derived values (`--color-primary-hover`, `--focus-ring-color`) are computed at the point of use with `var(--x, color-mix(...))` so overriding `--color-primary` alone, even on a nested element, updates them. This allows users to easily customize the look and feel of their site by overriding these variables in their own stylesheets or `<style>` blocks.
 
 Variables follow a semantic naming convention:
 - Colors: `--color-primary`, `--color-background`, `--color-text`, etc.
@@ -20,14 +22,18 @@ Variables follow a semantic naming convention:
 ### 2. Base Styles
 Standard HTML elements are styled using the defined CSS variables. This includes:
 - Global box-sizing and basic resets
-- Typography (headings, paragraphs, links, blockquotes, code)
-- Lists (ordered and unordered)
-- Buttons
-- Forms (inputs, textareas, selects, labels)
-- Tables
+- Typography (headings, paragraphs, links, inline elements, hr, blockquotes, code, kbd)
+- Lists (ordered, unordered, description lists)
+- Media (images, video, figure/figcaption)
+- Page structure (nav, header, main, footer)
+- Buttons, with `.secondary` / `.outline` variants built on private `--_btn-*` variables
+- Forms (all input types, validation states, help text)
+- Tables (caption, tfoot, scrollable inside `<figure>`)
+- details/summary, dialog, progress, meter
+- Reduced-motion and print styles
 
 ### 3. Utilities
-A `.container` class is provided to constrain the maximum width of the content and center it on the page.
+`.container` constrains and centers content; `.visually-hidden` hides content visually while keeping it accessible.
 
 ## Usage in Astro.js
 
@@ -62,5 +68,5 @@ Using TagBrush.css in an Astro.js project is straightforward since it requires n
 
 ## Next Steps
 
-- Expand the set of styled elements if necessary (e.g., specific form states, dialogs).
 - Refine the spacing and typography scales based on user feedback.
+- Consider a minified build (`tagbrush.min.css`) for the CDN.
