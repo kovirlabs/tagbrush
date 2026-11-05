@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TagBrush.css — a tiny, no-build CSS library</title>
-    <meta name="description" content="TagBrush.css is a ~6KB, no-build CSS library that makes plain semantic HTML look clean and modern. Theme it with CSS variables. Works with static sites and Astro.">
+    <meta name="description" content="TagBrush.css is a ~4 KB gzipped, no-build CSS library that makes plain semantic HTML look clean and modern. Theme it with CSS variables, with dark mode built in. Works with static sites and Astro.">
     <link rel="stylesheet" href="tagbrush.css">
     <style>
         /*
@@ -12,6 +12,9 @@
          * value below comes from a TagBrush.css variable — this page is styled
          * by TagBrush.css itself.
          */
+        .site-nav { padding: var(--spacing-md) 0; border-bottom: var(--border-width) solid var(--color-border); }
+        .site-nav .brand { font-family: var(--font-family-mono); font-weight: 600; color: var(--color-text); }
+        .site-nav select { width: auto; display: inline-block; padding-top: var(--spacing-xs); padding-bottom: var(--spacing-xs); }
         header, section, footer { padding: var(--spacing-xl) 0; }
         section + section, footer { border-top: var(--border-width) solid var(--color-border); }
         .hero { text-align: center; padding: 4rem 0 var(--spacing-xl); }
@@ -19,8 +22,6 @@
         .hero h1 .bracket { color: var(--color-primary); }
         .lead { font-size: 1.25rem; color: var(--color-text-muted); max-width: 40rem; margin-left: auto; margin-right: auto; }
         .actions { display: flex; flex-wrap: wrap; gap: var(--spacing-sm); justify-content: center; margin-bottom: var(--spacing-lg); }
-        .button.secondary { background-color: var(--color-surface); color: var(--color-text); border-color: var(--color-border); }
-        .button.secondary:hover { background-color: var(--color-border); color: var(--color-text); }
         .hero pre { display: inline-block; text-align: left; max-width: 100%; }
         .grid { display: grid; gap: var(--spacing-lg); grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
         .card { padding: var(--spacing-lg); background-color: var(--color-surface); border-radius: var(--border-radius); }
@@ -29,16 +30,35 @@
         .muted { color: var(--color-text-muted); }
         .swatches { display: flex; flex-wrap: wrap; gap: var(--spacing-sm); margin-bottom: var(--spacing-md); }
         .swatches button[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--color-text); }
+        .themed-box { padding: var(--spacing-lg); border-radius: var(--border-radius); margin-bottom: var(--spacing-md); border: var(--border-width) solid var(--color-border); }
         .field { margin-bottom: var(--spacing-md); }
         footer { text-align: center; }
+        .stack > * + * { margin-top: var(--spacing-sm); }
     </style>
 </head>
 <body>
     <div class="container">
 
+        <nav class="site-nav" aria-label="Main">
+            <a class="brand" href="#">&lt;tagbrush&gt;</a>
+            <ul>
+                <li><a href="#why">Why</a></li>
+                <li><a href="#showcase">Elements</a></li>
+                <li><a href="#get-started">Get started</a></li>
+                <li>
+                    <label class="visually-hidden" for="theme-select">Color scheme</label>
+                    <select id="theme-select">
+                        <option value="">Auto</option>
+                        <option value="light">Light</option>
+                        <option value="dark">Dark</option>
+                    </select>
+                </li>
+            </ul>
+        </nav>
+
         <header class="hero">
             <h1 aria-label="TagBrush.css"><span class="bracket">&lt;</span>tagbrush<span class="bracket">&gt;</span></h1>
-            <p class="lead">A tiny, no-build CSS library that makes plain semantic HTML look clean and modern. One file. No classes required. Themeable with CSS variables.</p>
+            <p class="lead">A tiny, no-build CSS library that makes plain semantic HTML look clean and modern. One file. No classes required. Themeable with CSS variables, with dark mode built in.</p>
             <div class="actions">
                 <a class="button" href="#get-started">Get started</a>
                 <a class="button secondary" href="https://github.com/kovirlabs/tagbrush">View on GitHub</a>
@@ -62,8 +82,16 @@
                     <p>Colors, fonts, spacing and radius are semantic CSS custom properties. Override a few to make it yours.</p>
                 </div>
                 <div class="card">
+                    <h3>Easy to override</h3>
+                    <p>Everything lives in a <code>@layer</code>, so your own CSS always wins. No <code>!important</code>, no specificity battles.</p>
+                </div>
+                <div class="card">
+                    <h3>Dark mode built in</h3>
+                    <p>Follows the visitor's system setting automatically, or force it with <code>data-theme="dark"</code> on any element.</p>
+                </div>
+                <div class="card">
                     <h3>Tiny</h3>
-                    <p>About 6&nbsp;KB unminified, with zero dependencies and zero JavaScript.</p>
+                    <p>About 4&nbsp;KB gzipped, with zero dependencies and zero JavaScript.</p>
                 </div>
                 <div class="card">
                     <h3>Astro friendly</h3>
@@ -78,18 +106,32 @@
 
         <section aria-labelledby="theming">
             <h2 id="theming">Try the theming</h2>
-            <p>Every component on this page reads from a handful of CSS variables. Pick a primary color and watch the buttons, links and input focus borders update.</p>
+            <p>Every component on this page reads from a handful of CSS variables. Pick a primary color and watch the buttons, links, checkboxes and focus rings update. Hover colors and focus rings are derived from <code>--color-primary</code> automatically, so one variable is all you need.</p>
             <div class="swatches" role="group" aria-label="Primary color">
-                <button type="button" data-primary="#3b82f6" data-hover="#2563eb" aria-pressed="true">Blue</button>
-                <button type="button" data-primary="#10b981" data-hover="#059669" aria-pressed="false">Emerald</button>
-                <button type="button" data-primary="#8b5cf6" data-hover="#7c3aed" aria-pressed="false">Violet</button>
-                <button type="button" data-primary="#f43f5e" data-hover="#e11d48" aria-pressed="false">Rose</button>
-                <button type="button" data-primary="#f59e0b" data-hover="#d97706" aria-pressed="false">Amber</button>
+                <button type="button" data-primary="#3b82f6" aria-pressed="true">Blue</button>
+                <button type="button" data-primary="#10b981" aria-pressed="false">Emerald</button>
+                <button type="button" data-primary="#8b5cf6" aria-pressed="false">Violet</button>
+                <button type="button" data-primary="#f43f5e" aria-pressed="false">Rose</button>
+                <button type="button" data-primary="#f59e0b" aria-pressed="false">Amber</button>
             </div>
             <pre><code id="theme-code">:root {
   --color-primary: #3b82f6;
-  --color-primary-hover: #2563eb;
 }</code></pre>
+
+            <h3>Dark mode</h3>
+            <p>TagBrush.css follows the visitor's system preference. Use the switcher at the top of the page, or set <code>data-theme</code> on any element to force a scheme for just that part of the page:</p>
+            <div class="grid">
+                <div class="themed-box" data-theme="light">
+                    <strong>data-theme="light"</strong>
+                    <p class="muted">Always light, whatever the system setting.</p>
+                    <button type="button">Button</button>
+                </div>
+                <div class="themed-box" data-theme="dark">
+                    <strong>data-theme="dark"</strong>
+                    <p class="muted">Always dark, whatever the system setting.</p>
+                    <button type="button">Button</button>
+                </div>
+            </div>
         </section>
 
         <section aria-labelledby="showcase">
@@ -104,6 +146,7 @@
             <h5>Heading 5</h5>
             <h6>Heading 6</h6>
             <p>Body text is set in your system font with a comfortable line height. It supports <a href="#showcase">links</a>, <strong>bold</strong>, <em>italics</em> and <code>inline code</code>.</p>
+            <p>Inline elements are covered too: <mark>highlighted text</mark>, keyboard shortcuts like <kbd>Ctrl</kbd> + <kbd>K</kbd>, <abbr title="Cascading Style Sheets">CSS</abbr> abbreviations, H<sub>2</sub>O, E = mc<sup>2</sup>, sample output like <samp>Build succeeded</samp>, and <small>small print</small>.</p>
             <blockquote>Blockquotes are great for callouts, notes, and quotes worth highlighting.</blockquote>
             <pre><code>// Code blocks scroll horizontally when they overflow
 function greet(name) {
@@ -127,13 +170,29 @@ function greet(name) {
                     <li>Second step</li>
                     <li>Third step</li>
                 </ol>
+                <dl>
+                    <dt>Description list</dt>
+                    <dd>Terms and their definitions.</dd>
+                    <dt>Classless</dt>
+                    <dd>No class names needed.</dd>
+                </dl>
             </div>
+
+            <h3>Media</h3>
+            <figure>
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='300' viewBox='0 0 1200 300'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%233b82f6'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='300' fill='url(%23g)'/%3E%3C/svg%3E" width="1200" height="300" alt="A blue to violet gradient">
+                <figcaption>Images scale down to fit their container. Wrap them in <code>&lt;figure&gt;</code> to add a caption.</figcaption>
+            </figure>
+            <hr>
 
             <h3>Buttons</h3>
             <p class="actions" style="justify-content: flex-start;">
                 <button type="button">Button</button>
+                <button type="button" class="secondary">Secondary</button>
+                <button type="button" class="outline">Outline</button>
                 <a href="#showcase" class="button">Link styled as button</a>
                 <button type="button" disabled>Disabled</button>
+                <a href="#showcase" class="button outline" aria-disabled="true">Disabled link</a>
             </p>
 
             <h3>Forms</h3>
@@ -161,13 +220,83 @@ function greet(name) {
                     <div class="field">
                         <label for="message">Message</label>
                         <textarea id="message" name="message" rows="4" placeholder="Your message..."></textarea>
+                        <small>Help text: put a <code>&lt;small&gt;</code> right after any field.</small>
                     </div>
-                    <button type="submit">Send message</button>
                 </fieldset>
+                <fieldset>
+                    <legend>More inputs</legend>
+                    <div class="grid">
+                        <div class="field">
+                            <label for="website">Website (invalid example)</label>
+                            <input type="url" id="website" value="not a url" aria-invalid="true">
+                            <small>Please enter a full URL, including https://</small>
+                        </div>
+                        <div class="field">
+                            <label for="username">Username (valid example)</label>
+                            <input type="text" id="username" value="ada" aria-invalid="false">
+                            <small>That username is available.</small>
+                        </div>
+                        <div class="field">
+                            <label for="date">Date</label>
+                            <input type="date" id="date">
+                        </div>
+                        <div class="field">
+                            <label for="disabled-input">Disabled</label>
+                            <input type="text" id="disabled-input" value="Can't edit me" disabled>
+                        </div>
+                        <div class="field">
+                            <label for="volume">Range</label>
+                            <input type="range" id="volume" value="60">
+                        </div>
+                        <div class="field">
+                            <label for="file">File</label>
+                            <input type="file" id="file">
+                        </div>
+                        <div class="field">
+                            <label for="color">Color</label>
+                            <input type="color" id="color" value="#3b82f6">
+                        </div>
+                        <div class="field stack">
+                            <label><input type="checkbox" checked> Subscribe to updates</label>
+                            <label><input type="radio" name="plan" checked> Free plan</label>
+                            <label><input type="radio" name="plan"> Pro plan</label>
+                        </div>
+                    </div>
+                </fieldset>
+                <p class="actions" style="justify-content: flex-start;">
+                    <button type="submit">Send message</button>
+                    <button type="reset">Reset</button>
+                </p>
             </form>
 
-            <h3 style="margin-top: var(--spacing-xl);">Tables</h3>
+            <h3>Progress and meter</h3>
+            <label for="upload-progress">Upload progress</label>
+            <progress id="upload-progress" value="70" max="100">70%</progress>
+            <label for="disk">Disk usage</label>
+            <meter id="disk" value="0.4" low="0.6" high="0.8" max="1">40%</meter>
+
+            <h3>Disclosure and dialogs</h3>
+            <details>
+                <summary>What is a &lt;details&gt; element?</summary>
+                <p>A native, accessible collapsible section with no JavaScript. Great for FAQs.</p>
+            </details>
+            <details>
+                <summary>Does it need any classes?</summary>
+                <p>Nope. Just write the HTML.</p>
+            </details>
+            <p><button type="button" class="outline" id="open-dialog">Open a dialog</button></p>
+            <dialog id="demo-dialog">
+                <h3>Native &lt;dialog&gt;</h3>
+                <p>Opened with <code>showModal()</code>. Press <kbd>Esc</kbd> or use the button to close it.</p>
+                <form method="dialog">
+                    <button>Close</button>
+                </form>
+            </dialog>
+
+            <h3>Tables</h3>
+            <figure>
             <table>
+                <caption>A few of the theme variables. Wrap a table in a figure to make it scroll on small screens.</caption>
                 <thead>
                     <tr>
                         <th>Variable</th>
@@ -181,7 +310,11 @@ function greet(name) {
                     <tr><td><code>--font-family-base</code></td><td><code>system-ui, …</code></td><td>All body text</td></tr>
                     <tr><td><code>--border-radius</code></td><td><code>0.375rem</code></td><td>Buttons, inputs, code</td></tr>
                 </tbody>
+                <tfoot>
+                    <tr><td colspan="3">See the README for the full list.</td></tr>
+                </tfoot>
             </table>
+            </figure>
         </section>
 
         <section aria-labelledby="get-started">
@@ -205,6 +338,7 @@ function greet(name) {
     --border-radius: 0.5rem;
   }
 &lt;/style&gt;</code></pre>
+            <p>Because TagBrush.css lives in its own cascade layer, any rule you write wins, even a plain <code>button { … }</code> selector. No <code>!important</code> needed.</p>
         </section>
 
         <footer>
@@ -214,18 +348,34 @@ function greet(name) {
     </div>
 
     <script>
-        // Live theming demo: swap the primary color variables on :root.
+        // Live theming demo: swap the primary color variable on :root.
+        // Hover and focus colors are derived from it by TagBrush.css.
         const root = document.documentElement;
         const code = document.getElementById('theme-code');
         document.querySelectorAll('[data-primary]').forEach((btn) => {
             btn.style.backgroundColor = btn.dataset.primary;
             btn.addEventListener('click', () => {
                 root.style.setProperty('--color-primary', btn.dataset.primary);
-                root.style.setProperty('--color-primary-hover', btn.dataset.hover);
                 document.querySelectorAll('[data-primary]').forEach((b) => b.setAttribute('aria-pressed', b === btn));
-                code.textContent = `:root {\n  --color-primary: ${btn.dataset.primary};\n  --color-primary-hover: ${btn.dataset.hover};\n}`;
+                code.textContent = `:root {\n  --color-primary: ${btn.dataset.primary};\n}`;
             });
         });
+
+        // Color scheme switcher: sets data-theme on <html> and remembers it.
+        const themeSelect = document.getElementById('theme-select');
+        const applyTheme = (value) => {
+            if (value) root.dataset.theme = value; else delete root.dataset.theme;
+        };
+        try { themeSelect.value = localStorage.getItem('tagbrush-theme') || ''; } catch (e) {}
+        applyTheme(themeSelect.value);
+        themeSelect.addEventListener('change', () => {
+            applyTheme(themeSelect.value);
+            try { localStorage.setItem('tagbrush-theme', themeSelect.value); } catch (e) {}
+        });
+
+        // Dialog demo
+        const dialog = document.getElementById('demo-dialog');
+        document.getElementById('open-dialog').addEventListener('click', () => dialog.showModal());
     </script>
 </body>
 </html>
