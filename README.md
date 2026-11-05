@@ -32,6 +32,10 @@ Then write ordinary HTML:
 
 The content is centered and the footer stays at the bottom of the window, with no classes. See [Page layout](#page-layout).
 
+**Starting from scratch?** Copy [`starter.html`](starter.html), a complete page with navigation, cards, a form, and a footer, and edit from there.
+
+**Converting Markdown?** Add the `<link>` to the page template of your static site generator, or to the HTML that Pandoc, markdown-it, or marked outputs. Headings, code blocks, task lists, tables (including column alignment), and footnotes are all styled, and wide tables scroll instead of widening the page.
+
 ### Versioning
 
 The `@1` in the URL gets fixes and new features, but never breaking changes. To lock to one exact release, use the full version, for example `tagbrush@1.0.0`.
@@ -69,13 +73,14 @@ Or just [download `tagbrush.css`](tagbrush.css) and host it yourself.
 | Category   | Elements                                                                 |
 |------------|--------------------------------------------------------------------------|
 | Typography | `h1`–`h6`, `hgroup` (muted subtitle), `p`, `a`, `strong`, `small`, `mark`, `abbr`, `del`, `ins`, `s`, `dfn`, `q`, `sub`, `sup`, `hr`, `address`, `blockquote` (with `footer` attribution), `code`, `pre`, `kbd`, `samp`, `output` |
-| Lists      | `ul`, `ol`, `menu` (including nested lists, muted `::marker`), `dl`, `dt`, `dd` |
+| Lists      | `ul`, `ol`, `menu` (including nested lists, muted `::marker`), Markdown task lists (checkbox replaces the bullet), `dl`, `dt`, `dd` |
 | Media      | `img`, `picture`, `video`, `audio`, `canvas`, `svg`, `iframe`, `object`, `embed` (scale to fit), `figure`, `figcaption` |
+| Markdown   | Footnotes from GitHub-flavored Markdown, markdown-it, and Pandoc (smaller, muted, highlighted when linked to); long URLs and words wrap instead of widening the page |
 | Structure  | `nav` (with `ul`/`menu` rendered as a horizontal menu, `aria-current` highlighted), `header`, `main`, `footer`, `search`, `article aside` (callout) |
 | Buttons    | `button`, `input[type=submit/button/reset]`, `.button`, `:disabled`, `aria-disabled` |
 | Forms      | `fieldset`, `legend`, `label` (including inputs wrapped in their label), `textarea`, `select` (consistent arrow), `select[multiple]`, `optgroup`, every text-like `input` type (including `date`, `time`, `search`, …), `checkbox`, `radio`, `range`, `color`, `file`, `image` |
 | Form states | `:focus`, `:disabled`, `::placeholder`, `aria-invalid="true"` / `"false"`, `:user-invalid`, help text via `<small>` after a field. Fields are spaced automatically. |
-| Tables     | `table`, `caption`, `thead`, `tbody`, `tfoot`, `th`, `td` (wrap in `<figure>` to scroll on small screens) |
+| Tables     | `table`, `caption`, `thead`, `tbody`, `tfoot`, `th`, `td`, and the `align` attribute. A table is as wide as its content and scrolls sideways inside itself when it doesn't fit. Wrap it in `<figure>` to make it fill the full width instead |
 | Interactive | `details`, `summary`, `dialog` (with `::backdrop`), `[popover]`, `progress`, `meter` (green / amber / red from its `low`, `high`, and `optimum` attributes) |
 
 ### Utility classes
@@ -291,6 +296,7 @@ Step-by-step guides with copy-paste snippets:
 | `tagbrush.shadow.min.css` | Minified Shadow DOM build *(generated)*              |
 | `frameworks/`             | Setup guides for each framework                      |
 | `index.html`              | Landing page, live demo, and theme builder           |
+| `starter.html`            | A complete page to copy as a starting point          |
 | `scripts/build.mjs`       | Generates the files above                            |
 | `tests/`                  | Cross-browser tests and screenshot baselines         |
 | `CHANGELOG.md`            | Release history                                      |

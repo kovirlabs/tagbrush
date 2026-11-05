@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My site</title>
+    <meta name="description" content="A short description of this page.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+    <!--
+        Optional: make it yours. Colors take a light and a dark value.
+        Every variable is listed at https://github.com/kovirlabs/tagbrush#available-variables
+    -->
+    <style>
+        :root {
+            /* --color-primary: #7c3aed; */
+            /* --font-family-base: Georgia, serif; */
+            /* --border-radius: 0.75rem; */
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav aria-label="Main">
+            <strong>My site</strong>
+            <ul>
+                <li><a href="/" aria-current="page">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <hgroup>
+            <h1>Welcome</h1>
+            <p>A one-line summary of what this site is about.</p>
+        </hgroup>
+        <p>Write plain HTML. Headings, lists, tables, forms, and buttons are already styled, and the page switches to dark mode with the system setting.</p>
+        <div role="group">
+            <a class="button" href="/about">Learn more</a>
+            <a class="button outline" href="/contact">Get in touch</a>
+        </div>
+
+        <h2>Features</h2>
+        <div class="grid">
+            <article class="card">
+                <h3>First</h3>
+                <p>Cards sit side by side and wrap to one column on small screens.</p>
+            </article>
+            <article class="card">
+                <h3>Second</h3>
+                <p>Remove the grid and cards if you don't need them.</p>
+            </article>
+            <article class="card">
+                <h3>Third</h3>
+                <p>Everything else on this page uses no classes at all.</p>
+            </article>
+        </div>
+
+        <h2>Contact</h2>
+        <form>
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" autocomplete="name" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" required>
+            <small>We'll never share your email.</small>
+
+            <label for="message">Message</label>
+            <textarea id="message" name="message" rows="4"></textarea>
+
+            <label><input type="checkbox" name="subscribe"> Send me updates</label>
+
+            <button type="submit">Send</button>
+        </form>
+    </main>
+
+    <footer>
+        <p>© 2026 My site</p>
+    </footer>
+</body>
+</html>

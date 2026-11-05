@@ -7,8 +7,12 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ### Added
 - Classless page layout: `header`, `main`, and `footer` stretch edge to edge with their content centered in `--container-max-width`, and the footer stays at the bottom of short pages. A page without `<main>` (such as Markdown output) is centered as a whole. Works through a framework wrapper without a class (`<div id="root">`, `<app-root>`).
 - `data-layout="full"` on `<body>`, a wrapper, or one landmark turns page layout off there.
+- Markdown output: task-list checkboxes replace the list bullet, footnotes (GitHub-flavored Markdown, markdown-it, Pandoc) are smaller and muted and highlight when linked to, and the `align` attribute on table cells is respected.
+- Long URLs and words wrap instead of widening the page.
+- `starter.html`, a complete page to copy as a starting point.
 
 ### Changed
+- Tables are as wide as their content and scroll sideways inside themselves when they don't fit, so wide tables no longer widen the page on phones. Tables inside `<figure>` still fill the full width.
 - Pages that use `<main>` without `.container` were full width and are now centered. Add `data-layout="full"` to `<body>` to keep the old behavior. Pages using `.container` look the same as before. The scoped and Shadow DOM builds are unchanged.
 
 ## 1.0.1 (unreleased)
