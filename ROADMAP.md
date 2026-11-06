@@ -103,7 +103,7 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 ## Chunk 15: Agent evaluation
 
-- [ ] A fixed set of prompts (landing page, form, dashboard, blog post, docs page, admin table). Pages written by agents that only see `llms.txt` are kept in `evals/`, checked by the tests (no overflow, contrast, no invented classes), and reviewed to find gaps.
+- [x] A fixed set of prompts (landing page, form, dashboard, blog post, docs page, admin table). Pages written by agents that only see `llms.txt` are kept in `evals/`, checked by the tests (no overflow, contrast, no invented classes), and reviewed to find gaps.
 
 ## Chunk 16: App and dashboard patterns
 

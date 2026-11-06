@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What I learned running a tiny SaaS for a year</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <strong>Field Notes</strong>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/" aria-current="page">Blog</a></li>
+        <li><a href="/about/">About</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <article>
+      <header>
+        <nav aria-label="Breadcrumb">
+          <ol>
+            <li><a href="/">Home</a></li>
+            <li><a href="/blog/">Blog</a></li>
+            <li><a aria-current="page">What I learned running a tiny SaaS for a year</a></li>
+          </ol>
+        </nav>
+        <hgroup>
+          <h1>What I learned running a tiny SaaS for a year</h1>
+          <p>Twelve months, 214 paying customers, and one very boring tech stack.</p>
+        </hgroup>
+        <p><small>By <a href="/about/">Maya Lindqvist</a> · <time datetime="2026-10-28">October 28, 2026</time> · 9 min read</small></p>
+      </header>
+
+      <figure>
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 600'%3E%3Crect width='1200' height='600' fill='%23e8eef7'/%3E%3Cpolyline points='80,520 240,500 400,470 560,430 720,360 880,300 1040,210 1120,150' fill='none' stroke='%233b6fd8' stroke-width='14' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cline x1='80' y1='540' x2='1120' y2='540' stroke='%2399a8bf' stroke-width='4'/%3E%3Ctext x='600' y='110' font-family='sans-serif' font-size='56' text-anchor='middle' fill='%23334766'%3EMonthly recurring revenue%3C/text%3E%3C/svg%3E" alt="A line chart of monthly recurring revenue rising slowly, then steeply, over twelve months">
+        <figcaption>Monthly recurring revenue from launch to month twelve. The curve is flat for longer than you would like.</figcaption>
+      </figure>
+
+      <p>A year ago I quit my job to build <strong>Invoicely</strong>, a small tool that turns time-tracking exports into clean invoices for freelancers. It now pays my rent. It does not yet pay for a second person. Here is what I would tell myself on day one.</p>
+
+      <section>
+        <h2>1. Distribution beats features</h2>
+        <p>For the first four months I shipped a feature a week and grew by roughly three customers a month. In month five I stopped building and wrote six honest guides on freelance invoicing. Signups tripled. Nobody asked for the features I had been shipping; they asked for the guides.</p>
+        <p>The lesson is not "content marketing works." It is that I had no idea where my customers already spent their time, and I should have found out before writing code.</p>
+      </section>
+
+      <blockquote>
+        <p>The product you build is a guess. The people you talk to are data.</p>
+        <footer>A note I taped above my desk in month three</footer>
+      </blockquote>
+
+      <section>
+        <h2>2. Boring infrastructure is a feature</h2>
+        <p>Invoicely runs on one server, one Postgres database, and a cron job. My total hosting bill is <mark>$41 a month</mark>. I have had two outages, both caused by me.</p>
+        <p>The single most useful piece of code I wrote all year is the nightly job that checks for failed payments and emails the customer before Stripe gives up:</p>
+        <pre><code>// jobs/dunning.js: runs nightly at 02:00
+import { db, stripe, mail } from "../lib/index.js";
+
+export async function remindFailedPayments() {
+  const failed = await db.query(
+    `SELECT id, email, stripe_invoice_id
+       FROM accounts
+      WHERE payment_status = 'past_due'
+        AND last_reminder_at &lt; now() - interval '3 days'`
+  );
+
+  for (const account of failed.rows) {
+    const invoice = await stripe.invoices.retrieve(account.stripe_invoice_id);
+    await mail.send(account.email, "payment-failed", {
+      amount: invoice.amount_due / 100,
+      payUrl: invoice.hosted_invoice_url,
+    });
+    await db.query(
+      "UPDATE accounts SET last_reminder_at = now() WHERE id = $1",
+      [account.id]
+    );
+  }
+}</code></pre>
+        <p>That job alone recovered about 9% of revenue that would otherwise have churned silently.</p>
+      </section>
+
+      <section>
+        <h2>3. Pricing: what I tried</h2>
+        <p>I changed pricing three times. Each change was scary, and each one was right. Here is how the plans compared:</p>
+        <figure>
+          <table class="striped">
+            <thead>
+              <tr>
+                <th scope="col">Plan</th>
+                <th scope="col">Price</th>
+                <th scope="col">Months live</th>
+                <th scope="col">Trial-to-paid</th>
+                <th scope="col">Monthly churn</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Single tier</th>
+                <td>$5/mo</td>
+                <td>1–3</td>
+                <td>4.1%</td>
+                <td>11%</td>
+              </tr>
+              <tr>
+                <th scope="row">Two tiers</th>
+                <td>$9 / $19</td>
+                <td>4–7</td>
+                <td>6.8%</td>
+                <td>7%</td>
+              </tr>
+              <tr>
+                <th scope="row">Annual-first</th>
+                <td>$15/mo or $144/yr</td>
+                <td>8–12</td>
+                <td>7.2%</td>
+                <td>3.5%</td>
+              </tr>
+            </tbody>
+          </table>
+        </figure>
+        <p>Raising prices did not hurt conversion. Cheap plans attracted customers who left the moment their busy season ended.</p>
+      </section>
+
+      <aside>
+        <p><strong>Note:</strong> These numbers come from a small sample (214 customers). Treat them as one data point, not a benchmark. Your market will behave differently.</p>
+      </aside>
+
+      <section>
+        <h2>4. Support is the product</h2>
+        <p>I answer every support email myself, usually within two hours. Customers mention this more than any feature. A surprising number of upgrades start with a reply that says "thanks for fixing that so fast."</p>
+        <p>I keep a plain text file of every question I have been asked more than twice. When a line hits five, it becomes either a help article or a fix in the product.</p>
+      </section>
+
+      <section>
+        <h2>5. Protect the boring days</h2>
+        <p>The hardest part was not technical. It was the long stretches where nothing happened: no signups, no feedback, no outages. I learned to schedule those days: Mondays for writing, Tuesdays and Wednesdays for code, Thursdays for talking to customers, and Fridays off unless something is on fire.</p>
+        <p>Year two goal: reach $8,000 MRR and hire a part-time support person, so I can take a real vacation without checking <kbd>Cmd</kbd> + <kbd>R</kbd> on the Stripe dashboard.</p>
+      </section>
+
+      <footer>
+        <section>
+          <h2>Related posts</h2>
+          <ul>
+            <li><a href="/blog/pricing-mistakes/">Three pricing mistakes I made in my first six months</a></li>
+            <li><a href="/blog/boring-stack/">The $41-a-month stack behind Invoicely</a></li>
+            <li><a href="/blog/talking-to-customers/">How I schedule twenty customer calls a month</a></li>
+            <li><a href="/blog/quitting/">Leaving a salaried job: the spreadsheet I used</a></li>
+          </ul>
+        </section>
+      </footer>
+    </article>
+  </main>
+
+  <footer>
+    <p>© 2026 Maya Lindqvist · <a href="/feed.xml">RSS</a></p>
+  </footer>
+</body>
+</html>

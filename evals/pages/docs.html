@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Installation - shipit docs</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <strong>shipit</strong>
+      <ul>
+        <li><a href="/docs/" aria-current="page">Docs</a></li>
+        <li><a href="/changelog/">Changelog</a></li>
+        <li><a href="https://github.com/example/shipit">GitHub</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <aside>
+      <nav aria-label="Table of contents">
+        <strong>On this page</strong>
+        <ol>
+          <li><a href="#requirements">Requirements</a></li>
+          <li><a href="#install">Install shipit</a></li>
+          <li><a href="#configure">Configure your project</a></li>
+          <li><a href="#options">Command-line options</a></li>
+          <li><a href="#shortcuts">Keyboard shortcuts</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ol>
+      </nav>
+    </aside>
+
+    <article>
+      <nav aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="/docs/">Docs</a></li>
+          <li><a href="/docs/getting-started/">Getting started</a></li>
+          <li><a aria-current="page">Installation</a></li>
+        </ol>
+      </nav>
+
+      <hgroup>
+        <h1>Installing shipit</h1>
+        <p>Get from zero to your first deploy in about five minutes.</p>
+      </hgroup>
+
+      <p><code>shipit</code> is a single-binary command-line tool that builds, tags and deploys your app to any SSH host or container registry. This page walks through installing it, wiring it into a project, and the flags you will use most.</p>
+
+      <section id="requirements">
+        <h2>Requirements</h2>
+        <ul>
+          <li>macOS 12+, Linux (glibc 2.31+ or musl), or Windows 10+ with WSL2</li>
+          <li>Git 2.30 or newer</li>
+          <li>Docker 24+ if you deploy containers (optional for SSH-only targets)</li>
+        </ul>
+      </section>
+
+      <section id="install">
+        <h2>Install shipit</h2>
+        <ol>
+          <li>
+            <p>Install the binary with your package manager, or with the install script:</p>
+            <pre><code># macOS
+brew install shipit
+
+# Debian / Ubuntu
+curl -fsSL https://get.shipit.dev/apt.gpg | sudo gpg --dearmor -o /usr/share/keyrings/shipit.gpg
+echo "deb [signed-by=/usr/share/keyrings/shipit.gpg] https://apt.shipit.dev stable main" | sudo tee /etc/apt/sources.list.d/shipit.list
+sudo apt update &amp;&amp; sudo apt install shipit
+
+# Anything else
+curl -fsSL https://get.shipit.dev | sh</code></pre>
+          </li>
+          <li>
+            <p>Check that it is on your <code>PATH</code>:</p>
+            <pre><code>$ shipit --version
+shipit 3.4.1 (linux/amd64, built 2026-10-14)</code></pre>
+          </li>
+          <li>
+            <p>Log in once so shipit can read your deploy targets:</p>
+            <pre><code>shipit login</code></pre>
+            <p>This opens a browser window. On a headless server, use <code>shipit login --device</code> and enter the code it prints.</p>
+          </li>
+        </ol>
+
+        <aside>
+          <p><strong>Warning:</strong> Do not run the install script with <code>sudo sh</code>. The script asks for elevated rights only for the final copy into <code>/usr/local/bin</code>; running the whole thing as root writes your config to <code>/root/.config/shipit</code>, where your normal user cannot read it.</p>
+        </aside>
+      </section>
+
+      <section id="configure">
+        <h2>Configure your project</h2>
+        <p>Run <code>shipit init</code> in the root of your repository. It writes a <code>shipit.toml</code> like this one:</p>
+        <pre><code>[app]
+name = "storefront"
+build = "npm ci &amp;&amp; npm run build"
+
+[targets.production]
+host = "deploy@prod-1.example.com"
+path = "/srv/storefront"
+health_check = "https://storefront.example.com/healthz"
+
+[targets.staging]
+host = "deploy@staging.example.com"
+path = "/srv/storefront"</code></pre>
+        <p>Then deploy to staging:</p>
+        <pre><code>shipit deploy staging</code></pre>
+      </section>
+
+      <section id="options">
+        <h2>Command-line options</h2>
+        <p>These flags work with every subcommand.</p>
+        <figure>
+          <table class="striped">
+            <thead>
+              <tr>
+                <th scope="col">Option</th>
+                <th scope="col">Short</th>
+                <th scope="col">Default</th>
+                <th scope="col">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>--config &lt;path&gt;</code></td>
+                <td><code>-c</code></td>
+                <td><code>./shipit.toml</code></td>
+                <td>Read configuration from a different file.</td>
+              </tr>
+              <tr>
+                <td><code>--target &lt;name&gt;</code></td>
+                <td><code>-t</code></td>
+                <td><code>staging</code></td>
+                <td>Deploy target defined in <code>[targets.*]</code>.</td>
+              </tr>
+              <tr>
+                <td><code>--dry-run</code></td>
+                <td><code>-n</code></td>
+                <td>off</td>
+                <td>Print every step without building or uploading anything.</td>
+              </tr>
+              <tr>
+                <td><code>--tag &lt;version&gt;</code></td>
+                <td></td>
+                <td>git describe</td>
+                <td>Release tag to create and push.</td>
+              </tr>
+              <tr>
+                <td><code>--parallel &lt;n&gt;</code></td>
+                <td><code>-p</code></td>
+                <td><code>4</code></td>
+                <td>Hosts to deploy to at the same time.</td>
+              </tr>
+              <tr>
+                <td><code>--yes</code></td>
+                <td><code>-y</code></td>
+                <td>off</td>
+                <td>Skip confirmation prompts. Required in CI.</td>
+              </tr>
+              <tr>
+                <td><code>--verbose</code></td>
+                <td><code>-v</code></td>
+                <td>off</td>
+                <td>Show remote command output. Repeat (<code>-vv</code>) for debug logs.</td>
+              </tr>
+            </tbody>
+          </table>
+        </figure>
+      </section>
+
+      <section id="shortcuts">
+        <h2>Keyboard shortcuts</h2>
+        <p>While <code>shipit deploy</code> is running in an interactive terminal:</p>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Keys</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><kbd>l</kbd></td>
+              <td>Toggle the live log view</td>
+            </tr>
+            <tr>
+              <td><kbd>p</kbd></td>
+              <td>Pause after the current host finishes</td>
+            </tr>
+            <tr>
+              <td><kbd>r</kbd></td>
+              <td>Retry the hosts that failed</td>
+            </tr>
+            <tr>
+              <td><kbd>Ctrl</kbd> + <kbd>C</kbd></td>
+              <td>Stop and roll back hosts already deployed</td>
+            </tr>
+            <tr>
+              <td><kbd>Ctrl</kbd> + <kbd>\</kbd></td>
+              <td>Stop immediately without rolling back</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="faq">
+        <h2>FAQ</h2>
+        <details name="faq">
+          <summary>Does shipit need an agent on my servers?</summary>
+          <p>No. shipit connects over SSH with your existing keys and only needs <code>tar</code> and a POSIX shell on the remote host.</p>
+        </details>
+        <details name="faq">
+          <summary>How do I roll back a bad release?</summary>
+          <p>Run <code>shipit rollback production</code>. shipit keeps the last five releases on each host and switches the <code>current</code> symlink back to the previous one.</p>
+        </details>
+        <details name="faq">
+          <summary>Can I use shipit in GitHub Actions?</summary>
+          <p>Yes. Install it with the script above, set <code>SHIPIT_TOKEN</code> as a repository secret, and run <code>shipit deploy production --yes</code>.</p>
+        </details>
+        <details name="faq">
+          <summary>Where is my configuration stored?</summary>
+          <p>Project settings live in <code>shipit.toml</code>. Your login token lives in <code>~/.config/shipit/credentials</code> on macOS and Linux, and in <code>%APPDATA%\shipit</code> on Windows.</p>
+        </details>
+      </section>
+
+      <footer>
+        <nav aria-label="Previous and next page">
+          <ul>
+            <li><a href="/docs/getting-started/" rel="prev">&larr; Previous: Introduction</a></li>
+            <li><a href="/docs/getting-started/first-deploy/" rel="next">Next: Your first deploy &rarr;</a></li>
+          </ul>
+        </nav>
+      </footer>
+    </article>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 shipit contributors. Released under the MIT License.</p>
+  </footer>
+</body>
+</html>

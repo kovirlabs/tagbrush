@@ -25,19 +25,22 @@ Add this to `<head>`:
 
 ## Page structure
 
-- `<header><nav><strong>Site name</strong><ul><li><a href="/" aria-current="page">Home</a></li>…</ul></nav></header>`: a top bar. Lists inside `<nav>` are horizontal; `aria-current="page"` marks the current page.
+- `<header><nav><strong>Site name</strong><ul><li><a href="/" aria-current="page">Home</a></li>…</ul></nav></header>`: a top bar. Lists inside any `<nav>` are horizontal rows (top bar, footer links, pagination); `aria-current="page"` marks the current page.
+- `<nav aria-label="Pagination"><ul><li><a rel="prev" href="…">← Previous</a></li><li><a rel="next" href="…">Next →</a></li></ul></nav>`: previous/next links; the `rel="next"` link sits at the far end of the row. Add numbered page links between them if needed.
 - `<main>`: page content, centered at 1200px. A `<main>` with a single `<article>` (a blog post, a docs page) is kept at a 70-character reading width.
 - A page with no `<main>` (for example Markdown output) is centered at reading width.
 - `<footer>`: muted, small text.
 - `<hgroup><h1>Title</h1><p>Subtitle</p></hgroup>`: a heading with a muted subtitle.
 - `<section><h2>Heading</h2><article>…</article><article>…</article></section>`: two or more `<article>`s in a `<section>` become a responsive grid of cards. Only headings, `hgroup`, `p`, `header`, and `footer` may sit beside the articles.
-- `<article><aside>Note</aside></article>`: an `<aside>` inside an article is a highlighted callout.
+- `<article><aside>Note</aside></article>`: an `<aside>` anywhere inside an `<article>` (also between its sections) is a highlighted callout. Start it with a bold word, such as "Warning:", to label it.
+- A page that is one form (sign-up, contact, settings): put the `<form>` inside an `<article>` in `<main>` to get a narrow, centered column.
 - `<nav aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a aria-current="page">Page</a></li></ol></nav>`: breadcrumbs with separators.
 
 ## Components from HTML and ARIA
 
 - Buttons: `<button>`. Secondary: `class="secondary"`. Outline: `class="outline"`. A link styled as a button: `<a class="button" href="…">`. These three are the only classes needed for buttons.
-- A row of buttons, or an input with a button (a search bar): wrap them in `<div role="group">`.
+- A row of buttons, or an input with a button (a search bar): wrap them in `<div role="group">`. Inputs and `<select>`s in the group share the row.
+- Short status labels (in tables, next to headings): `<mark>`. Changes up or down: `<ins>` and `<del>`.
 - Toggle switch: `<label><input type="checkbox" role="switch"> Label</label>`.
 - Loading: `aria-busy="true"` on a button or any element shows a spinner.
 - Accordion: neighboring `<details><summary>Question</summary><p>Answer</p></details>`. Give them the same `name="…"` so only one opens at a time.
