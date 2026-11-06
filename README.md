@@ -149,6 +149,15 @@ npx degit kovirlabs/tagbrush/ai/claude/tagbrush .claude/skills/tagbrush
 
 The tests render every snippet in `llms.txt`, so the instructions agents follow always match what TagBrush.css actually styles.
 
+### Debug mode
+
+Add `data-tagbrush="debug"` to `<html>` (or any element) to outline common mistakes, for you or for an agent that takes screenshots:
+
+- **Red dashed:** images without `alt`, form fields without a label, buttons and links without text, clickable `<div>`/`<span>`, a second `<main>`.
+- **Amber dotted:** classes TagBrush.css doesn't use, and inline styles other than CSS variables.
+
+A small legend appears in the corner. Remove the attribute when you're done; nothing changes without it.
+
 ## Page layout
 
 Write the usual page landmarks and TagBrush.css lays them out:

@@ -5,6 +5,7 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ## Unreleased
 
 ### Added
+- Debug mode: `data-tagbrush="debug"` outlines images without `alt`, unlabeled form fields, empty buttons and links, clickable `<div>`s, unused classes, and inline layout styles, in pure CSS.
 - App patterns, no classes: `<aside>` next to `<main>` becomes a sidebar layout with vertical navigation (stacked on phones); `<aside>` next to an `<article>` in `<main>` becomes a sticky table of contents; a `<dl>` whose items are `<div>`s becomes stat tiles; a `<header>` with a heading and buttons lays them out in one row; `<search>` and `<form role="search">` lay out filters in a row; an `<hgroup>` in the page header becomes a centered hero.
 - Agent evaluation in `evals/`: pages written by AI agents that only had `llms.txt`, checked by the tests for overflow, contrast, invented classes, and layout CSS.
 - Previous/next links: in a `<nav>`, a link with `rel="next"` moves to the far end of the row.

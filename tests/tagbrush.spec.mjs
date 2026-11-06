@@ -948,6 +948,38 @@ test.describe('app patterns', () => {
   });
 });
 
+test.describe('debug mode', () => {
+  const outline = (page, selector) => style(page, selector, 'outlineStyle');
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/debug.html'));
+  });
+
+  test('outlines mistakes in red', async ({ page }) => {
+    for (const selector of ['#no-alt', '[data-test=unlabeled-input]', '#empty-button', '#empty-link', '#click-div']) {
+      expect(await outline(page, selector), selector).toBe('dashed');
+    }
+  });
+
+  test('outlines unused classes and inline layout styles in amber', async ({ page }) => {
+    expect(await outline(page, '#invented-class')).toBe('dotted');
+    expect(await outline(page, '#inline-layout')).toBe('dotted');
+  });
+
+  test('leaves correct HTML alone', async ({ page }) => {
+    for (const selector of ['#has-alt', '#named', '#wrapped', '#aria-named', '#text-button', '#icon-button', '#button-link', '#variable-style', '#token']) {
+      expect(await outline(page, selector), selector).toBe('none');
+    }
+  });
+
+  test('shows a legend, and does nothing without the attribute', async ({ page }) => {
+    expect(await style(page, 'body', 'content', '::after')).toContain('TagBrush debug');
+    await page.evaluate(() => document.documentElement.removeAttribute('data-tagbrush'));
+    expect(await outline(page, '#no-alt')).toBe('none');
+    expect(await style(page, 'body', 'content', '::after')).toBe('none');
+  });
+});
+
 test.describe('accessibility', () => {
   // WCAG AA asks for 4.5:1 between normal-size text and its background.
   const AA = 4.5;

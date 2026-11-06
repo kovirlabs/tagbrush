@@ -91,6 +91,10 @@ Override variables in a `<style>` block. Colors take a light and a dark value wi
 
 To force light or dark: `<html data-theme="light">` or `data-theme="dark"` on any element. To lay out a page yourself instead: `<body data-layout="full">`.
 
+## Checking your work
+
+Add `data-tagbrush="debug"` to `<html>` while working, then look at the page (or a screenshot). Red dashed outlines mark images without `alt`, form fields without a label, buttons or links without text, and clickable `<div>`/`<span>` elements; amber dotted outlines mark classes TagBrush.css doesn't use and inline styles that aren't CSS variables. Fix them, then remove the attribute.
+
 ## Links
 
 - [README](https://github.com/kovirlabs/tagbrush#readme): full documentation and the list of variables
