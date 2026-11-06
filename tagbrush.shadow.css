@@ -87,6 +87,7 @@
     --focus-ring-width: 3px;
     --shadow: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px rgb(0 0 0 / 0.06);
     --shadow-lg: 0 10px 25px rgb(0 0 0 / 0.15), 0 4px 10px rgb(0 0 0 / 0.1);
+    --hero-background: radial-gradient(ellipse 80% 70% at 50% 0%, color-mix(in oklab, var(--color-primary) 9%, transparent), transparent); /* behind a hero; none to turn off */
     --transition-duration: 0.15s;
 
     /* Code highlighting: token colors for Prism, highlight.js, Hugo/Chroma,
@@ -244,6 +245,27 @@
     color: inherit;
   }
 
+  /* Status tones: data-tone="success|warning|error|info|neutral" sets --tone,
+     or set --tone to any color yourself (style="--tone: #db2777"). A <mark>
+     with a tone is a badge; an <aside> callout takes the tone's color. */
+  :where([data-tone="success"]) { --tone: var(--color-success); }
+  :where([data-tone="warning"]) { --tone: var(--color-warning); }
+  :where([data-tone="error"]) { --tone: var(--color-error); }
+  :where([data-tone="info"]) { --tone: var(--color-link, light-dark(oklch(from var(--color-primary) min(l, 0.5) c h), oklch(from var(--color-primary) max(l, 0.77) min(c, 0.15) h))); }
+  :where([data-tone="neutral"]) { --tone: var(--color-text-muted); }
+
+  /* The text mixes the tone with the text color, so it stays readable on the
+     tinted background in both schemes, whatever the tone. */
+  mark:where([data-tone], [style*="--tone"]) {
+    padding: 0.1em 0.6em;
+    border-radius: 1em;
+    background-color: color-mix(in oklab, var(--tone) 15%, transparent);
+    color: color-mix(in oklab, var(--tone) 55%, var(--color-text));
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
   /* Full-contrast text, since the tint lowers contrast for inherited muted text */
   del {
     color: var(--color-text);
@@ -328,10 +350,21 @@
     margin-bottom: 0;
   }
 
-  hgroup > :not(:first-child) {
+  /* Only the heading keeps full weight: the paragraphs are muted */
+  hgroup > :not(h1, h2, h3, h4, h5, h6) {
     margin-top: var(--spacing-xs);
     color: var(--color-text-muted);
     font-weight: 400;
+  }
+
+  /* A label before the heading: <hgroup><p>Pricing</p><h2>…</h2></hgroup> */
+  hgroup > :not(h1, h2, h3, h4, h5, h6):has(~ :is(h1, h2, h3, h4, h5, h6)) {
+    margin: 0 0 var(--spacing-xs);
+    color: var(--color-link, light-dark(oklch(from var(--color-primary) min(l, 0.5) c h), oklch(from var(--color-primary) max(l, 0.77) min(c, 0.15) h)));
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   code, pre, kbd, samp {
@@ -530,6 +563,21 @@
     height: auto;
   }
 
+  /* Icons: an inline <svg> without width or height in a button, link, label,
+     heading, list item or badge is sized to the text and sits on its line. */
+  :where(button, .button, a, summary, label, legend, h1, h2, h3, h4, h5, h6, li, dt, th, td, mark, strong, small) > svg:where(:not([width], [height])) {
+    flex-shrink: 0;
+    width: 1.25em;
+    height: 1.25em;
+    vertical-align: -0.25em;
+  }
+
+  :where(mark, small) > svg:where(:not([width], [height])) {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+  }
+
   figure {
     margin: 0 0 var(--spacing-md) 0;
   }
@@ -630,6 +678,11 @@
     border-left: 4px solid var(--color-primary);
     border-radius: 0 var(--border-radius) var(--border-radius) 0;
     background-color: var(--color-surface);
+  }
+
+  :where(article aside:is([data-tone], [style*="--tone"])) {
+    border-left-color: var(--tone);
+    background-color: color-mix(in oklab, var(--tone) 12%, var(--color-background));
   }
 
   :where(article aside) > :last-child {
@@ -851,6 +904,14 @@
 
   :where(.button[aria-disabled="true"]) {
     pointer-events: none;
+  }
+
+  /* A button with an icon lines it up with the label */
+  :where(button, .button):where(:has(> svg)) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5em;
   }
 
   /* After the button rules so a busy button shows the progress cursor */
@@ -1305,6 +1366,24 @@
 
   :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))) > article > :last-child {
     margin-bottom: 0;
+  }
+
+  /* Feature cards: an icon (an <svg> without width or height) first in a card
+     sits on a tinted tile. data-tone on the svg picks another color. */
+  :where(section > article > svg:first-child:not([width], [height])) {
+    display: block;
+    box-sizing: border-box;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-bottom: var(--spacing-md);
+    padding: 0.625rem;
+    border-radius: var(--border-radius);
+    color: color-mix(in oklab, var(--tone, var(--color-primary)) 75%, var(--color-text));
+    background-color: color-mix(in oklab, var(--tone, var(--color-primary)) 14%, transparent);
+  }
+
+  section > article > svg:first-child + :is(h2, h3, h4, h5, h6) {
+    margin-top: 0;
   }
 
   /* ==========================================================================

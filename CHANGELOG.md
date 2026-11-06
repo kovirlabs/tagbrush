@@ -2,6 +2,21 @@
 
 All notable changes to TagBrush.css are listed here. This project follows [Semantic Versioning](https://semver.org/): variable names and the selectors you can rely on only change in a major release.
 
+## Unreleased
+
+Closes the "plain" gap the benchmarks found: designs that agents used to build with custom CSS now come from plain HTML.
+
+### Added
+- Status badges: `<mark data-tone="success">` (also `warning`, `error`, `info`, `neutral`) is a tinted pill whose text meets 4.5:1 in both schemes. Any color works with `style="--tone: #db2777"`. `data-tone` also colors an `<aside>` callout in an article.
+- Icons: an inline `<svg>` without `width` or `height` in a button, link, heading, label, list item, table cell, or badge is sized to the text and lined up with it; buttons put a gap between icon and label. An icon first in a card of an article grid sits on a tinted tile.
+- Hero with a picture: a `<figure>`, `<img>`, `<picture>`, or `<svg>` in the page header beside the `<hgroup>` sits next to the text (below it on phones). Heroes get a soft tint of the primary color, set by `--hero-background` (`none` turns it off).
+- Full-height sidebar: an `<aside>` placed before the `<header>` runs the full height of the window, with the header as a top bar beside it.
+- Footer columns: a page `<footer>` with two or more `<nav>`s lays them out as columns of links, with a last paragraph spanning the width.
+- A `<p>` before the heading in an `<hgroup>` is a small uppercase label in the link color.
+
+### Fixed
+- `<hgroup>` muted every child after the first, so a label before the heading muted the heading. Now only the non-heading children are muted.
+
 ## 1.1.0 (2026-11-05)
 
 The biggest release since 1.0: plain HTML now gets a full page layout, Markdown and highlighted code look right, apps and dashboards need no classes, any brand color stays readable, and AI agents get a guide, instruction files, and a page checker.

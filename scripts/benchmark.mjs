@@ -13,7 +13,9 @@ import { check } from '../bin/tagbrush.mjs';
 
 const DIR = process.argv[2] ?? 'evals/benchmark';
 const APPROACHES = { tagbrush: 'TagBrush.css', 'tagbrush-plus': 'TagBrush.css + small CSS', tailwind: 'Tailwind (CDN)', 'plain-css': 'Hand-written CSS' };
-const hasReference = (request) => existsSync(`${DIR}/reference/${request}-1.png`);
+// A re-run folder inside a benchmark (evals/benchmark-2/rerun) uses its parent's reference.
+const referenceFile = (request) => [`${DIR}/reference/${request}-1.png`, `${DIR}/../reference/${request}-1.png`].find((f) => existsSync(f));
+const hasReference = (request) => Boolean(referenceFile(request));
 // Rules from `tagbrush check` that apply to any page, whatever its styling.
 const A11Y_RULES = new Set(['missing-alt', 'unlabeled-field', 'label-for-missing', 'empty-button', 'empty-link', 'clickable-div', 'multiple-main', 'missing-lang']);
 
@@ -95,7 +97,7 @@ const measure = async (file) => {
   let similarity = null;
   if (hasReference(request)) {
     const shot = (await page.screenshot({ clip: { x: 0, y: 0, width: 1280, height: 1000 } })).toString('base64');
-    const reference = readFileSync(`${DIR}/reference/${request}-1.png`).toString('base64');
+    const reference = readFileSync(referenceFile(request)).toString('base64');
     similarity = await page.evaluate(async ([a, b]) => {
       const pixels = async (data) => {
         const img = new Image();
