@@ -1,0 +1,172 @@
+[
+  {
+    "file": "dashboard.plain-css.html",
+    "total": 8351,
+    "textTokens": 556,
+    "overhead": 7795,
+    "cssTokens": 3654,
+    "classes": 162,
+    "classTokens": 233,
+    "svgTokens": 1912,
+    "darkMode": true,
+    "overflowPhone": true,
+    "overflowDesktop": false,
+    "contrastLight": 31,
+    "contrastDark": 36,
+    "contrastExamples": {
+      "light": [
+        "h3 \"Store\" 3.18",
+        "h3 \"Channels\" 3.18",
+        "span \"fernwoodgoods.com\" 3.18",
+        "span \"Owner\" 3.18",
+        "span \"▲ 12.4% vs $75,010\" 3.18",
+        "span \"▲ 8.1% vs 1,060\" 3.18"
+      ],
+      "dark": [
+        "h3 \"Store\" 4.09",
+        "h3 \"Channels\" 4.09",
+        "span \"fernwoodgoods.com\" 4.09",
+        "span \"Owner\" 4.09",
+        "span \"▲ 12.4% vs $75,010\" 4.09",
+        "span \"▲ 8.1% vs 1,060\" 4.09"
+      ]
+    },
+    "a11yErrors": []
+  },
+  {
+    "file": "dashboard.tagbrush.html",
+    "total": 1771,
+    "textTokens": 378,
+    "overhead": 1393,
+    "cssTokens": 0,
+    "classes": 8,
+    "classTokens": 8,
+    "svgTokens": 0,
+    "darkMode": true,
+    "overflowPhone": false,
+    "overflowDesktop": false,
+    "contrastLight": 0,
+    "contrastDark": 0,
+    "contrastExamples": {
+      "light": [],
+      "dark": []
+    },
+    "a11yErrors": []
+  },
+  {
+    "file": "dashboard.tailwind.html",
+    "total": 11966,
+    "textTokens": 558,
+    "overhead": 11408,
+    "cssTokens": 39,
+    "classes": 1367,
+    "classTokens": 4906,
+    "svgTokens": 3483,
+    "darkMode": true,
+    "overflowPhone": false,
+    "overflowDesktop": false,
+    "contrastLight": 3,
+    "contrastDark": 3,
+    "contrastExamples": {
+      "light": [
+        "p \"Sales channels\" 2.56",
+        "td \"$48.00\" 2.56",
+        "footer \"Data refreshed Nov 4, 2026 at \" 2.45"
+      ],
+      "dark": [
+        "p \"Sales channels\" 3.75",
+        "td \"$48.00\" 3.75",
+        "footer \"Data refreshed Nov 4, 2026 at \" 4.24"
+      ]
+    },
+    "a11yErrors": []
+  },
+  {
+    "file": "landing.plain-css.html",
+    "total": 11898,
+    "textTokens": 1156,
+    "overhead": 10742,
+    "cssTokens": 5535,
+    "classes": 141,
+    "classTokens": 184,
+    "svgTokens": 1908,
+    "darkMode": true,
+    "overflowPhone": false,
+    "overflowDesktop": false,
+    "contrastLight": 49,
+    "contrastDark": 21,
+    "contrastExamples": {
+      "light": [
+        "a \"Start free\" 3.73",
+        "span \"New: automatic invoice reminde\" 4.45",
+        "a \"Start your 14-day free trial\" 3.73",
+        "p \"No credit card required. Free \" 3.48",
+        "div \"Tracking now\" 3.63",
+        "div \"Northfield Studio · billable\" 3.63"
+      ],
+      "dark": [
+        "div \"Tracking now\" 4.24",
+        "div \"Northfield Studio · billable\" 4.24",
+        "div \"Parcel & Co. · billable\" 4.24",
+        "div \"Internal · non-billable\" 4.24",
+        "span \"Mon\" 4.24",
+        "span \"Tue\" 4.24"
+      ]
+    },
+    "a11yErrors": []
+  },
+  {
+    "file": "landing.tagbrush.html",
+    "total": 2060,
+    "textTokens": 679,
+    "overhead": 1381,
+    "cssTokens": 0,
+    "classes": 9,
+    "classTokens": 9,
+    "svgTokens": 0,
+    "darkMode": true,
+    "overflowPhone": false,
+    "overflowDesktop": false,
+    "contrastLight": 0,
+    "contrastDark": 0,
+    "contrastExamples": {
+      "light": [],
+      "dark": []
+    },
+    "a11yErrors": []
+  },
+  {
+    "file": "landing.tailwind.html",
+    "total": 16661,
+    "textTokens": 1200,
+    "overhead": 15461,
+    "cssTokens": 33,
+    "classes": 1612,
+    "classTokens": 5339,
+    "svgTokens": 6211,
+    "darkMode": true,
+    "overflowPhone": false,
+    "overflowDesktop": false,
+    "contrastLight": 26,
+    "contrastDark": 44,
+    "contrastExamples": {
+      "light": [
+        "a \"Start tracking free\" 2.60",
+        "span \"MR\" 2.77",
+        "span \"AK\" 2.54",
+        "span \"JT\" 4.23",
+        "span \"SO\" 3.67",
+        "span \"app.lumen.so/today\" 2.56"
+      ],
+      "dark": [
+        "a \"Start tracking free\" 2.60",
+        "p \"Free forever for 1 client. No \" 4.24",
+        "span \"MR\" 2.77",
+        "span \"AK\" 2.54",
+        "span \"JT\" 4.23",
+        "span \"SO\" 3.67"
+      ]
+    },
+    "a11yErrors": []
+  }
+]
