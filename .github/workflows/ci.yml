@@ -8,6 +8,9 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    # Downloading the test browsers has hung twice on GitHub's runners; fail
+    # fast instead of waiting for the six-hour default, then re-run the job.
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
 
@@ -24,6 +27,7 @@ jobs:
           git diff --exit-code || (echo "::error::Generated CSS is out of date. Run 'npm run build' and commit the result." && exit 1)
 
       - run: npx playwright install --with-deps chromium firefox webkit
+        timeout-minutes: 5
 
       # Screenshot baselines are recorded on macOS, so CI skips the pixel
       # comparison and runs every other check in all three browsers.

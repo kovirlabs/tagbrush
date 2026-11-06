@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 import { readdirSync, readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
+import { check } from '../bin/tagbrush.mjs';
 const fileUrl = (path) => pathToFileURL(resolve(path)).href;
 const DEMO = fileUrl('index.html');
 
@@ -993,6 +995,62 @@ test.describe('debug mode', () => {
     await page.evaluate(() => document.documentElement.removeAttribute('data-tagbrush'));
     expect(await outline(page, '#no-alt')).toBe('none');
     expect(await style(page, 'body', 'content', '::after')).toBe('none');
+  });
+});
+
+test.describe('npx tagbrush check', () => {
+  test.skip(({ browserName }) => browserName !== 'chromium', 'Runs in Node, once');
+  const run = (...args) => spawnSync(process.execPath, ['bin/tagbrush.mjs', ...args], { encoding: 'utf8' });
+  const rules = (html) => check(html).map((p) => `${p.level}:${p.rule}`);
+  const page = (body, head = '<meta name="viewport" content="width=device-width"><link rel="stylesheet" href="tagbrush.css">') =>
+    `<!DOCTYPE html><html lang="en"><head>${head}</head><body>${body}</body></html>`;
+
+  test('reports every problem in the debug fixture and exits with 1', () => {
+    const result = run('check', 'tests/fixtures/debug.html');
+    expect(result.status).toBe(1);
+    for (const rule of ['missing-alt', 'unlabeled-field', 'empty-button', 'empty-link', 'clickable-div', 'unknown-class', 'inline-style']) {
+      expect(result.stdout).toContain(rule);
+    }
+    expect(result.stdout).toMatch(/1 file checked: 5 errors, 3 warnings/);
+  });
+
+  test('pages written by agents and starter.html are clean', () => {
+    const result = run('check', 'evals/pages', 'starter.html');
+    expect(result.stdout).toMatch(/0 errors, 0 warnings/);
+    expect(result.status).toBe(0);
+  });
+
+  test('labels: for/id pairs, wrapping, and aria-label all count; a missing target does not', () => {
+    expect(rules(page('<label for="a">A</label><input id="a">'))).toEqual([]);
+    expect(rules(page('<label>B <input></label>'))).toEqual([]);
+    expect(rules(page('<input aria-label="Search" type="search">'))).toEqual([]);
+    expect(rules(page('<input type="hidden" name="token"><input type="submit" value="Go">'))).toEqual([]);
+    expect(rules(page('<label for="missing">C</label><input id="other">'))).toEqual(['error:label-for-missing', 'error:unlabeled-field']);
+  });
+
+  test('buttons and links are named by text, aria-label, or an image with alt text', () => {
+    expect(rules(page('<button><img src="x.svg" alt="Close"></button><a href="/"><span>Home</span></a>'))).toEqual([]);
+    expect(rules(page('<button><img src="x.svg" alt=""></button>'))).toEqual(['error:empty-button']);
+  });
+
+  test('page basics, headings, ids, and styles', () => {
+    expect(rules('<html><body><h1>A</h1></body></html>')).toEqual(['error:missing-lang', 'warning:missing-viewport', 'warning:missing-stylesheet']);
+    expect(rules(page('<h1>A</h1><h3>B</h3>'))).toEqual(['warning:heading-skip']);
+    expect(rules(page('<p id="x"></p><p id="x"></p>'))).toEqual(['warning:duplicate-id']);
+    expect(rules(page('<main></main><main></main>'))).toEqual(['error:multiple-main']);
+    expect(rules(page('', '<meta name="viewport" content="x"><link rel="stylesheet" href="tagbrush.css"><style>:root { --color-primary: #0f766e; color-scheme: light; }</style>'))).toEqual([]);
+    expect(rules(page('', '<meta name="viewport" content="x"><link rel="stylesheet" href="tagbrush.css"><style>.hero { display: grid; }</style>'))).toEqual(['warning:style-block']);
+  });
+
+  test('classes inside code blocks and documented classes are fine', () => {
+    expect(rules(page('<pre><code class="language-js"><span class="token keyword">const</span></code></pre><a class="button outline" href="/">Go</a>'))).toEqual([]);
+  });
+
+  test('--json prints structured results and --strict fails on warnings', () => {
+    const json = JSON.parse(run('check', 'tests/fixtures/debug.html', '--json').stdout);
+    expect(json[0].problems.some((p) => p.rule === 'missing-alt' && p.line === 12)).toBe(true);
+    expect(run('check', 'evals/pages/landing.html', '--strict').status).toBe(0);
+    expect(run('help').status).toBe(2);
   });
 });
 

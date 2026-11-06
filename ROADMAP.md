@@ -117,7 +117,7 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 ## Chunk 18: `npx tagbrush check`
 
-- [ ] A zero-dependency command that reports the same problems as text, plus page-level checks (missing `lang`, viewport, stylesheet link, label `for`/`id` pairs), for agents without screenshots.
+- [x] A zero-dependency command that reports the same problems as text, plus page-level checks (missing `lang`, viewport, stylesheet link, label `for`/`id` pairs), for agents without screenshots.
 
 ## Release
 

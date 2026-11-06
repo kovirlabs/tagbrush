@@ -5,6 +5,7 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ## Unreleased
 
 ### Added
+- `npx tagbrush check`: a dependency-free command that reports missing alt text and labels, `<label for>` without a matching `id`, empty buttons and links, clickable `<div>`s, invented classes, layout CSS, skipped headings, duplicate ids, and a missing `lang` or viewport. `--json` for tools, exit code 1 on errors.
 - Dropdown menus: a `<nav>` inside a popover is a vertical list, for user menus in the top bar.
 - Debug mode: `data-tagbrush="debug"` outlines images without `alt`, unlabeled form fields, empty buttons and links, clickable `<div>`s, unused classes, and inline layout styles, in pure CSS.
 - App patterns, no classes: `<aside>` next to `<main>` becomes a sidebar layout with vertical navigation (stacked on phones); `<aside>` next to an `<article>` in `<main>` becomes a sticky table of contents; a `<dl>` whose items are `<div>`s becomes stat tiles; a `<header>` with a heading and buttons lays them out in one row; `<search>` and `<form role="search">` lay out filters in a row; an `<hgroup>` in the page header becomes a centered hero.

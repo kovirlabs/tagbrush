@@ -90,6 +90,8 @@ To force light or dark: `<html data-theme="light">` or `data-theme="dark"` on an
 
 Add `data-tagbrush="debug"` to `<html>` while working, then look at the page (or a screenshot). Red dashed outlines mark images without `alt`, form fields without a label, buttons or links without text, and clickable `<div>`/`<span>` elements; amber dotted outlines mark classes TagBrush.css doesn't use and inline styles that aren't CSS variables. Fix them, then remove the attribute.
 
+Without screenshots, run `npx tagbrush check page.html` (files or folders). It reports the same problems as text, plus a missing `lang` or viewport, `<label for>` values with no matching `id`, skipped heading levels, duplicate ids, and CSS in `<style>` blocks other than variables. Exit code 1 means errors to fix.
+
 ### Links
 
 - [README](https://github.com/kovirlabs/tagbrush#readme): full documentation and the list of variables

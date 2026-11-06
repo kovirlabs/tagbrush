@@ -45,7 +45,8 @@
     "tagbrush.shadow.css",
     "tagbrush.shadow.min.css",
     "llms.txt",
-    "ai/"
+    "ai/",
+    "bin/"
   ],
   "sideEffects": [
     "*.css"
@@ -58,5 +59,8 @@
   "devDependencies": {
     "@playwright/test": "^1.64.1",
     "lightningcss": "^1.33.0"
+  },
+  "bin": {
+    "tagbrush": "bin/tagbrush.mjs"
   }
 }
