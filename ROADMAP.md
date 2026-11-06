@@ -33,9 +33,9 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 - [x] Framework wrappers: a class-free wrapper around the landmarks (`<div id="root">`, `<app-root>`) counts as the page.
 - [x] Scoped and Shadow DOM builds leave page layout out: they style part of a page that something else lays out.
 - [x] Quick start no longer needs `class="container"`.
-- Reading width for text-heavy pages: moved to [Open questions](#open-questions).
+- [x] Reading width for text-heavy pages: done in chunk 8.
 
-**Not planned: flexbox on general elements** (`div`, `section`, `article`). Turning normal block flow into flex changes how all content lays out, and users would have to undo it more often than they'd want it. Rows and columns are already covered by `nav` (flex), `[role="group"]` (flex row) and `.grid`. To discuss: should a `<section>` that contains only `<article>`s lay them out as a responsive grid automatically?
+**Not planned: flexbox on general elements** (`div`, `section`, `article`). Turning normal block flow into flex changes how all content lays out, and users would have to undo it more often than they'd want it. Rows and columns are already covered by `nav` (flex), `[role="group"]` (flex row) and `.grid`. A `<section>` of `<article>`s now lays them out as a grid (chunk 8).
 
 ## Chunk 3: Markdown and starter template
 
@@ -72,14 +72,34 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 - [x] README leads with the "drop in a link" user: plain HTML, Markdown output, and static site generators first, framework guides second.
 - [x] "How it compares" section with Pico, Simple.css, and Water.css, measured from each package's current npm release (size, `@layer`, dark mode, theming, layout, scoped and Shadow DOM support). Re-measure when those libraries release new versions.
 
+## Chunk 8: Reading width and article grids
+
+- [x] `--reading-width` (70ch) for pages without `<main>` and for a `<main>` with a single `<article>`.
+- [x] A `<section>` of two or more `<article>`s lays them out as a grid of cards.
+
+## Chunk 9: Code highlighting
+
+- [ ] Colors for highlighted code from common generators (Prism, highlight.js, Shiki, Hugo/Chroma, Rouge), following the theme and dark mode. These classes come from the generator, not the user, like the footnote classes.
+
+## Chunk 10: Starters
+
+- [ ] Ready-made starting points: a Pandoc one-liner and template, and minimal Hugo, Eleventy, and Astro starters in `starters/`.
+
+## Chunk 11: AI-written pages
+
+- [ ] `llms.txt` and a README section on using TagBrush.css with pages written by AI assistants, which produce semantic HTML and have no class names to invent.
+
+## Chunk 12: Visual identity
+
+- [ ] A design pass so a TagBrush page is recognizable: type scale, spacing rhythm, neutral palette, and a few signature details, without adding anything users must learn.
+
 ## Release
 
-- [ ] Publish 1.1.0 with chunks 2–7 (version bump, date the CHANGELOG, tag, `npm publish`, GitHub release). `starter.html` and the README rely on the new page layout, so this should happen before announcing them.
+- [ ] Publish 1.1.0 with chunks 2–12 (version bump, date the CHANGELOG, tag, `npm publish`, GitHub release). `starter.html` and the README rely on the new page layout, so this should happen before announcing them.
 
 ## Open questions
 
-- A narrower reading width (about 70 characters) for text-heavy pages such as Markdown output, for example a separate `--content-max-width`.
-- Should a `<section>` that contains only `<article>`s lay them out as a responsive grid automatically?
+None right now.
 
 ## Out of scope
 

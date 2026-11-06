@@ -69,6 +69,7 @@
     --spacing-lg: calc(var(--spacing) * 1.5);
     --spacing-xl: calc(var(--spacing) * 2);
     --container-max-width: 1200px;
+    --reading-width: 70ch; /* comfortable line length for long text */
     --container-padding: var(--spacing-md);
     --grid-min-column: 16rem;
     --grid-gap: var(--spacing-lg);
@@ -491,7 +492,9 @@
        while their content is centered within --container-max-width;
      - the footer sits at the bottom of the window on short pages.
      A page without <main> (for example Markdown output) is centered as a
-     whole. A wrapper without a class around header/main/footer, like a
+     whole at --reading-width, and so is a <main> holding a single <article>
+     (a blog post or a docs page), so long text keeps a comfortable line
+     length. A wrapper without a class around header/main/footer, like a
      framework's <div id="root"> or <app-root>, counts as the page too.
 
      Opt out with data-layout="full" on <body>, the wrapper, or any one of
@@ -520,8 +523,14 @@
   }
 
   :where(body:not([data-layout="full"], :has(main, > .container))) {
-    padding-right: max(var(--container-padding), (100% - var(--container-max-width)) / 2 + var(--container-padding));
-    padding-left: max(var(--container-padding), (100% - var(--container-max-width)) / 2 + var(--container-padding));
+    padding-right: max(var(--container-padding), (100% - var(--reading-width)) / 2);
+    padding-left: max(var(--container-padding), (100% - var(--reading-width)) / 2);
+  }
+
+  :where(main > article:only-of-type):where(:not([data-layout="full"], [data-layout="full"] *)) {
+    max-width: var(--reading-width);
+    margin-right: auto;
+    margin-left: auto;
   }
   /* Page layout: end */
 
@@ -1155,6 +1164,43 @@
   :where([role="group"]) > :where(input:not([type="checkbox"], [type="radio"], [type="color"]), select) {
     flex: 1 1 12rem;
     width: auto;
+  }
+
+  /* A <section> of two or more <article>s (posts, products, features) lays
+     them out as a grid of cards. Headings, paragraphs, a header or a footer
+     in the section span the full width above or below the cards. */
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))) {
+    display: grid;
+    gap: var(--grid-gap);
+    grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-min-column), 100%), 1fr));
+    margin-bottom: var(--spacing-md);
+  }
+
+    /* A heading spans every column the grid could hold, so empty columns
+     don't collapse. With two or three articles, cap the columns at that
+     number so the cards still fill the width. */
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))):where(:has(> article:nth-of-type(2):last-of-type)) { --_articles: 2; }
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))):where(:has(> article:nth-of-type(3):last-of-type)) { --_articles: 3; }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))):where(:has(> article:nth-of-type(2):last-of-type, > article:nth-of-type(3):last-of-type)) {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, max(var(--grid-min-column), (100% - (var(--_articles) - 1) * var(--grid-gap)) / var(--_articles))), 1fr));
+  }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))) > :not(article) {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+  }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))) > :where(article) {
+    min-width: 0;
+    padding: var(--card-padding);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--card-radius);
+    background-color: var(--color-surface);
+  }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))) > article > :last-child {
+    margin-bottom: 0;
   }
 
   /* Hide visually but keep available to screen readers */
