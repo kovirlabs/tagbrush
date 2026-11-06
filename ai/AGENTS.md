@@ -96,6 +96,7 @@ Without screenshots, run `npx tagbrush check page.html` (files or folders). It r
 
 ### Links
 
+- [The Tag family](https://kovirlabs.github.io/tagstack/llms.txt): how TagBrush.css, TagAction, and TagCheck fit together
 - [README](https://github.com/kovirlabs/tagbrush#readme): full documentation and the list of variables
 - [Live demo and theme builder](https://kovirlabs.github.io/tagbrush/)
 - [starter.html](https://github.com/kovirlabs/tagbrush/blob/main/starter.html): a complete example page

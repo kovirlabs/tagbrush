@@ -7,6 +7,7 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 Closes the "plain" gap the benchmarks found: designs that agents used to build with custom CSS now come from plain HTML.
 
 ### Added
+- `llms.txt` links to the Tag family guide (https://kovirlabs.github.io/tagstack/llms.txt), which explains how TagBrush.css, TagAction, and TagCheck fit together.
 - Status badges: `<mark data-tone="success">` (also `warning`, `error`, `info`, `neutral`) is a tinted pill whose text meets 4.5:1 in both schemes. Any color works with `style="--tone: #db2777"`. `data-tone` also colors an `<aside>` callout in an article.
 - Icons: an inline `<svg>` without `width` or `height` in a button, link, heading, label, list item, table cell, or badge is sized to the text and lined up with it; buttons put a gap between icon and label. An icon first in a card of an article grid sits on a tinted tile.
 - Hero with a picture: a `<figure>`, `<img>`, `<picture>`, or `<svg>` in the page header beside the `<hgroup>` sits next to the text (below it on phones). Heroes get a soft tint of the primary color, set by `--hero-background` (`none` turns it off).
