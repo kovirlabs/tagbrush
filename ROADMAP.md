@@ -155,7 +155,8 @@ The benchmark (`evals/benchmark/`) showed TagBrush.css pages cost 3–4× less m
 
 ## Release
 
-- [ ] Publish 1.1.0 with chunks 2–12 (version bump, date the CHANGELOG, tag, `npm publish`, GitHub release). `starter.html` and the README rely on the new page layout, so this should happen before announcing them.
+- [x] Prepare 1.1.0 with chunks 2–18 (version bump, dated CHANGELOG, comparison and size claims updated).
+- [ ] Publish: merge the release PR, `npm publish` (maintainer, two-factor), tag `v1.1.0`, GitHub release. Until then `tagbrush@1` on the CDN serves 1.0.0, which agents following `llms.txt` will see.
 
 ## Open questions
 

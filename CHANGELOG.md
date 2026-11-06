@@ -2,7 +2,11 @@
 
 All notable changes to TagBrush.css are listed here. This project follows [Semantic Versioning](https://semver.org/): variable names and the selectors you can rely on only change in a major release.
 
-## Unreleased
+## 1.1.0 (2026-11-05)
+
+The biggest release since 1.0: plain HTML now gets a full page layout, Markdown and highlighted code look right, apps and dashboards need no classes, any brand color stays readable, and AI agents get a guide, instruction files, and a page checker.
+
+**Upgrading from 1.0:** most pages look the same or better, but check these visible changes (details under "Changed"): a `<main>` without `.container` is now centered, tables are as wide as their content and scroll when wide, the default blue is darker for contrast, and neutral colors take a faint tint of `--color-primary`. Add `data-layout="full"` to `<body>` to keep the old full-width layout.
 
 ### Added
 - `npx tagbrush check`: a dependency-free command that reports missing alt text and labels, `<label for>` without a matching `id`, empty buttons and links, clickable `<div>`s, invented classes, layout CSS, skipped headings, duplicate ids, and a missing `lang` or viewport. `--json` for tools, exit code 1 on errors.
@@ -33,6 +37,8 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 - Theme builder: shows the contrast of button text and links as you pick colors, keeps the theme in the page URL so you can share it, and has a live preview.
 
 ### Fixed
+- Default colors meet WCAG AA contrast (4.5:1) in light and dark mode, checked by the tests for ten different primary colors. `--color-primary` is now `#2563eb` (was `#3b82f6`, 3.7:1 with white text) and muted text is darker.
+- Inline SVGs with `width`, `height`, and `viewBox` attributes keep their proportions when they shrink to fit a narrow container, instead of keeping their full height.
 - A `.visually-hidden` element inside a scrolling table or figure no longer widens the page.
 - `<ins>` and `<del>` keep 4.5:1 contrast inside muted text on a surface, such as a stat card.
 
@@ -42,13 +48,6 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 - The select arrow follows the theme (`--color-text-muted`) instead of a fixed gray image.
 - Tables are as wide as their content and scroll sideways inside themselves when they don't fit, so wide tables no longer widen the page on phones. Tables inside `<figure>` still fill the full width.
 - Pages that use `<main>` without `.container` were full width and are now centered. Add `data-layout="full"` to `<body>` to keep the old behavior. Pages using `.container` look the same as before. The scoped and Shadow DOM builds are unchanged.
-
-## 1.0.1 (unreleased)
-
-### Fixed
-- Default colors now meet WCAG AA contrast (4.5:1) in light and dark mode. `--color-primary` is now `#2563eb` (was `#3b82f6`, 3.7:1 with white text), and the light `--color-text-muted` is now `#646b76` (was `#6b7280`, 4.4:1 on `--color-surface`). If you set your own colors, nothing changes for you.
-- Links and `.outline` button text use a lighter version of the primary color in dark mode, so they stay readable on dark backgrounds. Setting `--color-link` still overrides this.
-- Inline SVGs with `width`, `height`, and `viewBox` attributes keep their proportions when they shrink to fit a narrow container, instead of keeping their full height.
 
 ## 1.0.0 (2026-11-04)
 
