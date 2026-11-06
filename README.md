@@ -38,6 +38,8 @@ The content is centered and the footer stays at the bottom of the window, with n
 
 **Using a site generator?** The [starters](starters/) give you a working Hugo, Eleventy, or Astro blog in one command, and a [Pandoc template](starters/pandoc/) turns any Markdown file into a styled page.
 
+**Having an AI assistant write the page?** See [Pages written by AI](#pages-written-by-ai).
+
 **Converting Markdown?** Add the `<link>` to the page template of your static site generator, or to the HTML that Pandoc, markdown-it, or marked outputs. Headings, code blocks, task lists, tables (including column alignment), and footnotes are all styled, and wide tables scroll instead of widening the page.
 
 ### Versioning
@@ -125,6 +127,18 @@ TagBrush.css keeps classes to a minimum:
 | `role="group"` | Lays out buttons in a row. Put an input and a button inside for an inline form (e.g. a search bar) |
 | `.striped`   | Zebra-striped table rows                                            |
 | `.visually-hidden` | Hides content visually but keeps it available to screen readers |
+
+## Pages written by AI
+
+AI assistants are good at semantic HTML, and a classless stylesheet gives them no class names to get wrong. Ask for plain HTML with TagBrush.css and the page looks finished without any CSS from the assistant:
+
+```text
+Build a page for <what you need> as a single HTML file. Use semantic HTML
+with no classes and no custom CSS, styled by TagBrush.css. Follow
+https://kovirlabs.github.io/tagbrush/llms.txt
+```
+
+[`llms.txt`](llms.txt) is a short cheat sheet written for AI assistants: which elements to use, the few patterns that turn plain HTML into components (`role="switch"`, `aria-busy`, a `<section>` of `<article>`s), forms, and theming. Assistants that can read links will follow it, and you can also paste it into the conversation or your project instructions (for example `CLAUDE.md` or `AGENTS.md`).
 
 ## Page layout
 
@@ -330,6 +344,7 @@ Step-by-step guides with copy-paste snippets:
 | `index.html`              | Landing page, live demo, and theme builder           |
 | `starter.html`            | A complete page to copy as a starting point          |
 | `starters/`               | Pandoc, Hugo, Eleventy, and Astro starters (built by CI) |
+| `llms.txt`                | Usage cheat sheet for AI assistants                  |
 | `scripts/build.mjs`       | Generates the files above                            |
 | `tests/`                  | Cross-browser tests and screenshot baselines         |
 | `CHANGELOG.md`            | Release history                                      |

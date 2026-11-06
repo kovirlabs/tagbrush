@@ -87,7 +87,7 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 ## Chunk 11: AI-written pages
 
-- [ ] `llms.txt` and a README section on using TagBrush.css with pages written by AI assistants, which produce semantic HTML and have no class names to invent.
+- [x] `llms.txt` and a README section on using TagBrush.css with pages written by AI assistants, which produce semantic HTML and have no class names to invent.
 
 ## Chunk 12: Visual identity
 
