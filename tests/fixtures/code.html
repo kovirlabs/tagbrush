@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Code highlighting fixture</title>
+    <link rel="stylesheet" href="../../tagbrush.css">
+</head>
+<body>
+<!-- Output as each highlighter writes it, trimmed to a few tokens. -->
+<h2>Prism</h2>
+<pre class="language-js"><code class="language-js"><span class="token comment">// greet</span>
+<span class="token keyword">const</span> <span class="token function">greet</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter">name</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token string">`Hi </span><span class="token number">42</span><span class="token punctuation">;</span>
+<span class="token tag"><span class="token punctuation">&lt;</span>p</span> <span class="token attr-name">class</span><span class="token attr-value">="x"</span><span class="token punctuation">&gt;</span>
+<span class="token deleted">- old line</span>
+<span class="token inserted">+ new line</span></code></pre>
+
+<h2>highlight.js</h2>
+<pre><code class="hljs language-js"><span class="hljs-comment">// greet</span>
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">greet</span> = (<span class="hljs-params">name</span>) =&gt; <span class="hljs-string">`Hi`</span>; <span class="hljs-number">42</span> <span class="hljs-literal">true</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"x"</span>&gt;</span></code></pre>
+
+<h2>Hugo (Chroma)</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="c1">// greet</span>
+</span></span><span class="line"><span class="cl"><span class="kd">func</span> <span class="nf">greet</span><span class="p">(</span><span class="nx">name</span> <span class="kt">string</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="s">"Hi"</span> <span class="mi">42</span> <span class="p">}</span>
+</span></span></code></pre></div>
+
+<h2>Jekyll (Rouge)</h2>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># greet</span>
+<span class="k">def</span> <span class="nf">greet</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span> <span class="s2">"Hi"</span> <span class="mi">42</span> <span class="k">end</span>
+</code></pre></div></div>
+
+<h2>Shiki, two themes with defaultColor: false</h2>
+<pre class="shiki shiki-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e" tabindex="0"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> x </span></span></code></pre>
+
+<h2>Astro (Shiki with its own class names)</h2>
+<pre class="astro-code astro-code-themes github-light github-dark" style="--shiki-light:#24292e;--shiki-dark:#e1e4e8;--shiki-light-bg:#fff;--shiki-dark-bg:#24292e; overflow-x: auto;" tabindex="0" data-language="js"><code><span class="line"><span style="--shiki-light:#D73A49;--shiki-dark:#F97583">const</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8"> x</span></span></code></pre>
+
+<h2>Shiki, css-variables theme</h2>
+<pre class="shiki css-variables" style="background-color:var(--shiki-background);color:var(--shiki-foreground)" tabindex="0"><code><span class="line"><span style="color:var(--shiki-token-keyword)">const</span><span style="color:var(--shiki-token-string)"> "Hi"</span></span></code></pre>
+</body>
+</html>

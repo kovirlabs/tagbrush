@@ -1,0 +1,10 @@
+---
+layout: base.njk
+---
+<article>
+  <hgroup>
+    <h1>{{ title }}</h1>
+    <p><time datetime="{{ page.date | isoDate }}">{{ page.date | readableDate }}</time></p>
+  </hgroup>
+  {{ content | safe }}
+</article>

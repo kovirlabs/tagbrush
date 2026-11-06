@@ -1,0 +1,10 @@
+---
+layout: base.njk
+---
+<h1>Welcome</h1>
+<p>This site is built with <a href="https://www.11ty.dev">Eleventy</a> and styled by <a href="https://github.com/kovirlabs/tagbrush">TagBrush.css</a>. The templates use plain HTML with no classes.</p>
+<section>
+  <h2>Latest posts</h2>
+  {% set posts = collections.posts | reverse %}
+  {% include "post-list.njk" %}
+</section>

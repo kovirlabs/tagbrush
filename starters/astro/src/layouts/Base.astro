@@ -1,0 +1,36 @@
+---
+import 'tagbrush';
+
+const { title } = Astro.props;
+const path = Astro.url.pathname;
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/posts/', label: 'Posts' },
+];
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title ? `${title} – My site` : 'My site'}</title>
+  </head>
+  <body>
+    <header>
+      <nav aria-label="Main">
+        <strong><a href="/">My site</a></strong>
+        <ul>
+          {links.map((link) => (
+            <li><a href={link.href} aria-current={path === link.href ? 'page' : undefined}>{link.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <p>© My site</p>
+    </footer>
+  </body>
+</html>

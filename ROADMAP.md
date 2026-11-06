@@ -79,15 +79,15 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 ## Chunk 9: Code highlighting
 
-- [ ] Colors for highlighted code from common generators (Prism, highlight.js, Shiki, Hugo/Chroma, Rouge), following the theme and dark mode. These classes come from the generator, not the user, like the footnote classes.
+- [x] Colors for highlighted code from common generators (Prism, highlight.js, Shiki, Hugo/Chroma, Rouge), following the theme and dark mode. These classes come from the generator, not the user, like the footnote classes.
 
 ## Chunk 10: Starters
 
-- [ ] Ready-made starting points: a Pandoc one-liner and template, and minimal Hugo, Eleventy, and Astro starters in `starters/`.
+- [x] Ready-made starting points: a Pandoc one-liner and template, and minimal Hugo, Eleventy, and Astro starters in `starters/`.
 
 ## Chunk 11: AI-written pages
 
-- [ ] `llms.txt` and a README section on using TagBrush.css with pages written by AI assistants, which produce semantic HTML and have no class names to invent.
+- [x] `llms.txt` and a README section on using TagBrush.css with pages written by AI assistants, which produce semantic HTML and have no class names to invent.
 
 ## Chunk 12: Visual identity
 
