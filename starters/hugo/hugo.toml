@@ -1,0 +1,21 @@
+baseURL = 'https://example.org/'
+languageCode = 'en'
+title = 'My site'
+
+[menus]
+  [[menus.main]]
+    name = 'Home'
+    pageRef = '/'
+    weight = 10
+  [[menus.main]]
+    name = 'Posts'
+    pageRef = '/posts'
+    weight = 20
+
+# Output CSS classes instead of inline colors, so code blocks follow
+# TagBrush.css's colors and dark mode.
+[markup.highlight]
+  noClasses = false
+
+[markup.goldmark.renderer]
+  unsafe = false

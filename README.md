@@ -36,6 +36,8 @@ The content is centered and the footer stays at the bottom of the window, with n
 
 **Starting from scratch?** Copy [`starter.html`](starter.html), a complete page with navigation, cards, a form, and a footer, and edit from there.
 
+**Using a site generator?** The [starters](starters/) give you a working Hugo, Eleventy, or Astro blog in one command, and a [Pandoc template](starters/pandoc/) turns any Markdown file into a styled page.
+
 **Converting Markdown?** Add the `<link>` to the page template of your static site generator, or to the HTML that Pandoc, markdown-it, or marked outputs. Headings, code blocks, task lists, tables (including column alignment), and footnotes are all styled, and wide tables scroll instead of widening the page.
 
 ### Versioning
@@ -97,7 +99,7 @@ TagBrush.css sits in the same family as [Pico CSS](https://picocss.com), [Simple
 | Typography | `h1`–`h6`, `hgroup` (muted subtitle), `p`, `a`, `strong`, `small`, `mark`, `abbr`, `del`, `ins`, `s`, `dfn`, `q`, `sub`, `sup`, `hr`, `address`, `blockquote` (with `footer` attribution), `code`, `pre`, `kbd`, `samp`, `output` |
 | Lists      | `ul`, `ol`, `menu` (including nested lists, muted `::marker`), Markdown task lists (checkbox replaces the bullet), `dl`, `dt`, `dd` |
 | Media      | `img`, `picture`, `video`, `audio`, `canvas`, `svg`, `iframe`, `object`, `embed` (scale to fit), `figure`, `figcaption` |
-| Code highlighting | Token colors for Prism, highlight.js, Hugo (Chroma), Jekyll (Rouge), and Pygments output, and Shiki's dual themes and `css-variables` theme. Follows the theme and dark mode; a highlighter theme you load yourself still wins |
+| Code highlighting | Token colors for Prism, highlight.js, Hugo (Chroma), Jekyll (Rouge), Pandoc, and Pygments output, and Shiki's dual themes and `css-variables` theme. Follows the theme and dark mode; a highlighter theme you load yourself still wins |
 | Markdown   | Footnotes from GitHub-flavored Markdown, markdown-it, and Pandoc (smaller, muted, highlighted when linked to); long URLs and words wrap instead of widening the page |
 | Article grids | A `<section>` of two or more `<article>`s becomes a responsive grid of cards |
 | Structure  | `nav` (with `ul`/`menu` rendered as a horizontal menu, `aria-current` highlighted), `header`, `main`, `footer`, `search`, `article aside` (callout), breadcrumbs (`<nav aria-label="Breadcrumb">` gets `/` separators) |
@@ -327,6 +329,7 @@ Step-by-step guides with copy-paste snippets:
 | `frameworks/`             | Setup guides for each framework                      |
 | `index.html`              | Landing page, live demo, and theme builder           |
 | `starter.html`            | A complete page to copy as a starting point          |
+| `starters/`               | Pandoc, Hugo, Eleventy, and Astro starters (built by CI) |
 | `scripts/build.mjs`       | Generates the files above                            |
 | `tests/`                  | Cross-browser tests and screenshot baselines         |
 | `CHANGELOG.md`            | Release history                                      |

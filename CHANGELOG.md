@@ -5,7 +5,8 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ## Unreleased
 
 ### Added
-- Code highlighting: tokens from Prism, highlight.js, Hugo (Chroma), Jekyll (Rouge), and Pygments get theme colors that meet 4.5:1 in light and dark mode, set by `--code-*` variables. Shiki's dual themes (`defaultColor: false`) follow the color scheme, and its `css-variables` theme uses the same palette.
+- Starters for Pandoc (one-liner and template), Hugo, Eleventy, and Astro in `starters/`, built by CI on every change.
+- Code highlighting: tokens from Prism, highlight.js, Hugo (Chroma), Jekyll (Rouge), Pandoc, and Pygments get theme colors that meet 4.5:1 in light and dark mode, set by `--code-*` variables. Shiki's dual themes (`defaultColor: false`, including Astro's built-in Shiki) follow the color scheme, and its `css-variables` theme uses the same palette.
 - Reading width: pages without `<main>` (such as Markdown output) and a `<main>` holding a single `<article>` are kept to `--reading-width` (70 characters) for comfortable reading.
 - Article grids: a `<section>` of two or more `<article>`s becomes a responsive grid of cards, no classes needed.
 - Classless page layout: `header`, `main`, and `footer` stretch edge to edge with their content centered in `--container-max-width`, and the footer stays at the bottom of short pages. A page without `<main>` (such as Markdown output) is centered as a whole. Works through a framework wrapper without a class (`<div id="root">`, `<app-root>`).

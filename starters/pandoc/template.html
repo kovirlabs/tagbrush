@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="$if(lang)$$lang$$else$en$endif$">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+$for(author-meta)$
+  <meta name="author" content="$author-meta$">
+$endfor$
+$if(date-meta)$
+  <meta name="dcterms.date" content="$date-meta$">
+$endif$
+$if(description-meta)$
+  <meta name="description" content="$description-meta$">
+$endif$
+  <title>$if(title-prefix)$$title-prefix$ – $endif$$pagetitle$</title>
+  <!-- TagBrush.css styles everything below. Pandoc's built-in styles are left out on purpose. -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+$for(css)$
+  <link rel="stylesheet" href="$css$">
+$endfor$
+$for(header-includes)$
+  $header-includes$
+$endfor$
+$if(math)$
+  $math$
+$endif$
+</head>
+<body>
+$for(include-before)$
+$include-before$
+$endfor$
+<main>
+<article>
+$if(title)$
+<header>
+<hgroup>
+<h1>$title$</h1>
+$if(subtitle)$
+<p>$subtitle$</p>
+$endif$
+</hgroup>
+$if(author)$
+<p><small>$for(author)$$author$$sep$, $endfor$$if(date)$ · <time>$date$</time>$endif$</small></p>
+$elseif(date)$
+<p><small><time>$date$</time></small></p>
+$endif$
+$if(abstract)$
+<blockquote>$abstract$</blockquote>
+$endif$
+</header>
+$endif$
+$if(toc)$
+<details open>
+<summary>$if(toc-title)$$toc-title$$else$Contents$endif$</summary>
+$table-of-contents$
+</details>
+$endif$
+$body$
+</article>
+</main>
+$for(include-after)$
+$include-after$
+$endfor$
+</body>
+</html>

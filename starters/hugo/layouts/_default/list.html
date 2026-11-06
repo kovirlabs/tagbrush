@@ -1,0 +1,13 @@
+{{ define "main" }}
+<h1>{{ .Title }}</h1>
+{{ .Content }}
+<section>
+  {{ range .Pages }}
+  <article>
+    <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+    <p><small><time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time></small></p>
+    <p>{{ .Summary | plainify | truncate 140 }}</p>
+  </article>
+  {{ end }}
+</section>
+{{ end }}

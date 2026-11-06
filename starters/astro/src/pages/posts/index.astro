@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import { posts } from '../../posts.js';
+---
+<Base title="Posts">
+  <h1>Posts</h1>
+  <section>
+    {posts.map((post) => (
+      <article>
+        <h2><a href={post.url}>{post.frontmatter.title}</a></h2>
+        <p>{post.frontmatter.description}</p>
+      </article>
+    ))}
+  </section>
+</Base>

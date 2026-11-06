@@ -355,7 +355,8 @@
      Code Highlighting
      --------------------------------------------------------------------------
      Syntax highlighters wrap tokens in classes like .token.keyword (Prism),
-     .hljs-keyword (highlight.js) or .k (Pygments, Rouge, Hugo's Chroma).
+     .hljs-keyword (highlight.js), .k (Pygments, Rouge, Hugo's Chroma) or
+     .kw (Pandoc).
      These come from the tool, not from you, so they're styled here and
      follow the theme and dark mode. A highlighter theme you load yourself
      still wins: every selector has zero specificity.
@@ -363,7 +364,8 @@
   :where(
     .token:is(.comment, .prolog, .doctype, .cdata),
     .hljs-comment, .hljs-quote,
-    :is(.highlight, .chroma) :is(.c, .c1, .cm, .ch, .cd, .cs, .cpf)
+    :is(.highlight, .chroma) :is(.c, .c1, .cm, .ch, .cd, .cs, .cpf),
+    .sourceCode :is(.co, .do, .an, .cv, .in)
   ) {
     color: var(--code-comment);
     font-style: italic;
@@ -372,7 +374,8 @@
   :where(
     .token:is(.keyword, .atrule, .important),
     .hljs-keyword, .hljs-meta .hljs-keyword, .hljs-doctag,
-    :is(.highlight, .chroma) :is(.k, .kd, .kn, .kp, .kr, .kt, .ow, .cp)
+    :is(.highlight, .chroma) :is(.k, .kd, .kn, .kp, .kr, .kt, .ow, .cp),
+    .sourceCode :is(.kw, .cf, .im, .pp)
   ) {
     color: var(--code-keyword);
   }
@@ -380,7 +383,8 @@
   :where(
     .token:is(.string, .char, .attr-value, .regex, .url),
     .hljs-string, .hljs-regexp, .hljs-template-variable, .hljs-link,
-    :is(.highlight, .chroma) :is(.s, .s1, .s2, .sa, .sb, .sc, .sd, .se, .sh, .si, .sx, .sr, .ss, .dl)
+    :is(.highlight, .chroma) :is(.s, .s1, .s2, .sa, .sb, .sc, .sd, .se, .sh, .si, .sx, .sr, .ss, .dl),
+    .sourceCode :is(.st, .ch, .vs, .ss, .sc)
   ) {
     color: var(--code-string);
   }
@@ -388,7 +392,8 @@
   :where(
     .token:is(.function, .class-name),
     .hljs-title, .hljs-section,
-    :is(.highlight, .chroma) :is(.nf, .fm, .nc, .nn, .nd)
+    :is(.highlight, .chroma) :is(.nf, .fm, .nc, .nn, .nd),
+    .sourceCode .fu
   ) {
     color: var(--code-function);
   }
@@ -396,7 +401,8 @@
   :where(
     .token:is(.number, .boolean, .constant, .symbol),
     .hljs-number, .hljs-literal, .hljs-built_in, .hljs-symbol, .hljs-bullet,
-    :is(.highlight, .chroma) :is(.m, .mi, .mf, .mh, .mo, .mb, .il, .kc, .nb, .bp)
+    :is(.highlight, .chroma) :is(.m, .mi, .mf, .mh, .mo, .mb, .il, .kc, .nb, .bp),
+    .sourceCode :is(.dv, .bn, .fl, .cn, .bu)
   ) {
     color: var(--code-constant);
   }
@@ -404,7 +410,8 @@
   :where(
     .token:is(.tag, .property, .attr-name, .selector, .builtin, .variable),
     .hljs-name, .hljs-tag, .hljs-attr, .hljs-attribute, .hljs-property, .hljs-variable, .hljs-selector-tag, .hljs-selector-class, .hljs-selector-id, .hljs-type,
-    :is(.highlight, .chroma) :is(.nt, .na, .nv, .vc, .vg, .vi, .py, .no)
+    :is(.highlight, .chroma) :is(.nt, .na, .nv, .vc, .vg, .vi, .py, .no),
+    .sourceCode :is(.va, .at, .dt)
   ) {
     color: var(--code-tag);
   }
@@ -424,13 +431,15 @@
   :where(.token.italic, .hljs-emphasis, :is(.highlight, .chroma) .ge) { font-style: italic; }
 
   /* Shiki with two themes and defaultColor: false writes --shiki-light and
-     --shiki-dark on every token. Pick the one for the current scheme. */
-  :where(.shiki, .shiki span) {
+     --shiki-dark on every token. Pick the one for the current scheme. Matched
+     by the variable rather than a class, because tools built on Shiki use
+     their own classes (Astro's is .astro-code). */
+  :where([style*="--shiki-light"]) {
     color: light-dark(var(--shiki-light, currentColor), var(--shiki-dark, currentColor));
   }
 
   /* Element-level specificity so it beats the default pre background */
-  pre:where(.shiki) {
+  pre:where([style*="--shiki-light-bg"]) {
     background-color: light-dark(var(--shiki-light-bg, var(--color-surface)), var(--shiki-dark-bg, var(--color-surface)));
   }
 

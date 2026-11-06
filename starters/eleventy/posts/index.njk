@@ -1,0 +1,11 @@
+---
+layout: base.njk
+title: Posts
+permalink: /posts/
+eleventyExcludeFromCollections: true
+---
+<h1>Posts</h1>
+<section>
+  {% set posts = collections.posts | reverse %}
+  {% include "post-list.njk" %}
+</section>

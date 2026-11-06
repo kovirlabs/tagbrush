@@ -1,0 +1,15 @@
+---
+import Base from './Base.astro';
+
+const { frontmatter } = Astro.props;
+const date = new Date(frontmatter.date);
+---
+<Base title={frontmatter.title}>
+  <article>
+    <hgroup>
+      <h1>{frontmatter.title}</h1>
+      <p><time datetime={date.toISOString().slice(0, 10)}>{date.toLocaleDateString('en-US', { dateStyle: 'long', timeZone: 'UTC' })}</time></p>
+    </hgroup>
+    <slot />
+  </article>
+</Base>

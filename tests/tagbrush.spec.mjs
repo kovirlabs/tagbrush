@@ -636,6 +636,14 @@ test.describe('code highlighting', () => {
     expect(await style(page, 'pre.shiki-themes', 'backgroundColor')).toBe('rgb(36, 41, 46)');
   });
 
+  test('Shiki output under other class names, like Astro\'s, works too', async ({ page }) => {
+    const token = 'pre.astro-code .line > span:first-child';
+    expect(await style(page, token, 'color')).toBe('rgb(215, 58, 73)');
+    expect(await style(page, 'pre.astro-code', 'backgroundColor')).toBe('rgb(255, 255, 255)');
+    await page.emulateMedia({ colorScheme: 'dark' });
+    expect(await style(page, token, 'color')).toBe('rgb(249, 117, 131)');
+  });
+
   test("Shiki's css-variables theme uses the TagBrush palette", async ({ page }) => {
     expect(await style(page, 'pre.css-variables .line > span:first-child', 'color')).toBe(KEYWORD);
   });

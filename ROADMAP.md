@@ -83,7 +83,7 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 ## Chunk 10: Starters
 
-- [ ] Ready-made starting points: a Pandoc one-liner and template, and minimal Hugo, Eleventy, and Astro starters in `starters/`.
+- [x] Ready-made starting points: a Pandoc one-liner and template, and minimal Hugo, Eleventy, and Astro starters in `starters/`.
 
 ## Chunk 11: AI-written pages
 

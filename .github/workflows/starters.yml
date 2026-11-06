@@ -1,0 +1,60 @@
+name: Starters
+
+# Builds every starter with its real tool and checks the output, so the
+# starters keep working as TagBrush.css and the tools change.
+on:
+  push:
+    branches: [main]
+    paths: ['starters/**', 'tagbrush.css', '.github/workflows/starters.yml']
+  pull_request:
+    paths: ['starters/**', 'tagbrush.css', '.github/workflows/starters.yml']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Hugo and Pandoc
+        timeout-minutes: 5
+        run: sudo apt-get update && sudo apt-get install -y hugo pandoc
+
+      - name: Pandoc
+        working-directory: starters/pandoc
+        run: |
+          printf -- '---\ntitle: Notes\nauthor: Me\n---\n\n## Section\n\nText with a footnote.[^1]\n\n```js\nconst x = 1;\n```\n\n[^1]: The note.\n' > notes.md
+          pandoc notes.md --standalone --template template.html --toc -o with-template.html
+          grep -q '<main>' with-template.html
+          grep -q 'tagbrush' with-template.html
+          grep -q 'class="kw"' with-template.html
+          ! grep -q '<style' with-template.html
+          pandoc notes.md --standalone --css https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css -o one-liner.html
+          grep -q 'tagbrush' one-liner.html
+          ! grep -q 'max-width: 36em' one-liner.html
+
+      - name: Hugo
+        working-directory: starters/hugo
+        run: |
+          hugo --minify=false
+          grep -q 'class="chroma"' public/posts/hello-world/index.html
+          grep -q '<article>' public/index.html
+
+      - name: Eleventy
+        working-directory: starters/eleventy
+        run: |
+          npm install --no-audit --no-fund
+          npx eleventy
+          grep -q 'class="token keyword"' _site/posts/hello-world/index.html
+          test ! -e _site/README/index.html
+
+      - name: Astro
+        working-directory: starters/astro
+        run: |
+          npm install --no-audit --no-fund
+          npx astro build
+          grep -q -- '--shiki-light' dist/posts/hello-world/index.html
