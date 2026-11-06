@@ -41,3 +41,11 @@ Fixed in TagBrush.css:
 Clarified in `llms.txt`: lists in any `<nav>` are horizontal; previous/next and pagination; callouts work anywhere in an article; single-form pages go in an `<article>`; `<select>` in a `role="group"`; `<mark>` for status labels and `<ins>`/`<del>` for changes.
 
 Gaps that need new patterns (chunk 16): a sidebar layout (dashboard, docs), vertical navigation in a sidebar, stat tiles for key numbers, a page header with a title and action buttons, and a hero section. Also reported, and not planned yet: badge colors, a "featured" card, multi-column footers, a danger button, pull quotes, and avatars.
+
+### Round 2 (November 2026)
+
+After the app patterns (chunk 16), the dashboard and docs requests went to two fresh agents (`dashboard-round2.html`, `docs-round2.html`). Both used the new patterns without being told to: the dashboard has a sidebar layout, stat tiles, a title row with an action, a `<search>` bar, and `<mark>` statuses; the docs page has a sticky table of contents beside the article and previous/next links at opposite ends. All automated checks pass.
+
+The review found one bug in the new patterns: a `<header>` with an `<hgroup>` inside `<main>` (a page title with a subtitle and a button) was styled as a giant hero, because a class-less `<main>` matched the rule meant for framework wrappers. The hero now only applies to the page header. The dashboard agent also wanted a dropdown user menu: a `<nav>` inside a popover is now a vertical list, and `llms.txt` shows the pattern.
+
+Still open: status colors (every `<mark>` looks the same), a wide panel beside a narrow one, and where breadcrumbs and keyboard-shortcut lists belong in docs.

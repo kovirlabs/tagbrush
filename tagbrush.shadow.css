@@ -1366,6 +1366,19 @@
     gap: 0;
   }
 
+  /* A menu in a popover (a user menu in the top bar) is a vertical list too */
+  :where([popover] nav, nav[popover]) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  [popover] nav :is(ul, ol, menu),
+  nav[popover] :is(ul, ol, menu) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-xs);
+  }
+
   aside nav :is(ul, ol, menu) :is(ul, ol, menu) {
     padding-inline-start: var(--spacing-md);
   }
