@@ -4,7 +4,7 @@
 
 **Make plain HTML look finished. One `<link>`, no classes.**
 
-You know HTML and want a page that looks good now: a landing page, docs, a blog, a Markdown export, an internal tool. Add one stylesheet and write ordinary HTML. The page is laid out, the forms and tables are styled, dark mode follows the system, and any brand color you pick stays readable. No classes to learn, no build step, no JavaScript, about 5 KB gzipped.
+You know HTML and want a page that looks good now: a landing page, docs, a blog, a Markdown export, an internal tool. Add one stylesheet and write ordinary HTML. The page is laid out, the forms and tables are styled, dark mode follows the system, and any brand color you pick stays readable. No classes to learn, no build step, no JavaScript, about 7 KB gzipped.
 
 When you do want to customize, a few CSS variables re-theme everything, and any CSS you write wins without `!important`. The same file works in plain HTML, static site generators, and every major framework.
 
@@ -72,27 +72,29 @@ Or just [download `tagbrush.css`](tagbrush.css) and host it yourself.
 - **Themeable** – colors, fonts, type scale, spacing, and radius are semantic CSS variables, and one variable re-themes everything. The [theme builder](https://kovirlabs.github.io/tagbrush/#theming) writes the CSS for you.
 - **Accessible** – WCAG AA contrast, visible keyboard focus rings, `prefers-reduced-motion`, forced-colors support, and print styles.
 - **Small helpers when you want them** – `.grid`, `.card`, `.container`, and `role="group"` cover the layouts most sites need.
-- **No build step, no dependencies** – plain CSS you can link, copy, or import. About 5 KB minified and gzipped.
+- **No build step, no dependencies** – plain CSS you can link, copy, or import. About 7 KB minified and gzipped.
 - **Works with any framework** – import it once in your root layout. [Setup guides](frameworks/README.md) cover Astro, Next.js, React, Vue, Nuxt, Angular, SvelteKit, Solid, Web Components, and Tailwind.
 
 ## How it compares
 
-TagBrush.css sits in the same family as [Pico CSS](https://picocss.com), [Simple.css](https://simplecss.org), and [Water.css](https://watercss.kognise.dev): drop-in stylesheets for semantic HTML. They're all good choices. Here's where they differ, measured from each package's current npm release (TagBrush.css 1.x, Pico 2.1.1, Simple.css 2.3.7, Water.css 2.1.1) in November 2026:
+TagBrush.css sits in a family of drop-in stylesheets for semantic HTML. [Pico CSS](https://picocss.com/docs/maintenance) was the best known, but it's no longer maintained (2.1.1 is its final release); [Blades CSS](https://blades.dev) is its maintained, drop-in fork. [Oat](https://oat.ink) is a newer semantic library that adds JavaScript components, and [Simple.css](https://simplecss.org) and [Water.css](https://watercss.kognise.dev) are the smallest. Measured from each package's current npm release in November 2026 (Blades 3.1.1, Oat 1.1.0, Simple.css 2.3.7, Water.css 2.1.1):
 
-| | TagBrush.css | Pico CSS | Simple.css | Water.css |
-|---|---|---|---|---|
-| Size (minified, gzipped) | 5.2 KB | 11.4 KB (10.1 KB classless) | 2.7 KB | 3.5 KB |
-| Works without classes | Yes | Yes (classless build) | Yes | Yes |
-| Your CSS wins without `!important` (`@layer`) | Yes | No | No | No |
-| Dark mode from the system setting | Yes | Yes | Yes | Yes |
-| Force light or dark on any element | Yes (`data-theme`) | Yes (`data-theme`) | No | Separate light and dark files |
-| Readable button text for a custom accent color | Automatic | Set by hand (`--pico-primary-inverse`), or use a prebuilt color theme | Set by hand (`--accent-text`) | Set by hand |
-| Page layout with no classes | Centered landmarks, full-width backgrounds, sticky footer | Centered `main` (classless build) | Centered column | Centered body |
-| Toggle switch, loading spinner | Yes | Yes | No | No |
-| Style only part of a page | Yes (`@scope`, `class="tagbrush"`) | Yes (`class="pico"` builds) | No | No |
-| Inside Web Components (Shadow DOM) | Yes (shadow build) | Yes | No | No |
+| | TagBrush.css | Blades CSS (Pico fork) | Oat | Simple.css | Water.css |
+|---|---|---|---|---|---|
+| Size (minified, gzipped) | 7.4 KB | 12.1 KB | 7.1 KB CSS + 4.0 KB JS | 2.7 KB | 3.5 KB |
+| Actively maintained | Yes | Yes | Yes | Yes | No commits since early 2024 |
+| JavaScript needed | No | No | For tabs, dropdowns, and toasts | No | No |
+| Your CSS wins without `!important` (`@layer`) | Yes | No | Yes | No | No |
+| Dark mode from the system setting | Yes | Yes | Yes | Yes | Yes |
+| Force light or dark on any element | Yes (`data-theme`) | Yes (`data-theme`) | No | No | Separate light and dark files |
+| Readable button text for any accent color | Automatic | Set by hand (`--pico-primary-inverse`) | Set by hand (`--primary-foreground`) | Set by hand (`--accent-text`) | Set by hand |
+| Page layout with no classes | Centered landmarks, sidebar layouts, article grids, sticky footer | Centered `main` | Sidebar with `data-sidebar` | Centered column | Centered body |
+| Markdown output (task lists, footnotes, highlighted code) | Yes | No | No | No | No |
+| Style only part of a page | Yes (`@scope`, `class="tagbrush"`) | Yes (`class="pico"` builds) | No | No | No |
+| Inside Web Components (Shadow DOM) | Yes (shadow build) | Yes | No | No | No |
+| Built for AI agents (`llms.txt`, agent files, page checker) | Yes | No | No | No | No |
 
-**Choose Simple.css or Water.css** if the smallest possible file matters most and you don't need components like toggle switches or dialogs laid out for you. **Choose Pico** if you want its larger set of components, such as dropdown menus and tooltips. **Choose TagBrush.css** if you want plain HTML to look finished without classes, need your own CSS to win cleanly, or want any brand color to stay readable.
+**Choose Simple.css or Water.css** if the smallest possible file matters most. **Choose Blades** if you have a Pico site to keep running. **Choose Oat** if you want ready-made interactive components like tabs and toasts and don't mind a little JavaScript. **Choose TagBrush.css** if you want plain HTML and Markdown to look finished without classes or JavaScript, need your own CSS to win cleanly, want any brand color to stay readable, or have AI agents writing your pages. In our [benchmarks](evals/benchmark-2/), agents using TagBrush.css produced the same designs as with Tailwind or hand-written CSS with about 35% less output, and plain pages with 5–8× less.
 
 ## What gets styled
 

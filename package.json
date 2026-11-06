@@ -1,6 +1,6 @@
 {
   "name": "tagbrush",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A tiny, no-build CSS library that makes plain semantic HTML look clean and modern. Dark mode built in, themeable with CSS variables.",
   "keywords": [
     "css",
@@ -17,7 +17,12 @@
     "svelte",
     "web-components",
     "shadow-dom",
-    "minimal"
+    "minimal",
+    "markdown",
+    "llm",
+    "ai-agents",
+    "llms-txt",
+    "accessible"
   ],
   "homepage": "https://kovirlabs.github.io/tagbrush/",
   "repository": {
