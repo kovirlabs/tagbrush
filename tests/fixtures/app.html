@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>App patterns fixture</title>
+    <link rel="stylesheet" href="../../tagbrush.css">
+</head>
+<body>
+    <header>
+        <nav aria-label="Main"><strong>Northwind</strong><ul><li><a href="#">Help</a></li><li><a href="#">Maya Ortiz</a></li></ul></nav>
+    </header>
+    <aside>
+        <nav aria-label="Sections">
+            <ul>
+                <li><a href="#" aria-current="page">Dashboard</a></li>
+                <li><a href="#">Orders</a></li>
+                <li><a href="#">Customers</a>
+                    <ul><li><a href="#">Segments</a></li></ul>
+                </li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </nav>
+    </aside>
+    <main>
+        <header>
+            <h1>Dashboard</h1>
+            <button>Export</button>
+        </header>
+        <dl id="stats">
+            <div><dt>Revenue</dt><dd>$84,312</dd><dd><ins>+12.4%</ins> vs. last month</dd></div>
+            <div><dt>Orders</dt><dd>1,148</dd></div>
+            <div><dt>Conversion</dt><dd>2.86%</dd></div>
+            <div><dt>Average order</dt><dd>$73.44</dd></div>
+        </dl>
+        <search>
+            <input type="search" aria-label="Search orders" placeholder="Search orders">
+            <select aria-label="Status"><option>All statuses</option></select>
+            <button>Filter</button>
+        </search>
+        <dl id="plain"><dt>Term</dt><dd>A plain definition list stays a list.</dd></dl>
+    </main>
+    <footer><p>Footer</p></footer>
+</body>
+</html>

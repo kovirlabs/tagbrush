@@ -107,7 +107,9 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 ## Chunk 16: App and dashboard patterns
 
-- [ ] `<aside>` next to `<main>` becomes a sidebar layout; a `<dl>` of `<div>` groups becomes stat tiles; `role="toolbar"` becomes a toolbar row. No classes.
+- [x] `<aside>` next to `<main>` becomes a sidebar layout, and next to an `<article>` a sticky table of contents; navigation in an aside is vertical; a `<dl>` of `<div>` groups becomes stat tiles; a header with a heading and buttons is one row; an `<hgroup>` in the page header is a hero.
+- [x] Search and filter bars use `<search>` instead of the planned `role="toolbar"`: ARIA toolbars promise arrow-key navigation, which needs JavaScript.
+- Not yet: badge colors, a featured card, multi-column footers, a danger button, pull quotes, avatars (reported by the round 1 agents).
 
 ## Chunk 17: Debug mode
 
