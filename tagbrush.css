@@ -1595,6 +1595,53 @@
   }
 
   /* ==========================================================================
+     Debug Mode
+     --------------------------------------------------------------------------
+     <html data-tagbrush="debug"> (or the attribute on any element) outlines
+     common mistakes inside it, so a person or an agent taking a screenshot
+     can spot them:
+       red    images without alt text, form fields without a label, buttons
+              and links without text, clickable div/span, a second <main>
+       amber  classes TagBrush.css doesn't use, inline styles other than
+              CSS variables
+     ========================================================================== */
+  :where([data-tagbrush~="debug"]) :where(
+    img:not([alt]),
+    :is(input:not([type="hidden"], [type="submit"], [type="button"], [type="reset"], [type="image"]), select, textarea):not([id], [aria-label], [aria-labelledby], [title], label *),
+    button:empty:not([aria-label], [aria-labelledby], [title]),
+    a[href]:empty:not([aria-label], [aria-labelledby], [title]),
+    :is(div, span)[onclick],
+    main ~ main:not([hidden])
+  ) {
+    outline: 3px dashed var(--color-error) !important;
+    outline-offset: 2px !important;
+  }
+
+  :where([data-tagbrush~="debug"]) :where(
+    [class]:not([class=""], .button, .secondary, .outline, .container, .grid, .card, .striped, .visually-hidden, pre *, pre, .highlight, .highlight *, [data-footnotes] *, .footnotes *),
+    [style]:not([style^="--"], [style*="; --"], [style*=";--"])
+  ) {
+    outline: 2px dotted var(--color-warning) !important;
+    outline-offset: 2px !important;
+  }
+
+  :where([data-tagbrush~="debug"]) > :where(body)::after,
+  :where(body[data-tagbrush~="debug"])::after {
+    content: "TagBrush debug · red: missing alt, label, or text · amber: unused class or inline style";
+    position: fixed;
+    right: var(--spacing-sm);
+    bottom: var(--spacing-sm);
+    z-index: 2147483647;
+    max-width: calc(100% - 2 * var(--spacing-sm));
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
+    background-color: var(--color-text);
+    color: var(--color-background);
+    font: 0.75rem/1.4 var(--font-family-mono);
+    pointer-events: none;
+  }
+
+  /* ==========================================================================
      Accessibility & Media Preferences
      ========================================================================== */
   @media (prefers-reduced-motion: no-preference) {

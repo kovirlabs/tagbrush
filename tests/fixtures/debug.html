@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" data-tagbrush="debug">
+<head>
+    <meta charset="UTF-8">
+    <title>Debug mode fixture</title>
+    <link rel="stylesheet" href="../../tagbrush.css">
+</head>
+<body>
+    <main>
+        <h1>Debug mode</h1>
+        <!-- Problems -->
+        <img id="no-alt" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="40" height="40">
+        <input id-missing type="text" name="unlabeled" data-test="unlabeled-input">
+        <button id="empty-button"></button>
+        <a id="empty-link" href="#"></a>
+        <div id="click-div" onclick="void 0">Click me</div>
+        <p id="invented-class" class="hero-text">Uses a class TagBrush doesn't style</p>
+        <p id="inline-layout" style="display: flex; gap: 1rem">Inline layout</p>
+        <!-- Fine -->
+        <img id="has-alt" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="" width="40" height="40">
+        <label for="named">Name</label><input id="named" type="text">
+        <label>Wrapped <input id="wrapped" type="text"></label>
+        <input id="aria-named" type="search" aria-label="Search">
+        <button id="text-button">Save</button>
+        <button id="icon-button" aria-label="Close">✕</button>
+        <a id="button-link" class="button" href="#">Link button</a>
+        <p id="variable-style" style="--color-primary: #0f766e">Theme variable inline</p>
+        <pre><code class="language-js"><span id="token" class="token keyword">const</span></code></pre>
+    </main>
+</body>
+</html>

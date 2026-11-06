@@ -113,7 +113,7 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 ## Chunk 17: Debug mode
 
-- [ ] `<html data-tagbrush="debug">` outlines common mistakes (images without `alt`, unlabeled fields, classes TagBrush doesn't use, empty buttons) in pure CSS, for people and for agents that take screenshots.
+- [x] `<html data-tagbrush="debug">` outlines common mistakes (images without `alt`, unlabeled fields, classes TagBrush doesn't use, empty buttons) in pure CSS, for people and for agents that take screenshots.
 
 ## Chunk 18: `npx tagbrush check`
 
