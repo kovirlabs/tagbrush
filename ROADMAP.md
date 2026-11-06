@@ -99,7 +99,7 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 ## Chunk 14: `llms.txt` contract test
 
-- [ ] Every HTML snippet in `llms.txt` is rendered in the tests and must be styled by TagBrush.css, and every class, attribute, and variable it mentions must exist in the stylesheet.
+- [x] Every HTML snippet in `llms.txt` is rendered in the tests and must be styled by TagBrush.css, and every class, attribute, and variable it mentions must exist in the stylesheet.
 
 ## Chunk 15: Agent evaluation
 
