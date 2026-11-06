@@ -352,6 +352,44 @@ test.describe('semantic components', () => {
   });
 });
 
+test.describe('form finishing touches', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+    await page.goto(DEMO);
+  });
+
+  test('a textarea without rows grows with its content', async ({ page }) => {
+    const supported = await page.evaluate(() => CSS.supports('field-sizing', 'content'));
+    test.skip(!supported, 'This browser does not support field-sizing yet');
+    const height = () => page.locator('#message').evaluate((el) => el.getBoundingClientRect().height);
+    const empty = await height();
+    expect(empty).toBeGreaterThanOrEqual(90);
+    await page.fill('#message', 'one\ntwo\nthree\nfour\nfive\nsix');
+    expect(await height()).toBeGreaterThan(empty);
+  });
+
+  test('a textarea with rows keeps its size', async ({ page }) => {
+    await page.evaluate(() => document.querySelector('#message').setAttribute('rows', '2'));
+    expect(await style(page, '#message', 'fieldSizing')).not.toBe('content');
+  });
+
+  test('read-only fields look fixed but keep readable text', async ({ page }) => {
+    expect(await style(page, '#readonly-input', 'backgroundColor')).toBe('rgb(243, 244, 246)');
+    expect(await style(page, '#readonly-input', 'color')).toBe('rgb(31, 41, 55)');
+    expect(await style(page, '#name', 'backgroundColor')).toBe('rgb(255, 255, 255)');
+  });
+
+  test('the caret uses the theme color', async ({ page }) => {
+    expect(await style(page, '#name', 'caretColor')).toBe('rgb(37, 99, 235)');
+  });
+
+  test('the select arrow is drawn in the muted text color', async ({ page }) => {
+    const image = await style(page, '#topic', 'backgroundImage');
+    expect(image).toContain('linear-gradient');
+    expect(image).toContain('rgb(100, 107, 118)');
+  });
+});
+
 test.describe('markdown output', () => {
   const MARKDOWN = fileUrl('tests/fixtures/markdown.html');
 
