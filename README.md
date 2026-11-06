@@ -66,7 +66,7 @@ Or just [download `tagbrush.css`](tagbrush.css) and host it yourself.
 - **Classless page layout** – `header`, `main`, and `footer` center themselves with full-width backgrounds, and the footer stays at the bottom of short pages. Markdown output without a `<main>` is centered too.
 - **Classless everything else** – typography, lists, media, forms, tables, dialogs, and more are styled automatically. Common components come from the HTML and ARIA you'd write anyway: `role="switch"` makes a toggle, `aria-busy="true"` shows a spinner, `<nav aria-label="Breadcrumb">` gets separators.
 - **Markdown-ready** – task lists, footnotes, column alignment, and wide tables from GitHub-flavored Markdown, Pandoc, markdown-it, and Hugo all look right.
-- **Any color stays readable** – pick any `--color-primary` and button text switches between white and black, while links darken or lighten as needed. The tests check WCAG AA contrast for 10 different primary colors in light and dark mode.
+- **One color, a whole palette** – pick any `--color-primary` and the backgrounds, surfaces, and borders take on a hint of it, button text switches between white and black, and links darken or lighten as needed to stay readable. The tests check WCAG AA contrast for 10 different primary colors in light and dark mode.
 - **Dark mode** – follows the system setting automatically, or force it per page or per element with `data-theme`.
 - **Easy to override** – everything lives in a `@layer`, so any CSS you write wins without `!important`.
 - **Themeable** – colors, fonts, type scale, spacing, and radius are semantic CSS variables, and one variable re-themes everything. The [theme builder](https://kovirlabs.github.io/tagbrush/#theming) writes the CSS for you.
@@ -249,12 +249,12 @@ Button variants only change a few private variables, so you can add your own in 
 | `--color-primary-hover` | *derived*    | Button hover (primary, darker under white text and lighter under black text) |
 | `--color-link`          | *derived*    | Link and outline-button text (primary, darkened in light mode and lightened in dark mode as far as needed to stay readable) |
 | `--color-link-hover`    | *derived*    | Link hover (link color, darkened in light mode, lightened in dark mode) |
-| `--color-background`    | white / `#111827` | Page, input, and dialog backgrounds  |
-| `--color-surface`       | `#f3f4f6` / `#1f2937` | Code, blockquotes, secondary buttons |
-| `--color-text`          | `#1f2937` / `#f3f4f6` | Body text                       |
+| `--color-background`    | white / near-black, *tinted* | Page, input, and dialog backgrounds  |
+| `--color-surface`       | light / dark gray, *tinted* | Code, blockquotes, cards, secondary buttons |
+| `--color-text`          | near-black / near-white, *tinted* | Body text                       |
 | `--color-heading`       | `--color-text` | Headings                                |
-| `--color-text-muted`    | `#646b76` / `#9ca3af` | Captions, help text, placeholders, footers |
-| `--color-border`        | `#e5e7eb` / `#374151` | Inputs, tables, rules, details  |
+| `--color-text-muted`    | mid gray, *tinted* | Captions, help text, placeholders, footers |
+| `--color-border`        | light / dark gray, *tinted* | Inputs, tables, rules, details  |
 | `--color-highlight`     | `#fef08a` / `#713f12` | `<mark>` background             |
 | `--color-error`         | `#dc2626` / `#f87171` | Invalid fields and their help text |
 | `--color-success`       | `#16a34a` / `#4ade80` | Fields marked `aria-invalid="false"`, good `meter` values, `<ins>` |
@@ -267,7 +267,7 @@ Button variants only change a few private variables, so you can add your own in 
 | `--font-family-heading` | `--font-family-base` | Headings                          |
 | `--font-size-base`      | `1rem`       | Body text, buttons, inputs                |
 | `--font-size-sm`        | `0.875rem`   | `small`, captions, footers                |
-| `--font-size-h1` … `--font-size-h6` | `2.25rem` – `1rem` | Heading sizes             |
+| `--font-size-h1` … `--font-size-h6` | `1.875rem`–`2.5rem` (grows with the screen) – `1rem` | Heading sizes |
 | `--font-weight-heading` | `600`        | Headings                                  |
 | `--line-height` / `--line-height-heading` | `1.6` / `1.2` | Body text / headings |
 | `--spacing`             | `1rem`       | Base unit; `--spacing-xs` … `--spacing-xl` are 0.25× – 2× of it |
@@ -285,7 +285,7 @@ Button variants only change a few private variables, so you can add your own in 
 | `--input-padding` / `--input-radius` | spacing, radius | Text inputs, selects, textareas |
 | `--card-padding` / `--card-radius` | `1.5rem` / radius | `.card`                       |
 
-Where two defaults are shown, they are the light and dark values.
+Where two defaults are shown, they are the light and dark values. *Tinted* neutrals carry a faint hint of `--color-primary`'s hue (more saturated primaries tint more, grays and black not at all), so changing one color gives the whole page a matching palette. Set any of them to a plain color to opt out, for example `--color-surface: light-dark(#f4f4f5, #27272a)`.
 
 ### Browser support
 

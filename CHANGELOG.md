@@ -26,6 +26,7 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 - Theme builder: shows the contrast of button text and links as you pick colors, keeps the theme in the page URL so you can share it, and has a live preview.
 
 ### Changed
+- Visual identity: background, surface, text, muted, and border colors carry a faint tint of `--color-primary`'s hue, so one color sets a matching palette (the default blue looks almost the same as before). `h1` and `h2` grow with the screen and have slightly tighter letter spacing. Links in running text are softly underlined. The page header and footer get hairline rules, a `<section>` after other content gets more room above it, and blockquotes get a primary-tinted rule.
 - Any `--color-primary` now stays readable: button text switches automatically between white and black (`--color-on-primary` was always white, which failed contrast on lighter colors like amber or emerald), hover goes darker or lighter to match, and links and outline buttons are darkened (light mode) or lightened (dark mode) only as far as needed. The default link color is a slightly darker blue. Setting `--color-on-primary` or `--color-link` still overrides this.
 - The select arrow follows the theme (`--color-text-muted`) instead of a fixed gray image.
 - Tables are as wide as their content and scroll sideways inside themselves when they don't fit, so wide tables no longer widen the page on phones. Tables inside `<figure>` still fill the full width.
