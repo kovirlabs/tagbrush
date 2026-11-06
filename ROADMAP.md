@@ -148,7 +148,10 @@ The benchmark (`evals/benchmark/`) showed TagBrush.css pages cost 3–4× less m
 - [ ] Status colors for badges (`<mark>` variants or a small attribute), the gap agents reported most.
 - [ ] A richer hero (a visual or figure beside the heading, a subtle background), and feature cards with an accent.
 - [ ] Inline SVG icons sized and aligned automatically in buttons, navigation, and headings.
-- [ ] Re-run the benchmark and compare screenshots side by side.
+- [ ] A full-height sidebar variant: `<aside>` before `<header>` puts the top bar beside the sidebar instead of above it (benchmark 2).
+- [ ] Fix `<hgroup>`: mute the paragraphs, never the heading, so a label before the heading works (benchmark 2).
+- [ ] Consider a built-in `--tone` pattern for badges and icons, as both benchmark 2 agents invented it.
+- [ ] Re-run the benchmarks and compare screenshots side by side.
 
 ## Release
 

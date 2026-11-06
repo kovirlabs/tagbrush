@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overview · Fernwood Goods</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+<style>
+:root {
+  --color-primary: #1f7a55;
+  --color-background: light-dark(#f8fafc, #0c1210);
+  --color-surface: light-dark(#fff, #141b18);
+  --color-text: light-dark(#0f172a, #e5ebe8);
+  --color-text-muted: light-dark(#64748b, #94a3a0);
+  --color-border: light-dark(#e2e8f0, #26312d);
+  --font-family-base: Inter, system-ui, sans-serif;
+  --font-size-h1: 1.5rem;
+  --font-size-h2: 1rem;
+  --font-size-base: .9375rem;
+  --card-radius: 1rem;
+  --border-radius: .5rem;
+}
+svg { width: 1.25em; height: 1.25em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: middle; }
+small { display: block; color: var(--color-text-muted); font-size: .75rem; }
+mark { background: color-mix(in srgb, var(--tone, #64748b) 12%, transparent); color: color-mix(in srgb, var(--tone, #64748b) 75%, var(--color-text)); border-radius: 1em; padding: .1em .55em; font-size: .75rem; font-weight: 500; }
+body > aside, body > header { background: var(--color-surface); }
+body > header { padding-block: .6rem; }
+body > header nav, body > header ul { display: flex; flex-flow: row nowrap; align-items: center; gap: .5rem; }
+body > header nav > p { margin: 0 auto 0 0; }
+aside a { padding-block: .55rem; }
+aside > p { display: grid; grid-template-columns: 2rem 1fr; column-gap: .75rem; margin: -.5rem -1rem 1.25rem; padding: 0 1rem 1rem; border-bottom: 1px solid var(--color-border); }
+aside > p svg, abbr { grid-row: span 2; box-sizing: content-box; padding: .4rem; border-radius: .5rem; background: var(--color-primary); color: #fff; width: 1.2rem; height: 1.2rem; }
+aside a { color: var(--color-text); font-weight: 500; gap: .75rem; }
+aside a svg { color: var(--color-text-muted); }
+aside a[aria-current] svg { color: inherit; }
+aside a[style]::before { content: ""; width: .45rem; height: .45rem; border-radius: 50%; background: var(--tone); margin-inline: .25rem .5rem; display: inline-block; }
+aside mark { margin-left: auto; background: var(--color-border); color: var(--color-text); }
+aside h2 { font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--color-text-muted); margin: 1.5rem .75rem .5rem; }
+aside > nav:last-child { margin-top: auto; border-top: 1px solid var(--color-border); padding-top: .75rem; }
+body > header button { border-color: transparent; color: var(--color-text-muted); }
+body > header button[aria-label^="Notif"] { position: relative; }
+body > header button[aria-label^="Notif"]::after { content: ""; position: absolute; top: .45rem; right: .7rem; width: .45rem; height: .45rem; border-radius: 50%; background: #f43f5e; }
+abbr { display: inline-grid; place-items: center; text-decoration: none; border-radius: 50%; font-size: .75rem; font-weight: 600; }
+header button:has(abbr) { display: flex; align-items: center; gap: .6rem; padding-block: .25rem; }
+header button > span { text-align: start; color: var(--color-text); line-height: 1.2; }
+main > header [role=group] { margin-left: auto; border: 1px solid var(--color-border); border-radius: var(--border-radius); padding: .2rem; background: var(--color-surface); }
+main > header [role=group] button { border: 0; color: var(--color-text); }
+[aria-pressed=true] { background: var(--color-border); }
+dl > div, section > article { background: var(--color-surface); border-radius: var(--card-radius); box-shadow: var(--shadow); }
+dt { display: flex; justify-content: space-between; align-items: start; gap: .5rem; color: var(--color-text-muted); }
+dt + dd { font-size: 2rem; font-weight: 600; color: var(--color-text); }
+dd svg { width: 100%; height: 2rem; margin-top: 1rem; color: var(--color-primary); }
+div:has(del) dd svg { color: #f43f5e; }
+ins, del { display: inline-flex; align-items: center; gap: .35em; text-decoration: none; border-radius: 1em; padding: .1em .55em; font-size: .75rem; font-weight: 600; }
+ins::before, del::before { content: ""; width: .3em; height: .3em; border: solid; border-width: 2px 2px 0 0; transform: translateY(.1em) rotate(-45deg); }
+del::before { transform: translateY(-.15em) rotate(135deg); }
+td del { background: none; color: var(--color-text-muted); text-decoration: line-through; }
+td del::before { display: none; }
+section > article { padding: 0; overflow: hidden; }
+article > header, article > footer { padding: 1.25rem; margin: 0; border-bottom: 1px solid var(--color-border); }
+article > header { display: flex; justify-content: space-between; align-items: center; }
+section > article { display: flex; flex-direction: column; }
+article > footer { margin-top: auto; }
+hgroup { margin: 0; }
+td { vertical-align: middle; }
+hgroup > p { margin: .15rem 0 0; }
+dd { font-size: .8125rem; color: var(--color-text-muted); }
+article > footer { border: 0; border-top: 1px solid var(--color-border); font-size: .8125rem; color: var(--color-text-muted); }
+article p { font-size: .8125rem; }
+figure { margin: 0; }
+th, td { white-space: nowrap; padding: .9rem 1.25rem; }
+th:first-child, td:first-child { font-weight: 500; }
+th { font-size: .75rem; text-transform: uppercase; letter-spacing: .04em; color: var(--color-text-muted); }
+td:nth-child(3) { color: var(--color-text-muted); }
+td:last-child, th:last-child { text-align: end; }
+td mark::before { content: ""; display: inline-block; width: .4em; height: .4em; border-radius: 50%; background: currentColor; margin-right: .35em; vertical-align: .1em; }
+ol { list-style: none; padding: 0; margin: 0; }
+ol li { display: grid; grid-template-columns: 2.5rem minmax(0, 1fr) auto; column-gap: .75rem; padding: 1rem 1.25rem; border-bottom: 1px solid var(--color-border); margin: 0; }
+ol li:last-child { border: 0; }
+ol svg { grid-row: span 2; box-sizing: border-box; width: 2.5rem; height: 2.5rem; padding: .6rem; border-radius: .5rem; color: var(--tone); background: color-mix(in srgb, var(--tone) 14%, transparent); }
+ol strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 500; }
+ol progress { grid-column: 1 / -1; height: .3rem; margin: .75rem 0 0; }
+body > footer { text-align: center; }
+@media (min-width: 768px) {
+  body { grid-template-areas: "aside header" "aside main" "aside footer"; }
+  aside { display: flex; flex-direction: column; }
+  a[href="#menu"] { display: none; }
+}
+@media (min-width: 1100px) { main > section { grid-template-columns: 2fr 1fr; } }
+@media (max-width: 767px) {
+  body > aside:not(:target), header li:has(search), header button > span, header button:has(abbr) > svg, header nav small { display: none; }
+  main > header [role=group] { margin-left: 0; }
+}
+</style>
+</head>
+<body>
+<aside id="menu">
+  <p><svg viewBox="0 0 24 24"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.5 19 2c1 2 2 4.2 2 8 0 5.5-4.8 10-10 10Z"/><path d="M2 21c0-3 1.9-5.4 5.1-6C9.5 14.5 12 13 13 12"/></svg> <strong>Fernwood Goods</strong> <small>Store admin</small></p>
+  <nav aria-label="Sections">
+    <ul>
+      <li><a href="#" aria-current="page"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg> Analytics</a></li>
+      <li><a href="#"><svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg> Orders <mark>14</mark></a></li>
+      <li><a href="#"><svg viewBox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.7l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.7l7 4a2 2 0 0 0 2 0l7-4a2 2 0 0 0 1-1.7Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg> Products</a></li>
+      <li><a href="#"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/><path d="M16 3.1a4 4 0 0 1 0 7.8"/></svg> Customers</a></li>
+      <li><a href="#"><svg viewBox="0 0 24 24"><path d="M12.6 2.6A2 2 0 0 0 11.2 2H4a2 2 0 0 0-2 2v7.2a2 2 0 0 0 .6 1.4l8.7 8.7a2.4 2.4 0 0 0 3.4 0l6.6-6.6a2.4 2.4 0 0 0 0-3.4z"/><circle cx="7.5" cy="7.5" r=".5"/></svg> Discounts</a></li>
+      <li><a href="#"><svg viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg> Marketing</a></li>
+    </ul>
+    <h2>Sales channels</h2>
+    <ul>
+      <li><a href="#" style="--tone: #16a34a">Online store</a></li>
+      <li><a href="#" style="--tone: #0ea5e9">Wholesale</a></li>
+      <li><a href="#" style="--tone: #f59e0b">Pop-up POS</a></li>
+    </ul>
+  </nav>
+  <nav aria-label="Account settings">
+    <ul>
+      <li><a href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg> Settings</a></li>
+    </ul>
+  </nav>
+</aside>
+
+<header>
+  <nav>
+    <a href="#menu" aria-label="Open menu"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg></a>
+    <p><strong>Fernwood Goods</strong> <small>fernwoodgoods.com · Live</small></p>
+    <ul>
+      <li><search><label for="q" class="visually-hidden">Search</label><input type="search" id="q" placeholder="Search orders, products…"></search></li>
+      <li><button class="outline" aria-label="Toggle dark mode" onclick="document.documentElement.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches === (document.documentElement.dataset.theme !== 'light') ? 'light' : 'dark'"><svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></button></li>
+      <li><button class="outline" aria-label="Notifications, unread"><svg viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg></button></li>
+      <li><button class="outline" popovertarget="account"><abbr title="Maya Okafor">MO</abbr> <span>Maya Okafor <small>Owner</small></span> <svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button></li>
+    </ul>
+  </nav>
+  <div popover id="account"><nav aria-label="Account"><ul><li><a href="#">Profile</a></li><li><a href="#">Sign out</a></li></ul></nav></div>
+</header>
+
+<main>
+  <header>
+    <hgroup>
+      <h1>Overview</h1>
+      <p>Oct 6 – Nov 4, 2026 compared with the previous 30 days</p>
+    </hgroup>
+    <div role="group" aria-label="Date range">
+      <button class="outline">7d</button>
+      <button class="outline" aria-pressed="true">30d</button>
+      <button class="outline">90d</button>
+    </div>
+    <button><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg> Export</button>
+  </header>
+
+  <dl>
+    <div>
+      <dt>Revenue <ins>12.4%</ins></dt>
+      <dd>$84,215</dd>
+      <dd>vs $74,920 previous period</dd>
+      <dd><svg viewBox="0 0 186 30" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,28 15,26 30,27 45,22 60,24 75,19 90,20 105,16 120,17 135,13 150,14 165,9 186,8"/></svg></dd>
+    </div>
+    <div>
+      <dt>Orders <ins>8.1%</ins></dt>
+      <dd>1,284</dd>
+      <dd>vs 1,188 previous period</dd>
+      <dd><svg viewBox="0 0 186 30" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,22 15,23 30,19 45,20 60,17 75,18 90,15 105,16 120,13 135,14 150,12 165,13 186,9"/></svg></dd>
+    </div>
+    <div>
+      <dt>Conversion rate <del>0.3 pts</del></dt>
+      <dd>3.2%</dd>
+      <dd>40,125 sessions · was 3.5%</dd>
+      <dd><svg viewBox="0 0 186 30" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,8 15,9 30,7 45,10 60,8 75,10 90,9 105,12 120,11 135,13 150,12 165,14 186,13"/></svg></dd>
+    </div>
+    <div>
+      <dt>Average order value <ins>4.0%</ins></dt>
+      <dd>$65.59</dd>
+      <dd>vs $63.06 previous period</dd>
+      <dd><svg viewBox="0 0 186 30" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,18 15,17 30,19 45,16 60,17 75,14 90,16 105,13 120,15 135,12 150,13 165,11 186,12"/></svg></dd>
+    </div>
+  </dl>
+
+  <section>
+    <article>
+      <header>
+        <hgroup><h2>Recent orders</h2><p>Last 24 hours</p></hgroup>
+        <a href="#">View all</a>
+      </header>
+      <figure>
+        <table>
+          <thead><tr><th>Order</th><th>Customer</th><th>Date</th><th>Status</th><th>Total</th></tr></thead>
+          <tbody>
+            <tr><td>#FW-10482</td><td>Priya Raman<small>3 items</small></td><td>Nov 4, 4:12 PM</td><td><mark style="--tone: #2563eb">Processing</mark></td><td>$142.00</td></tr>
+            <tr><td>#FW-10481</td><td>Daniel Whitaker<small>1 item</small></td><td>Nov 4, 3:47 PM</td><td><mark style="--tone: #16a34a">Paid</mark></td><td>$38.50</td></tr>
+            <tr><td>#FW-10480</td><td>Sofia Marquez<small>2 items</small></td><td>Nov 4, 2:05 PM</td><td><mark style="--tone: #7c3aed">Shipped</mark></td><td>$96.25</td></tr>
+            <tr><td>#FW-10479</td><td>Kenji Watanabe<small>5 items</small></td><td>Nov 4, 11:38 AM</td><td><mark style="--tone: #64748b">Delivered</mark></td><td>$231.80</td></tr>
+            <tr><td>#FW-10478</td><td>Amara Nwosu<small>2 items</small></td><td>Nov 4, 9:54 AM</td><td><mark style="--tone: #d97706">Pending</mark></td><td>$64.00</td></tr>
+            <tr><td>#FW-10477</td><td>Liam O'Connell<small>1 item</small></td><td>Nov 3, 10:21 PM</td><td><mark style="--tone: #e11d48">Refunded</mark></td><td><del>$48.00</del></td></tr>
+            <tr><td>#FW-10476</td><td>Hannah Becker<small>4 items</small></td><td>Nov 3, 7:09 PM</td><td><mark style="--tone: #7c3aed">Shipped</mark></td><td>$178.40</td></tr>
+          </tbody>
+        </table>
+      </figure>
+    </article>
+
+    <article>
+      <header>
+        <hgroup><h2>Top products</h2><p>By revenue, last 30 days</p></hgroup>
+        <a href="#">Report</a>
+      </header>
+      <ol>
+        <li style="--tone: #d97706"><svg viewBox="0 0 24 24"><path d="M8 10h8v10a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2z"/><path d="M12 3c1 1.5 1.5 2.5 0 4-1.5-1.5-1-2.5 0-4z"/></svg><strong>Cedar &amp; Smoke Soy Candle</strong><b>$12,480</b><small>416 sold · 9 oz</small><progress value="12480" max="12480" aria-label="Share of top product revenue"></progress></li>
+        <li style="--tone: #2563eb"><svg viewBox="0 0 24 24"><path d="M17 8h1a4 4 0 1 1 0 8h-1"/><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"/></svg><strong>Speckled Stoneware Mug</strong><b>$9,612</b><small>356 sold · 12 oz</small><progress value="9612" max="12480" aria-label="Share of top product revenue"></progress></li>
+        <li style="--tone: #059669"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M3 14h18"/></svg><strong>Waffle Linen Throw Blanket</strong><b>$8,190</b><small>63 sold · Sage</small><progress value="8190" max="12480" aria-label="Share of top product revenue"></progress></li>
+        <li style="--tone: #7c3aed"><svg viewBox="0 0 24 24"><path d="M7 20h10"/><path d="M12 20v-8"/><path d="M12 12c0-4-3-6-7-6 0 4 3 6 7 6z"/><path d="M12 12c0-4 3-6 7-6 0 4-3 6-7 6z"/></svg><strong>Terracotta Herb Planter Set</strong><b>$6,342</b><small>151 sold · Set of 3</small><progress value="6342" max="12480" aria-label="Share of top product revenue"></progress></li>
+        <li style="--tone: #e11d48"><svg viewBox="0 0 24 24"><path d="M10 2h4v4h-4z"/><path d="M9 6h6l1 4v10a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2V10z"/></svg><strong>Lavender Hand &amp; Body Wash</strong><b>$4,968</b><small>276 sold · 16 oz</small><progress value="4968" max="12480" aria-label="Share of top product revenue"></progress></li>
+      </ol>
+      <footer>Top 5 account for <strong>49.6%</strong> of revenue</footer>
+    </article>
+  </section>
+</main>
+
+<footer>
+  <p>Data refreshed Nov 4, 2026 at 4:30 PM PT</p>
+</footer>
+</body>
+</html>

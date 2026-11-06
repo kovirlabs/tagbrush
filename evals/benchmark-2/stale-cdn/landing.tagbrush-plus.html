@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lumen: time tracking and invoicing for freelancers</title>
+<meta name="description" content="Lumen is the time tracker built for freelancers. Track hours, send invoices, and see which clients are worth your time.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+<style>
+/* Theme: TagBrush variables */
+:root {
+  --color-primary: light-dark(#dc6110, #f58a3c);
+  --color-background: light-dark(#faf9f6, #141210);
+  --color-surface: light-dark(#fff, #1f1d1a);
+  --color-text: light-dark(#1c1a17, #f2efe9);
+  --color-heading: var(--color-text);
+  --color-text-muted: light-dark(#6b665e, #a29d94);
+  --color-border: light-dark(#e8e4dd, #34312c);
+  --color-success: #22a35a;
+  --font-family-base: Inter, system-ui, sans-serif;
+  --font-weight-heading: 700;
+  --border-radius: 0.6rem;
+  --card-radius: 1rem;
+  --card-padding: 1.75rem;
+  --button-padding: .8rem 1.3rem;
+  --button-font-weight: 600;
+  --container-max-width: 1072px;
+  --grid-min-column: 18rem;
+  --band: light-dark(#f2f0eb, #1b1916);
+}
+
+/* Page frame: centered columns with full-width backgrounds */
+body > * { padding-inline: max(var(--container-padding), (100% - var(--container-max-width)) / 2); }
+body > header { position: sticky; top: 0; z-index: 2; background: var(--color-background); border-bottom: 1px solid var(--color-border); padding-block: .6rem; }
+body > header nav > ul:last-child { margin-left: auto; }
+nav a:not(.button) { color: var(--color-text-muted); text-decoration: none; }
+strong:has(> svg) { display: inline-flex; align-items: center; gap: .5rem; font-size: 1.15rem; margin-right: auto; }
+body > header nav > ul:first-of-type { margin-right: auto; gap: 1.75rem; }
+body > header button { padding: .6rem; line-height: 0; }
+.outline { --_btn-color: var(--color-text); --_btn-border: var(--color-border); background: var(--color-surface); }
+h1, h2 { letter-spacing: -0.035em; line-height: 1.1; }
+em { font-style: normal; color: var(--color-primary); }
+mark { background: color-mix(in srgb, var(--color-primary) 14%, transparent); color: var(--color-primary); border-radius: 99px; padding: .35em .9em; font-size: .8rem; font-weight: 600; }
+abbr[style] { display: inline-grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: var(--avatar); color: #fff; font-size: .8rem; font-weight: 700; text-decoration: none; flex: none; }
+
+/* Hero */
+main > section:first-child { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr)); gap: 3.5rem 4rem; align-items: center; padding-block: 3.5rem 4.5rem; }
+main > section:first-child h1 { font-size: clamp(2.5rem, 6vw, 3.65rem); letter-spacing: -.045em; margin-block: 1.5rem; text-wrap: wrap; }
+main > section:first-child > div > p:nth-of-type(2) { font-size: 1.2rem; color: var(--color-text-muted); }
+main > section:first-child > div > p:nth-last-child(2) { font-size: .9rem; color: var(--color-text-muted); }
+main > section:first-child > div > p:last-child { display: flex; align-items: center; font-size: .9rem; color: var(--color-text-muted); }
+main > section:first-child abbr { width: 2rem; height: 2rem; margin-right: -.45rem; border: 2px solid var(--color-background); font-size: .7rem; }
+main > section:first-child abbr:nth-child(4) { margin-right: 1rem; }
+
+/* App preview */
+figure { position: relative; margin: 0; padding: 1.25rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--card-radius); box-shadow: var(--shadow-lg); }
+figure header, figure li, figure figcaption { display: flex; justify-content: space-between; align-items: center; gap: .9rem; }
+figure header { padding-bottom: 1rem; border-bottom: 1px solid var(--color-border); }
+figure p { display: grid; margin: 0; }
+figure small { color: var(--color-text-muted); font-size: .8rem; }
+figure header small::before { content: "● "; color: var(--color-success); }
+figure time { margin-left: auto; font: 600 .95rem var(--font-family-mono); }
+figure header time { font-size: 1.9rem; }
+figure ul { padding: 0; margin: 0 0 1rem; border-bottom: 1px solid var(--color-border); }
+figure ul li { padding-block: .75rem; border-bottom: 1px dashed var(--color-border); }
+figure ul li:last-child { border: 0; }
+figure ul li::before { content: ""; width: .6rem; height: .6rem; border-radius: 2px; background: var(--avatar); }
+figure figcaption { font-size: .85rem; margin: 0; }
+figure ol { display: grid; grid-template-columns: repeat(7, 1fr); gap: .5rem; height: 7rem; padding: 0; margin: 1rem 0 0; list-style: none; font-size: .75rem; color: var(--color-text-muted); text-align: center; }
+figure ol li { display: flex; flex-direction: column; align-items: stretch; justify-content: flex-end; }
+figure ol li::before { content: ""; height: calc(var(--h) * .055rem); min-height: 4px; margin-bottom: .4rem; border-radius: 2px; background: light-dark(#e0793a, #d9733a); }
+figure ol li:nth-child(n+6)::before { background: var(--color-border); }
+figure [role=status] { position: absolute; right: -1rem; bottom: -1.5rem; grid-template-columns: auto 1fr; column-gap: .6rem; align-items: center; padding: .7rem 1rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--border-radius); box-shadow: var(--shadow-lg); font-size: .85rem; }
+figure [role=status] svg { grid-row: span 2; padding: .35rem; border-radius: 50%; background: color-mix(in srgb, var(--color-success) 18%, transparent); color: var(--color-success); }
+
+/* Logo strip */
+main > section:nth-child(2) { padding-block: 2.5rem 4rem; border-top: 1px solid var(--color-border); text-align: center; font-size: .9rem; color: var(--color-text-muted); }
+main > section:nth-child(2) ul { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem 2.75rem; padding: 0; list-style: none; font-size: 1.1rem; font-weight: 600; }
+
+/* Sections, intros and card grids */
+main > section { padding-block: 5rem; }
+section:has(> article) { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-min-column), 100%), 1fr)); gap: 1.25rem; }
+section:has(> article) > :not(article) { grid-column: 1 / -1; }
+section > hgroup { max-width: 40rem; margin: 0 auto 2.5rem; text-align: center; }
+section > hgroup h2 { font-size: clamp(2rem, 4vw, 2.6rem); margin-block: .5rem 1rem; color: var(--color-heading); font-weight: 700; }
+section > hgroup p:first-child { color: var(--color-primary); font-size: .8rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+section > hgroup p:last-child { font-size: 1.15rem; }
+#pricing, #faq { background: var(--band); box-shadow: 0 0 0 100vmax var(--band); clip-path: inset(0 -100vmax); }
+section > article { padding: var(--card-padding); background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--card-radius); }
+article p { color: var(--color-text-muted); font-size: .95rem; }
+article > svg:first-child { width: 2.6rem; height: 2.6rem; padding: .65rem; border-radius: var(--border-radius); background: color-mix(in srgb, var(--color-primary) 14%, transparent); color: var(--color-primary); }
+article h3 { margin-block: 1rem .5rem; font-size: 1.2rem; }
+
+/* Pricing */
+#pricing > p { display: flex; width: fit-content; margin: -1rem auto 1.5rem; padding: .25rem; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 99px; }
+#pricing > p button { --_btn-bg: transparent; --_btn-color: var(--color-text-muted); border: 0; border-radius: 99px; padding: .5rem 1.1rem; font-size: .9rem; }
+#pricing > p button[aria-pressed=true] { --_btn-bg: var(--color-text); --_btn-color: var(--color-background); }
+#pricing article { position: relative; display: flex; flex-direction: column; }
+#pricing article:has(mark) { border: 2px solid var(--color-primary); box-shadow: var(--shadow-lg); }
+#pricing article mark { position: absolute; top: -.8rem; background: var(--color-primary); color: var(--color-on-primary); padding: .3rem .65rem; font-size: .75rem; }
+#pricing article h3 { margin-top: 0; }
+#pricing article p:has(strong) { margin-block: 1.5rem .75rem; }
+#pricing strong { font-size: 3rem; color: var(--color-text); letter-spacing: -.03em; }
+#pricing article small { color: var(--color-text-muted); }
+#pricing ul { padding: 0; margin-block: 1.5rem 2rem; list-style: none; }
+#pricing li { display: flex; gap: .75rem; padding-block: .35rem; }
+#pricing li::before { content: "✓"; color: var(--color-success); font-weight: 700; }
+#pricing article .button { margin-top: auto; text-align: center; }
+#pricing > footer, #customers dt { text-align: center; color: var(--color-text-muted); font-size: .9rem; }
+
+/* Testimonials and stats */
+blockquote { margin: 0; padding: 0; border: 0; background: none; color: var(--color-text); }
+blockquote footer { display: grid; grid-template-columns: auto 1fr; column-gap: .75rem; margin-top: 2rem; }
+blockquote footer::before { content: none !important; }
+blockquote footer abbr { grid-row: span 2; }
+blockquote footer small { color: var(--color-text-muted); }
+blockquote p, blockquote b, #customers dd { color: var(--color-text); }
+article > p:first-child { color: var(--color-primary); letter-spacing: .1em; }
+#customers dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); margin-top: 3rem; text-align: center; }
+#customers dl div { display: flex; flex-direction: column-reverse; }
+#customers dt { font-weight: 400; }
+#customers dd { margin: 0; font-size: 2.2rem; font-weight: 700; }
+
+/* FAQ */
+#faq > details { max-width: 47.5rem; margin: 0 auto; padding: 1.4rem 0; border: 0; border-bottom: 1px solid var(--color-border); border-radius: 0; }
+#faq > details:first-of-type { border-top: 1px solid var(--color-border); }
+#faq summary { display: flex; justify-content: space-between; align-items: center; list-style: none; font-weight: 600; font-size: 1.05rem; }
+#faq summary::after { content: ""; width: .45rem; height: .45rem; margin-right: .4rem; border: solid var(--color-text-muted); border-width: 0 2px 2px 0; rotate: 45deg; }
+#faq [open] summary::after { rotate: -135deg; }
+#faq details p { color: var(--color-text-muted); }
+
+/* Call to action */
+#start { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1.5rem; margin-block: 0 6rem; padding: 3rem; border-radius: 1.25rem; --color-background: #1c1a17; }
+#start h2 { max-width: 12em; margin: 0 0 .75rem; font-size: 2.2rem; }
+#start p { margin: 0; color: var(--color-text-muted); }
+
+/* Footer */
+body > footer { display: grid; grid-template-columns: 2fr repeat(3, 1fr); gap: 2rem; padding-top: 3.5rem; border-top: 1px solid var(--color-border); color: var(--color-text-muted); }
+body > footer strong { color: var(--color-text); }
+body > footer h2 { margin: 0 0 1rem; font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; color: var(--color-text-muted); }
+body > footer nav { display: block; }
+body > footer nav ul { flex-direction: column; align-items: flex-start; gap: .5rem; }
+body > footer > small, body > footer > nav:last-child { grid-row: 2; grid-column: 1 / -1; padding-top: 2rem; }
+body > footer > small { border-top: 1px solid var(--color-border); }
+body > footer > nav:last-child { justify-self: end; }
+body > footer > nav:last-child ul { flex-direction: row; justify-content: flex-end; gap: 1.5rem; }
+
+@media (max-width: 720px) {
+  body > header nav > ul:first-of-type, body > header li:has(a:not(.button)) { display: none; }
+  main > section:first-child [role=group] { align-items: flex-start; flex-direction: column; }
+  figure [role=status] { position: static; margin-top: 1rem; }
+  #start { padding: 2rem; }
+  body > footer { grid-template-columns: 1fr 1fr; }
+  body > footer > div { grid-column: 1 / -1; }
+  body > footer > :is(small, nav:last-child) { grid-row: auto; }
+  body > footer > nav:last-child { justify-self: start; padding: 0; }
+}
+</style>
+</head>
+<body>
+<a class="visually-hidden" href="#main">Skip to content</a>
+<header>
+  <nav>
+    <strong><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 7v5l3 2"/></svg>Lumen</strong>
+    <ul>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#customers">Customers</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <ul>
+      <li><button class="outline" aria-label="Toggle dark mode"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button></li>
+      <li><a href="#signin">Sign in</a></li>
+      <li><a class="button" href="#start">Start free</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main">
+  <section aria-label="Introduction">
+    <div>
+      <p><mark>New: automatic invoice reminders</mark></p>
+      <h1>Know where your hours go. <em>Get paid for every one.</em></h1>
+      <p>Lumen is the time tracker built for freelancers. Start a timer in one click, turn tracked hours into a clean invoice, and see which clients are actually worth your time.</p>
+      <div role="group">
+        <a class="button" href="#start">Start your 14-day free trial</a>
+        <a class="button outline" href="#features">See how it works</a>
+      </div>
+      <p>No credit card required. Free plan available forever.</p>
+      <p>
+        <abbr title="Maya Reyes" style="--avatar:#c2410c">MR</abbr><abbr title="Arjun Kapoor" style="--avatar:#0f766e">AK</abbr><abbr title="Jess Okafor" style="--avatar:#6d28d9">JO</abbr><abbr title="Tom Sato" style="--avatar:#be185d">TS</abbr>
+        <span>Trusted by 38,000+ designers, developers and writers</span>
+      </p>
+    </div>
+
+    <figure aria-label="Lumen app preview">
+      <header>
+        <p><small>Tracking now</small><strong>Brightwave · Homepage redesign</strong></p>
+        <time>01:42:18</time>
+      </header>
+      <ul>
+        <li style="--avatar:#2563eb"><p>Client call: sprint review<small>Northfield Studio · billable</small></p><time>0:45</time></li>
+        <li style="--avatar:#16a34a"><p>API integration for checkout<small>Parcel &amp; Co. · billable</small></p><time>2:30</time></li>
+        <li style="--avatar:#9ca3af"><p>Bookkeeping and admin<small>Internal · non-billable</small></p><time>0:35</time></li>
+      </ul>
+      <figcaption>This week <span><b>31h 20m</b> · $2,740 billable</span></figcaption>
+      <ol aria-label="Hours per day">
+        <li style="--h:58">Mon</li><li style="--h:72">Tue</li><li style="--h:51">Wed</li><li style="--h:77">Thu</li><li style="--h:47">Fri</li><li style="--h:6">Sat</li><li style="--h:3">Sun</li>
+      </ol>
+      <p role="status">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L19 7"/></svg>
+        <b>Invoice #1047 paid</b>
+        <small>$1,860.00 from Northfield Studio</small>
+      </p>
+    </figure>
+  </section>
+
+  <section aria-label="Teams">
+    <p>Freelancers at Lumen work with teams like</p>
+    <ul>
+      <li>Northfield</li><li>Parcel&amp;Co</li><li>Brightwave</li><li>Oakline</li><li>Harbor Labs</li><li>Kettle</li>
+    </ul>
+  </section>
+
+  <section id="features">
+    <hgroup>
+      <p>Features</p>
+      <h2>Everything between "start timer" and "payment received"</h2>
+      <p>Lumen replaces the spreadsheet, the invoice template and the sticky note that says "remember to bill for Tuesday."</p>
+    </hgroup>
+    <article>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="14" r="7"/><path d="M12 11v3l2 1M10 3h4"/></svg>
+      <h3>One-click timers</h3>
+      <p>Start tracking from the menu bar, browser extension or your phone. Forgot to start? Lumen notices idle time and asks what you were working on.</p>
+    </article>
+    <article>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>
+      <h3>Invoices in seconds</h3>
+      <p>Select a date range, pick a client, and Lumen builds an itemized invoice from your tracked hours. Send it with Stripe or PayPal payment links attached.</p>
+    </article>
+    <article>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+      <h3>Client profitability</h3>
+      <p>See your real hourly rate per client after revisions, calls and scope creep. Find out which projects pay off and which ones quietly drain you.</p>
+    </article>
+    <article>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <h3>Budgets and alerts</h3>
+      <p>Set an hour or fee cap for each project. Lumen warns you at 75% and 100%, so you can have the "this is out of scope" talk before it is too late.</p>
+    </article>
+    <article>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+      <h3>Calendar sync</h3>
+      <p>Connect Google or Outlook and turn meetings into time entries with one tap. Your calendar becomes a timesheet you already filled in.</p>
+    </article>
+    <article>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      <h3>Client portal</h3>
+      <p>Share a private link where clients can see hours, approve timesheets and pay invoices. Fewer "can you send me a breakdown?" emails.</p>
+    </article>
+  </section>
+
+  <section id="pricing">
+    <hgroup>
+      <p>Pricing</p>
+      <h2>Simple pricing that pays for itself</h2>
+      <p>Most freelancers recover the cost of Lumen in the first week from hours they used to forget to bill.</p>
+    </hgroup>
+    <p role="group" aria-label="Billing period">
+      <button aria-pressed="false">Monthly</button>
+      <button aria-pressed="true">Yearly&nbsp; Save 20%</button>
+    </p>
+    <article>
+      <h3>Starter</h3>
+      <p>For side projects and freelancers just getting going.</p>
+      <p><strong>$0</strong> / month</p>
+      <small>Free forever</small>
+      <ul>
+        <li>Unlimited time tracking</li>
+        <li>Up to 2 active clients</li>
+        <li>3 invoices per month</li>
+        <li>Desktop, web and mobile apps</li>
+      </ul>
+      <a class="button outline" href="#start">Get started free</a>
+    </article>
+    <article>
+      <mark>Most popular</mark>
+      <h3>Pro</h3>
+      <p>For full-time freelancers who bill by the hour.</p>
+      <p><strong data-monthly="$11">$9</strong> / month</p>
+      <small>Billed $108 yearly</small>
+      <ul>
+        <li>Everything in Starter</li>
+        <li>Unlimited clients and invoices</li>
+        <li>Stripe and PayPal payments</li>
+        <li>Profitability reports and budgets</li>
+        <li>Calendar sync and automatic reminders</li>
+      </ul>
+      <a class="button" href="#start">Start 14-day free trial</a>
+    </article>
+    <article>
+      <h3>Studio</h3>
+      <p>For small agencies and freelance collectives up to 10 people.</p>
+      <p><strong data-monthly="$30">$24</strong> / month</p>
+      <small>Billed $288 yearly, includes 3 seats</small>
+      <ul>
+        <li>Everything in Pro</li>
+        <li>Team timesheets and approvals</li>
+        <li>Branded client portal</li>
+        <li>QuickBooks and Xero export</li>
+        <li>Priority support</li>
+      </ul>
+      <a class="button outline" href="#start">Start 14-day free trial</a>
+    </article>
+    <footer>Prices in USD. Extra Studio seats are $6 per month. Cancel anytime from your account settings.</footer>
+  </section>
+
+  <section id="customers">
+    <hgroup>
+      <p>Customers</p>
+      <h2>Freelancers bill more with Lumen</h2>
+      <p>On average, Pro users invoice 11% more hours in their first three months.</p>
+    </hgroup>
+    <article>
+      <p aria-label="5 out of 5 stars">★★★★★</p>
+      <blockquote>
+        <p>"I used to reconstruct my week from Slack messages every Friday. Now I hit one shortcut when I switch tasks and the invoice is basically written for me. I found almost six unbilled hours in my first month."</p>
+        <footer><abbr title="Maya Reyes" style="--avatar:#c2410c">MR</abbr><b>Maya Reyes</b><small>Brand designer, Austin</small></footer>
+      </blockquote>
+    </article>
+    <article>
+      <p aria-label="5 out of 5 stars">★★★★★</p>
+      <blockquote>
+        <p>"The profitability report was a wake-up call. My favorite client was paying me an effective $41 an hour once you counted all the calls. I renegotiated, and we are both happier with a fixed retainer."</p>
+        <footer><abbr title="Arjun Kapoor" style="--avatar:#0f766e">AK</abbr><b>Arjun Kapoor</b><small>Full-stack developer, Toronto</small></footer>
+      </blockquote>
+    </article>
+    <article>
+      <p aria-label="5 out of 5 stars">★★★★★</p>
+      <blockquote>
+        <p>"We moved our five-person studio from spreadsheets to Lumen in an afternoon. Timesheet approvals take minutes now, and clients love paying straight from the portal."</p>
+        <footer><abbr title="Jess Okafor" style="--avatar:#6d28d9">JO</abbr><b>Jess Okafor</b><small>Founder, Kettle Studio</small></footer>
+      </blockquote>
+    </article>
+    <footer>
+      <dl>
+        <div><dt>freelancers and studios</dt><dd>38,000+</dd></div>
+        <div><dt>invoiced through Lumen</dt><dd>$410M</dd></div>
+        <div><dt>average app store rating</dt><dd>4.8 / 5</dd></div>
+      </dl>
+    </footer>
+  </section>
+
+  <section id="faq">
+    <hgroup>
+      <p>FAQ</p>
+      <h2>Questions, answered</h2>
+    </hgroup>
+    <details name="faq" open>
+      <summary>Is the free plan really free?</summary>
+      <p>Yes. Starter is free with no time limit and no credit card. You can track unlimited hours for up to two clients and send three invoices a month. Upgrade only when you need more.</p>
+    </details>
+    <details name="faq">
+      <summary>Can I import my data from Toggl, Harvest or Clockify?</summary>
+      <p>Yes. Upload a CSV export from any of them and Lumen maps your clients, projects and entries automatically.</p>
+    </details>
+    <details name="faq">
+      <summary>Does Lumen work offline?</summary>
+      <p>Yes. Timers keep running without a connection and sync as soon as you are back online.</p>
+    </details>
+    <details name="faq">
+      <summary>How do clients pay my invoices?</summary>
+      <p>Each invoice includes Stripe and PayPal payment links, so clients can pay by card or bank transfer in a few clicks.</p>
+    </details>
+    <details name="faq">
+      <summary>Can I set different rates for different clients or tasks?</summary>
+      <p>Yes. Set a default rate per client, then override it for any project or task.</p>
+    </details>
+    <details name="faq">
+      <summary>What happens to my data if I cancel?</summary>
+      <p>You can export everything at any time, and your data stays available for 90 days after you cancel.</p>
+    </details>
+  </section>
+
+  <section id="start" data-theme="dark">
+    <div>
+      <h2>Stop guessing what last week was worth.</h2>
+      <p>Set up in two minutes. Your first invoice could go out today.</p>
+    </div>
+    <a class="button" href="#signup">Start tracking free</a>
+  </section>
+</main>
+
+<footer>
+  <div>
+    <strong><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 7v5l3 2"/></svg>Lumen</strong>
+    <p>Time tracking and invoicing for independent professionals. Made by a small team in Portland, Oregon.</p>
+  </div>
+  <nav aria-label="Product">
+    <h2>Product</h2>
+    <ul><li><a href="#features">Features</a></li><li><a href="#pricing">Pricing</a></li><li><a href="#download">Download apps</a></li><li><a href="#changelog">Changelog</a></li></ul>
+  </nav>
+  <nav aria-label="Resources">
+    <h2>Resources</h2>
+    <ul><li><a href="#help">Help center</a></li><li><a href="#rates">Rate calculator</a></li><li><a href="#templates">Invoice templates</a></li><li><a href="#blog">Blog</a></li></ul>
+  </nav>
+  <nav aria-label="Company">
+    <h2>Company</h2>
+    <ul><li><a href="#about">About</a></li><li><a href="#careers">Careers</a></li><li><a href="#contact">Contact</a></li><li><a href="#status">Status</a></li></ul>
+  </nav>
+  <small>© 2026 Lumen Software, Inc.</small>
+  <nav aria-label="Legal">
+    <ul><li><a href="#privacy">Privacy</a></li><li><a href="#terms">Terms</a></li><li><a href="#security">Security</a></li></ul>
+  </nav>
+</footer>
+
+<script>
+  document.querySelector('[aria-label="Toggle dark mode"]').onclick = () => {
+    const root = document.documentElement;
+    const dark = root.dataset.theme ? root.dataset.theme === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    root.dataset.theme = dark ? 'light' : 'dark';
+  };
+  document.querySelectorAll('#pricing [aria-pressed]').forEach((button) => {
+    button.onclick = () => {
+      const yearly = button.textContent.startsWith('Yearly');
+      document.querySelectorAll('#pricing [aria-pressed]').forEach((b) => b.setAttribute('aria-pressed', b === button));
+      document.querySelectorAll('#pricing strong[data-monthly]').forEach((price) => {
+        price.dataset.yearly ??= price.textContent;
+        price.textContent = yearly ? price.dataset.yearly : price.dataset.monthly;
+      });
+    };
+  });
+</script>
+</body>
+</html>

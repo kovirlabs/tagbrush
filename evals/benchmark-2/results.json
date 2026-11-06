@@ -1,0 +1,187 @@
+[
+  {
+    "file": "dashboard.plain-css.html",
+    "total": 9664,
+    "textTokens": 556,
+    "overhead": 9108,
+    "cssTokens": 4247,
+    "classes": 184,
+    "classTokens": 318,
+    "svgTokens": 2905,
+    "darkMode": true,
+    "overflowPhone": true,
+    "overflowDesktop": false,
+    "contrastLight": 3,
+    "contrastDark": 3,
+    "contrastExamples": {
+      "light": [
+        "span \"0.3 pts\" 4.41",
+        "s \"$48.00\" 2.56",
+        "p \"Data refreshed Nov 4, 2026 at \" 2.45"
+      ],
+      "dark": [
+        "button \"Export\" 3.79",
+        "s \"$48.00\" 3.73",
+        "p \"Data refreshed Nov 4, 2026 at \" 3.96"
+      ]
+    },
+    "a11yErrors": [],
+    "similarity": 0.8812090444240189
+  },
+  {
+    "file": "dashboard.tagbrush-plus.html",
+    "total": 6535,
+    "textTokens": 555,
+    "overhead": 5980,
+    "cssTokens": 2182,
+    "classes": 7,
+    "classTokens": 9,
+    "svgTokens": 2364,
+    "darkMode": true,
+    "overflowPhone": false,
+    "overflowDesktop": false,
+    "contrastLight": 2,
+    "contrastDark": 4,
+    "contrastExamples": {
+      "light": [
+        "mark \"Paid\" 4.38",
+        "mark \"Pending\" 4.31"
+      ],
+      "dark": [
+        "mark \"Processing\" 4.46",
+        "mark \"Shipped\" 4.15",
+        "mark \"Refunded\" 4.35",
+        "mark \"Shipped\" 4.15"
+      ]
+    },
+    "a11yErrors": [],
+    "similarity": 0.8688002515318628
+  },
+  {
+    "file": "dashboard.tailwind.html",
+    "total": 10190,
+    "textTokens": 558,
+    "overhead": 9632,
+    "cssTokens": 20,
+    "classes": 1133,
+    "classTokens": 3942,
+    "svgTokens": 3365,
+    "darkMode": true,
+    "overflowPhone": true,
+    "overflowDesktop": false,
+    "contrastLight": 5,
+    "contrastDark": 2,
+    "contrastExamples": {
+      "light": [
+        "p \"SALES CHANNELS\" 2.56",
+        "span \"Search\" 2.45",
+        "span \"0.3 pts\" 4.28",
+        "td \"$48.00\" 2.56",
+        "p \"Data refreshed Nov 4, 2026 at \" 2.45"
+      ],
+      "dark": [
+        "p \"SALES CHANNELS\" 3.75",
+        "p \"Data refreshed Nov 4, 2026 at \" 4.24"
+      ]
+    },
+    "a11yErrors": [],
+    "similarity": 0.8843175928308816
+  },
+  {
+    "file": "landing.plain-css.html",
+    "total": 12272,
+    "textTokens": 1158,
+    "overhead": 11114,
+    "cssTokens": 5888,
+    "classes": 167,
+    "classTokens": 230,
+    "svgTokens": 2170,
+    "darkMode": true,
+    "overflowPhone": false,
+    "overflowDesktop": false,
+    "contrastLight": 45,
+    "contrastDark": 3,
+    "contrastExamples": {
+      "light": [
+        "a \"Start free\" 3.69",
+        "span \"New: automatic invoice reminde\" 4.24",
+        "a \"Start your 14-day free trial\" 3.69",
+        "p \"No credit card required. Free \" 3.48",
+        "span \"Tracking now\" 3.66",
+        "div \"Northfield Studio · billable\" 3.66"
+      ],
+      "dark": [
+        "span \"MR\" 1.45",
+        "span \"AK\" 1.53",
+        "span \"JO\" 1.99"
+      ]
+    },
+    "a11yErrors": [],
+    "similarity": 0.8762355968137269
+  },
+  {
+    "file": "landing.tagbrush-plus.html",
+    "total": 7970,
+    "textTokens": 1153,
+    "overhead": 6817,
+    "cssTokens": 3548,
+    "classes": 10,
+    "classTokens": 10,
+    "svgTokens": 883,
+    "darkMode": true,
+    "overflowPhone": false,
+    "overflowDesktop": false,
+    "contrastLight": 14,
+    "contrastDark": 1,
+    "contrastExamples": {
+      "light": [
+        "a \"Start free\" 3.69",
+        "mark \"New: automatic invoice reminde\" 2.96",
+        "a \"Start your 14-day free trial\" 3.69",
+        "small \"● Tracking now\" 3.30",
+        "p \"Features\" 3.51",
+        "p \"Pricing\" 3.24"
+      ],
+      "dark": [
+        "a \"Start tracking free\" 3.69"
+      ]
+    },
+    "a11yErrors": [],
+    "similarity": 0.8702121770833346
+  },
+  {
+    "file": "landing.tailwind.html",
+    "total": 12546,
+    "textTokens": 1166,
+    "overhead": 11380,
+    "cssTokens": 107,
+    "classes": 1507,
+    "classTokens": 5315,
+    "svgTokens": 2752,
+    "darkMode": true,
+    "overflowPhone": false,
+    "overflowDesktop": false,
+    "contrastLight": 19,
+    "contrastDark": 13,
+    "contrastExamples": {
+      "light": [
+        "a \"Start free\" 3.67",
+        "span \"New: automatic invoice reminde\" 3.90",
+        "a \"Start your 14-day free trial\" 3.67",
+        "li \"Northfield\" 2.40",
+        "li \"Parcel&Co\" 2.40",
+        "li \"Brightwave\" 2.40"
+      ],
+      "dark": [
+        "li \"Northfield\" 3.90",
+        "li \"Parcel&Co\" 3.90",
+        "li \"Brightwave\" 3.90",
+        "li \"Oakline\" 3.90",
+        "li \"Harbor Labs\" 3.90",
+        "li \"Kettle\" 3.90"
+      ]
+    },
+    "a11yErrors": [],
+    "similarity": 0.8734759531250014
+  }
+]

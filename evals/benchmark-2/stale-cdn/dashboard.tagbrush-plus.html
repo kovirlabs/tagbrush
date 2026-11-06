@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overview · Fernwood Goods</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+<style>
+:root {
+  --color-primary: #1f7a55;
+  --font-family-base: Inter, system-ui, sans-serif;
+  --border-radius: 0.5rem;
+  --color-background: light-dark(#f8fafc, #0b1220);
+  --surface: light-dark(#fff, #111a2b);
+  --line: light-dark(#e5e7eb, #233047);
+  --muted: light-dark(#64748b, #94a3b8);
+}
+body { font-size: .9375rem; display: grid; grid-template: auto 1fr auto / 16rem minmax(0, 1fr); min-height: 100vh; margin: 0; }
+body > * { grid-column: 2; }
+svg { width: 1.15rem; height: 1.15rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: middle; flex: none; }
+[style*="--tone"] { color: light-dark(var(--tone), color-mix(in oklab, var(--tone) 55%, white)); background: color-mix(in srgb, var(--tone) 14%, transparent); }
+
+/* sidebar */
+aside[popover] { display: flex; flex-direction: column; grid-area: 1 / 1 / -1; position: sticky; top: 0; inset-inline: auto; height: 100vh; width: 16rem; max-width: none; box-sizing: border-box; margin: 0; padding: 0; border: 0; border-right: 1px solid var(--line); background: var(--surface); color: inherit; box-shadow: none; overflow: auto; }
+aside > header { display: flex; gap: .75rem; align-items: center; padding: .9rem 1.25rem; border-bottom: 1px solid var(--line); line-height: 1.3; font-size: .9rem; }
+aside > header > svg { width: 2rem; height: 2rem; padding: .4rem; border-radius: .5rem; background: var(--color-primary); color: #fff; }
+aside small, header small { display: block; color: var(--muted); font-size: .8rem; }
+aside nav { display: block; padding: .75rem; }
+aside nav ul { display: block; list-style: none; margin: 0; padding: 0; }
+aside nav li { display: block; margin: 0 0 .25rem; }
+aside nav a { width: 100%; box-sizing: border-box; display: flex; gap: .75rem; align-items: center; padding: .55rem .75rem; border-radius: .5rem; color: inherit; text-decoration: none; font-size: .95rem; }
+aside nav a:hover, aside nav a[aria-current] { background: color-mix(in srgb, var(--color-primary) 10%, transparent); }
+aside nav a[aria-current] { color: var(--color-primary); font-weight: 500; }
+aside nav td mark::before { display: none; }
+aside nav mark { margin-left: auto; padding: .05rem .5rem; border-radius: 1rem; background: var(--line); color: inherit; font-size: .75rem; }
+aside h2 { margin: 1rem .75rem .25rem; font-size: .75rem; font-weight: 500; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+aside nav svg circle { fill: currentColor; stroke: none; }
+aside > footer { margin-top: auto; border-top: 1px solid var(--line); }
+
+/* top bar */
+body > header { position: sticky; top: 0; z-index: 2; padding: .6rem 2rem; background: var(--surface); border-bottom: 1px solid var(--line); }
+body > header nav { display: flex; align-items: center; gap: 1rem; }
+body > header nav p { margin: 0 auto 0 0; font-size: 1.1rem; line-height: 1.3; }
+body > header nav ul { align-items: center; gap: .5rem; margin: 0; }
+body > header search input { width: 16rem; margin: 0; padding: .45rem .75rem; font-size: .9rem; }
+body > header button:not(.outline) { padding: .4rem; background: none; border: 0; color: var(--muted); }
+header button.outline { display: flex; gap: .6rem; align-items: center; border: 0; padding: 0; color: inherit; text-align: left; line-height: 1.25; font-size: .95rem; }
+abbr { display: inline-grid; place-items: center; width: 2.1rem; height: 2.1rem; border-radius: 50%; background: var(--color-primary); color: #fff; font-size: .8rem; font-weight: 600; text-decoration: none; }
+[aria-label="Notifications"] { position: relative; }
+[aria-label="Notifications"]::after { content: ""; position: absolute; top: .3rem; right: .3rem; width: .5rem; height: .5rem; border-radius: 50%; background: #ef4444; }
+[popovertarget="sidebar"] { display: none; }
+
+/* main */
+main { width: 100%; max-width: none; margin: 0; padding: 1.5rem 2rem; box-sizing: border-box; }
+main > header { display: flex; flex-wrap: wrap; gap: .75rem; align-items: center; }
+main > header hgroup { margin: 0 auto 0 0; }
+main h1 { font-size: 1.6rem; margin: 0 0 .25rem; }
+hgroup, hgroup p { margin: 0; }
+hgroup p { color: var(--muted); }
+[role="group"] { width: auto; margin: 0; padding: .2rem; border: 1px solid var(--line); border-radius: .5rem; background: var(--surface); }
+[role="group"] button { background: none; border: 0; color: var(--muted); padding: .3rem .7rem; font-size: .9rem; }
+main > header > button { padding: .45rem 1rem; font-size: .95rem; }
+[role="group"] [aria-pressed="true"] { background: var(--line); color: inherit; font-weight: 500; }
+
+/* stat tiles */
+main dl { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+main dl > div, article { background: var(--surface); border: 1px solid var(--line); border-radius: 1rem; box-shadow: 0 1px 3px #0000000d; }
+main dl > div { display: grid; grid-template-columns: 1fr auto; align-items: start; gap: .25rem .5rem; padding: 1.25rem; margin: 0; }
+dt { color: var(--muted); font-weight: 400; }
+dd { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: .8rem; }
+dd:nth-of-type(1) { grid-column: 2; }
+dd:nth-of-type(2) { font-size: 2rem; font-weight: 600; color: inherit; line-height: 1.2; margin-top: .5rem; }
+dd ins, dd del { display: inline-flex; gap: .15rem; align-items: center; padding: .1rem .5rem; border-radius: 1rem; text-decoration: none; font-weight: 600; font-size: .75rem; }
+dd ins svg, dd del svg { width: .8rem; height: .8rem; stroke-width: 3; }
+dd:last-child svg { width: 100%; height: 2.5rem; margin-top: .75rem; color: var(--color-primary); stroke-width: 1.5; }
+div:has(del) dd:last-child svg { color: #f43f5e; }
+
+/* cards */
+main > section { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 1.5rem; align-items: start; }
+article { padding: 0; margin: 0; overflow: hidden; }
+article > header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; margin: 0; border-bottom: 1px solid var(--line); }
+article h2 { font-size: 1.05rem; margin: 0; }
+article hgroup p { font-size: .8rem; }
+article > header a { text-decoration: none; font-weight: 500; }
+figure { margin: 0; }
+table { width: 100%; margin: 0; }
+th { font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); background: none; }
+th, td { font-size: .875rem; padding: .85rem 1rem; border-color: var(--line); white-space: nowrap; vertical-align: middle; }
+th { font-size: .75rem; }
+td { line-height: 1.35; }
+td:nth-child(3) { color: var(--muted); }
+th:last-child, td:last-child { text-align: right; font-weight: 600; }
+td small { display: block; color: var(--muted); font-size: .8rem; }
+td mark { display: inline-flex; gap: .3rem; align-items: center; padding: .05rem .5rem; border-radius: 1rem; border: 1px solid color-mix(in srgb, currentColor 30%, transparent); font-size: .8rem; font-weight: 500; }
+td mark::before { content: ""; width: .4rem; height: .4rem; border-radius: 50%; background: currentColor; }
+s { color: var(--muted); }
+article ol { list-style: none; margin: 0; padding: 0; }
+article li { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 0 .75rem; padding: 1rem 1.25rem; border-bottom: 1px solid var(--line); font-size: .9rem; }
+article li > svg { grid-row: span 2; width: 2.5rem; height: 2.5rem; padding: .55rem; border-radius: .5rem; box-sizing: border-box; }
+article li strong { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+article li data { font-weight: 600; }
+article li small { grid-column: 2 / -1; color: var(--muted); font-size: .8rem; }
+progress { grid-column: 1 / -1; height: .35rem; margin: .75rem 0 0; }
+article > footer { padding: 1rem 1.25rem; font-size: .8rem; color: var(--muted); }
+body > footer { text-align: center; padding: 0 0 1.5rem; }
+
+@media (max-width: 960px) {
+  body { grid-template-columns: minmax(0, 1fr); }
+  body > * { grid-column: 1; }
+  aside[popover]:not(:popover-open) { display: none; }
+  aside[popover] { position: fixed; inset: 0 auto 0 0; width: 16rem; }
+  [popovertarget="sidebar"] { display: block; }
+  body > header { padding: .6rem 1rem; }
+  body > header search, header button.outline span, body > header nav small { display: none; }
+  main { padding: 1.5rem 1rem; }
+  main > section { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 600px) {
+  main dl { grid-template-columns: minmax(0, 1fr); }
+  main > header > :not(hgroup) { order: 1; }
+  main > header hgroup { flex-basis: 100%; }
+}
+</style>
+</head>
+<body data-layout="full">
+<aside id="sidebar" popover>
+  <header>
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21c-4-3-6-7-6-10a6 6 0 0 1 12 0c0 3-2 7-6 10z"/><path d="M12 21V9"/></svg>
+    <p><strong>Fernwood Goods</strong><small>Store admin</small></p>
+  </header>
+  <nav aria-label="Sections">
+    <ul>
+      <li><a href="#" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 15 4-4 3 3 5-6"/></svg>Analytics</a></li>
+      <li><a href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14l-1 13H6z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>Orders<mark>14</mark></a></li>
+      <li><a href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg>Products</a></li>
+      <li><a href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg>Customers</a></li>
+      <li><a href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3h8l10 10-8 8L3 11z"/><circle cx="7.5" cy="7.5" r="1"/></svg>Discounts</a></li>
+      <li><a href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4z"/></svg>Marketing</a></li>
+    </ul>
+    <h2>Sales channels</h2>
+    <ul>
+      <li><a href="#"><svg viewBox="0 0 24 24" style="color:#22a06b" aria-hidden="true"><circle cx="12" cy="12" r="4"/></svg>Online store</a></li>
+      <li><a href="#"><svg viewBox="0 0 24 24" style="color:#0ea5e9" aria-hidden="true"><circle cx="12" cy="12" r="4"/></svg>Wholesale</a></li>
+      <li><a href="#"><svg viewBox="0 0 24 24" style="color:#f59e0b" aria-hidden="true"><circle cx="12" cy="12" r="4"/></svg>Pop-up POS</a></li>
+    </ul>
+  </nav>
+  <footer>
+    <nav aria-label="Settings"><ul><li><a href="#"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>Settings</a></li></ul></nav>
+  </footer>
+</aside>
+
+<header>
+  <nav>
+    <button popovertarget="sidebar" aria-label="Menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+    <p><strong>Fernwood Goods</strong><small>fernwoodgoods.com · Live</small></p>
+    <ul>
+      <li><search><input type="search" placeholder="Search orders, products..." aria-label="Search"></search></li>
+      <li><button aria-label="Dark mode" onclick="document.documentElement.dataset.theme = matchMedia('(prefers-color-scheme: dark)').matches === (document.documentElement.dataset.theme !== 'light') ? 'light' : 'dark'"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg></button></li>
+      <li><button aria-label="Notifications"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21a2 2 0 0 0 4 0"/></svg></button></li>
+      <li><button class="outline" popovertarget="account"><abbr title="Maya Okafor">MO</abbr><span><strong>Maya Okafor</strong><small>Owner</small></span></button>
+        <div popover id="account"><nav aria-label="Account"><ul><li><a href="#">Profile</a></li><li><a href="#">Sign out</a></li></ul></nav></div></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <header>
+    <hgroup><h1>Overview</h1><p>Oct 6 – Nov 4, 2026 compared with the previous 30 days</p></hgroup>
+    <div role="group"><button>7d</button><button aria-pressed="true">30d</button><button>90d</button></div>
+    <button><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/></svg> Export</button>
+  </header>
+
+  <dl>
+    <div>
+      <dt>Revenue</dt>
+      <dd><ins style="--tone:#15803d"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>12.4%</ins></dd>
+      <dd>$84,215</dd>
+      <dd>vs $74,920 previous period</dd>
+      <dd><svg viewBox="0 0 200 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,32 15,30 30,31 45,26 60,28 75,23 90,25 105,21 120,23 135,18 150,20 165,15 180,13 200,12"/></svg></dd>
+    </div>
+    <div>
+      <dt>Orders</dt>
+      <dd><ins style="--tone:#15803d"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>8.1%</ins></dd>
+      <dd>1,284</dd>
+      <dd>vs 1,188 previous period</dd>
+      <dd><svg viewBox="0 0 200 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,28 15,30 30,26 45,27 60,24 75,25 90,22 105,24 120,21 135,22 150,19 165,21 180,18 200,14"/></svg></dd>
+    </div>
+    <div>
+      <dt>Conversion rate</dt>
+      <dd><del style="--tone:#e11d48"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>0.3 pts</del></dd>
+      <dd>3.2%</dd>
+      <dd>40,125 sessions · was 3.5%</dd>
+      <dd><svg viewBox="0 0 200 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,14 15,15 30,13 45,16 60,15 75,17 90,16 105,18 120,17 135,19 150,18 165,20 180,19 200,20"/></svg></dd>
+    </div>
+    <div>
+      <dt>Average order value</dt>
+      <dd><ins style="--tone:#15803d"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 15 6-6 6 6"/></svg>4.0%</ins></dd>
+      <dd>$65.59</dd>
+      <dd>vs $63.06 previous period</dd>
+      <dd><svg viewBox="0 0 200 40" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,26 15,25 30,27 45,24 60,25 75,23 90,25 105,22 120,24 135,21 150,22 165,20 180,21 200,19"/></svg></dd>
+    </div>
+  </dl>
+
+  <section>
+    <article>
+      <header>
+        <hgroup><h2>Recent orders</h2><p>Last 24 hours</p></hgroup>
+        <a href="#">View all</a>
+      </header>
+      <figure>
+        <table>
+          <thead><tr><th>Order</th><th>Customer</th><th>Date</th><th>Status</th><th>Total</th></tr></thead>
+          <tbody>
+            <tr><td>#FW-10482</td><td>Priya Raman<small>3 items</small></td><td>Nov 4, 4:12 PM</td><td><mark style="--tone:#2563eb">Processing</mark></td><td>$142.00</td></tr>
+            <tr><td>#FW-10481</td><td>Daniel Whitaker<small>1 item</small></td><td>Nov 4, 3:47 PM</td><td><mark style="--tone:#16a34a">Paid</mark></td><td>$38.50</td></tr>
+            <tr><td>#FW-10480</td><td>Sofia Marquez<small>2 items</small></td><td>Nov 4, 2:05 PM</td><td><mark style="--tone:#7c3aed">Shipped</mark></td><td>$96.25</td></tr>
+            <tr><td>#FW-10479</td><td>Kenji Watanabe<small>5 items</small></td><td>Nov 4, 11:38 AM</td><td><mark style="--tone:#475569">Delivered</mark></td><td>$231.80</td></tr>
+            <tr><td>#FW-10478</td><td>Amara Nwosu<small>2 items</small></td><td>Nov 4, 9:54 AM</td><td><mark style="--tone:#d97706">Pending</mark></td><td>$64.00</td></tr>
+            <tr><td>#FW-10477</td><td>Liam O'Connell<small>1 item</small></td><td>Nov 3, 10:21 PM</td><td><mark style="--tone:#e11d48">Refunded</mark></td><td><s>$48.00</s></td></tr>
+            <tr><td>#FW-10476</td><td>Hannah Becker<small>4 items</small></td><td>Nov 3, 7:09 PM</td><td><mark style="--tone:#7c3aed">Shipped</mark></td><td>$178.40</td></tr>
+          </tbody>
+        </table>
+      </figure>
+    </article>
+
+    <article>
+      <header>
+        <hgroup><h2>Top products</h2><p>By revenue, last 30 days</p></hgroup>
+        <a href="#">Report</a>
+      </header>
+      <ol>
+        <li><svg viewBox="0 0 24 24" style="--tone:#d97706" aria-hidden="true"><path d="M8 9h8l1 11H7z"/><path d="M12 9V5"/></svg><strong>Cedar &amp; Smoke Soy Candle</strong><data value="12480">$12,480</data><small>416 sold · 9 oz</small><progress value="100" max="100"></progress></li>
+        <li><svg viewBox="0 0 24 24" style="--tone:#0284c7" aria-hidden="true"><path d="M4 7h12v10H4zM16 9h3v5h-3"/></svg><strong>Speckled Stoneware Mug</strong><data value="9612">$9,612</data><small>356 sold · 12 oz</small><progress value="77" max="100"></progress></li>
+        <li><svg viewBox="0 0 24 24" style="--tone:#059669" aria-hidden="true"><path d="M4 6h16v12H4zM4 10h16M4 14h16"/></svg><strong>Waffle Linen Throw Blanket</strong><data value="8190">$8,190</data><small>63 sold · Sage</small><progress value="66" max="100"></progress></li>
+        <li><svg viewBox="0 0 24 24" style="--tone:#7c3aed" aria-hidden="true"><path d="M12 21v-9M12 12c0-4-3-6-7-6 0 4 3 6 7 6zM12 14c0-3 2-5 6-5 0 3-2 5-6 5z"/></svg><strong>Terracotta Herb Planter Set</strong><data value="6342">$6,342</data><small>151 sold · Set of 3</small><progress value="51" max="100"></progress></li>
+        <li><svg viewBox="0 0 24 24" style="--tone:#e11d48" aria-hidden="true"><path d="M8 10h8v11H8zM10 10V6h4v4M10 3h4"/></svg><strong>Lavender Hand &amp; Body Wash</strong><data value="4968">$4,968</data><small>276 sold · 16 oz</small><progress value="40" max="100"></progress></li>
+      </ol>
+      <footer>Top 5 account for <strong>49.6%</strong> of revenue</footer>
+    </article>
+  </section>
+</main>
+
+<footer>Data refreshed Nov 4, 2026 at 4:30 PM PT</footer>
+</body>
+</html>
