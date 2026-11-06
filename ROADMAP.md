@@ -119,6 +119,37 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 - [x] A zero-dependency command that reports the same problems as text, plus page-level checks (missing `lang`, viewport, stylesheet link, label `for`/`id` pairs), for agents without screenshots.
 
+## Chunk 19: The stylesheet for LLM output in chat apps
+
+Chat interfaces render a model's Markdown as HTML and need CSS for it. TagBrush.css already styles most of it; these make it a natural fit inside a chat window:
+
+- [ ] Compact density for a chat column (tighter spacing and type, set with one attribute or variable), usable with the scoped build inside each message.
+- [ ] Stable layout while text streams in: no jumps when a half-finished table, list, or code block arrives.
+- [ ] A collapsible reasoning block: `<details>` holding a model's thinking.
+- [ ] Citations and sources: footnote-style references and a sources list at the end of an answer.
+- [ ] Math: KaTeX and MathML output.
+- [ ] Wide tables and long code lines that stay readable in a narrow column.
+- [ ] Integration snippets for common chat stacks (a Markdown renderer plus the scoped build).
+
+## Chunk 20: Discovery by AI tools
+
+So agents find and use TagBrush.css on their own, not only when told to:
+
+- [ ] A small MCP server: the guide, `check` as a tool, a theme from a brand color, and starter pages.
+- [ ] Indexing in documentation services that coding agents query for library docs.
+- [ ] Listings: `llms.txt` directories, Claude Code plugin and skill marketplaces, Cursor rule collections, classless-CSS lists, and npm keywords. Prepared here; submitted by the maintainer, since they post publicly.
+- [ ] Defaults and examples in other tools: chat UIs, Markdown-to-HTML tools, and AI SDK examples.
+- [ ] Keep the benchmark (`evals/benchmark/`) current and cite it, so the claims stay measured.
+
+## Chunk 21: Close the polish gap
+
+The benchmark (`evals/benchmark/`) showed TagBrush.css pages cost 3–4× less markup per word and have no contrast failures, but look plainer than what agents build with Tailwind or their own CSS. Make the default result look as designed as theirs, still without classes:
+
+- [ ] Status colors for badges (`<mark>` variants or a small attribute), the gap agents reported most.
+- [ ] A richer hero (a visual or figure beside the heading, a subtle background), and feature cards with an accent.
+- [ ] Inline SVG icons sized and aligned automatically in buttons, navigation, and headings.
+- [ ] Re-run the benchmark and compare screenshots side by side.
+
 ## Release
 
 - [ ] Publish 1.1.0 with chunks 2–12 (version bump, date the CHANGELOG, tag, `npm publish`, GitHub release). `starter.html` and the README rely on the new page layout, so this should happen before announcing them.

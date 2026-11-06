@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fernwood Goods Analytics</title>
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --surface: #ffffff;
+    --surface-2: #f0f2f5;
+    --border: #e3e6eb;
+    --text: #161a20;
+    --text-2: #5b6370;
+    --text-3: #8a919c;
+    --accent: #2f6f5e;
+    --accent-soft: #e4f0ec;
+    --pos: #1f7a4d;
+    --neg: #b23a3a;
+    --s-paid-bg: #e3f4ea; --s-paid-fg: #1c6b43;
+    --s-ship-bg: #e5edfb; --s-ship-fg: #2a4f9a;
+    --s-pend-bg: #fbf1dc; --s-pend-fg: #8a5a0b;
+    --s-ref-bg:  #f8e5e5; --s-ref-fg:  #9b2f2f;
+    --s-del-bg:  #ecebf5; --s-del-fg:  #4b4690;
+    --shadow: 0 1px 2px rgba(16,24,40,.04), 0 1px 3px rgba(16,24,40,.06);
+    --radius: 12px;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1215;
+      --surface: #171b20;
+      --surface-2: #1e2329;
+      --border: #2a3038;
+      --text: #e8eaed;
+      --text-2: #a3abb6;
+      --text-3: #737c88;
+      --accent: #6cc3a6;
+      --accent-soft: #1d3a32;
+      --pos: #5fd19a;
+      --neg: #f08585;
+      --s-paid-bg: #173527; --s-paid-fg: #7fdcab;
+      --s-ship-bg: #1a2a45; --s-ship-fg: #93b5f5;
+      --s-pend-bg: #3a2d12; --s-pend-fg: #f0c674;
+      --s-ref-bg:  #3d1c1c; --s-ref-fg:  #f29b9b;
+      --s-del-bg:  #262443; --s-del-fg:  #b4aef0;
+      --shadow: 0 1px 2px rgba(0,0,0,.3);
+      color-scheme: dark;
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; text-decoration: none; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+
+  /* Sidebar */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 20px 14px;
+    display: flex; flex-direction: column; gap: 24px;
+    position: sticky; top: 0; height: 100vh;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; padding: 0 8px; font-weight: 650; font-size: 15px; }
+  .brand-mark {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: var(--accent); color: var(--surface);
+    display: grid; place-items: center; font-weight: 700;
+  }
+  .nav-group h3 {
+    margin: 0 0 6px; padding: 0 10px;
+    font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3);
+  }
+  .nav { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+  .nav a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: 8px; color: var(--text-2); font-weight: 500;
+  }
+  .nav a:hover { background: var(--surface-2); color: var(--text); }
+  .nav a[aria-current="page"] { background: var(--accent-soft); color: var(--accent); }
+  .nav svg { width: 18px; height: 18px; flex: none; }
+  .nav .count {
+    margin-left: auto; font-size: 12px; padding: 0 7px; border-radius: 999px;
+    background: var(--surface-2); color: var(--text-2);
+  }
+  .sidebar-foot {
+    margin-top: auto; padding: 12px; border: 1px solid var(--border); border-radius: 10px;
+    background: var(--surface-2); font-size: 13px; color: var(--text-2);
+  }
+  .sidebar-foot strong { display: block; color: var(--text); font-weight: 600; margin-bottom: 2px; }
+
+  /* Main */
+  .main { min-width: 0; display: flex; flex-direction: column; }
+  .topbar {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 28px; background: var(--surface); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 5;
+  }
+  .store { display: flex; flex-direction: column; }
+  .store-name { font-weight: 650; font-size: 16px; }
+  .store-url { font-size: 12px; color: var(--text-3); }
+  .search {
+    margin-left: auto; display: flex; align-items: center; gap: 8px;
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 7px 10px; width: 260px; color: var(--text-3);
+  }
+  .search input { border: 0; outline: 0; background: transparent; color: var(--text); font: inherit; width: 100%; }
+  .icon-btn {
+    width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text-2); display: grid; place-items: center; cursor: pointer; position: relative;
+  }
+  .icon-btn .dot { position: absolute; top: 7px; right: 8px; width: 7px; height: 7px; border-radius: 50%; background: var(--neg); border: 2px solid var(--surface); }
+  .user { position: relative; }
+  .user summary {
+    list-style: none; cursor: pointer; display: flex; align-items: center; gap: 10px;
+    padding: 4px 8px 4px 4px; border-radius: 10px;
+  }
+  .user summary::-webkit-details-marker { display: none; }
+  .user summary:hover { background: var(--surface-2); }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: linear-gradient(135deg, #d7a46a, #b0624a); color: #fff;
+    display: grid; place-items: center; font-weight: 600; font-size: 13px;
+  }
+  .user-meta { line-height: 1.2; }
+  .user-meta b { display: block; font-weight: 600; font-size: 13px; }
+  .user-meta span { font-size: 12px; color: var(--text-3); }
+  .menu {
+    position: absolute; right: 0; top: calc(100% + 6px); min-width: 200px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.12); padding: 6px; z-index: 10;
+  }
+  .menu a { display: block; padding: 8px 10px; border-radius: 6px; color: var(--text-2); }
+  .menu a:hover { background: var(--surface-2); color: var(--text); }
+  .menu hr { border: 0; border-top: 1px solid var(--border); margin: 6px 0; }
+
+  .content { padding: 28px; display: grid; gap: 24px; max-width: 1400px; width: 100%; }
+  .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .page-head h1 { margin: 0; font-size: 22px; font-weight: 650; letter-spacing: -.01em; }
+  .page-head p { margin: 2px 0 0; color: var(--text-2); }
+  .segmented { display: inline-flex; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 3px; }
+  .segmented button {
+    border: 0; background: transparent; color: var(--text-2); font: inherit; font-weight: 500;
+    padding: 5px 12px; border-radius: 6px; cursor: pointer;
+  }
+  .segmented button[aria-pressed="true"] { background: var(--surface-2); color: var(--text); box-shadow: var(--shadow); }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow); }
+
+  /* KPIs */
+  .kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .kpi { padding: 18px 20px; }
+  .kpi-label { color: var(--text-2); font-weight: 500; font-size: 13px; }
+  .kpi-value { font-size: 28px; font-weight: 650; letter-spacing: -.02em; margin: 6px 0 8px; }
+  .kpi-foot { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--text-3); }
+  .delta { font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
+  .delta.up { color: var(--pos); }
+  .delta.down { color: var(--neg); }
+  .spark { width: 84px; height: 28px; color: var(--accent); }
+
+  /* Lower grid */
+  .grid-2 { display: grid; grid-template-columns: minmax(0, 2fr) minmax(300px, 1fr); gap: 16px; align-items: start; }
+  .card-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid var(--border); }
+  .card-head h2 { margin: 0; font-size: 15px; font-weight: 600; }
+  .card-head a { color: var(--accent); font-weight: 500; font-size: 13px; }
+
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 12px 20px; white-space: nowrap; }
+  th { font-size: 12px; font-weight: 600; color: var(--text-3); text-transform: uppercase; letter-spacing: .04em; background: var(--surface-2); }
+  td { border-top: 1px solid var(--border); }
+  tbody tr:hover td { background: var(--surface-2); }
+  td.right, th.right { text-align: right; }
+  .order-id { font-weight: 600; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 13px; }
+  .cust b { display: block; font-weight: 550; }
+  .cust span { color: var(--text-3); font-size: 12px; }
+  .muted { color: var(--text-2); }
+
+  .status {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600;
+    padding: 3px 9px; border-radius: 999px;
+  }
+  .status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .status.paid { background: var(--s-paid-bg); color: var(--s-paid-fg); }
+  .status.shipped { background: var(--s-ship-bg); color: var(--s-ship-fg); }
+  .status.pending { background: var(--s-pend-bg); color: var(--s-pend-fg); }
+  .status.refunded { background: var(--s-ref-bg); color: var(--s-ref-fg); }
+  .status.delivered { background: var(--s-del-bg); color: var(--s-del-fg); }
+
+  .products { list-style: none; margin: 0; padding: 8px 0; }
+  .product { display: grid; grid-template-columns: 44px 1fr auto; gap: 12px; align-items: center; padding: 10px 20px; }
+  .thumb { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; font-size: 20px; }
+  .product-name { font-weight: 550; }
+  .product-sub { font-size: 12px; color: var(--text-3); }
+  .bar { height: 4px; border-radius: 4px; background: var(--surface-2); margin-top: 6px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--accent); border-radius: 4px; }
+  .product-rev { text-align: right; font-weight: 600; }
+  .product-rev small { display: block; font-weight: 500; font-size: 12px; color: var(--text-3); }
+
+  @media (max-width: 1100px) {
+    .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 820px) {
+    .app { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .search { display: none; }
+    .topbar { padding: 12px 16px; }
+    .content { padding: 20px 16px; }
+    .user-meta { display: none; }
+  }
+  @media (max-width: 480px) {
+    .kpis { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="brand-mark">F</span> Fernwood Goods</div>
+
+    <nav class="nav-group" aria-label="Main">
+      <h3>Store</h3>
+      <ul class="nav">
+        <li><a href="#" aria-current="page">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+          Analytics</a></li>
+        <li><a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          Orders <span class="count num">14</span></a></li>
+        <li><a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.3 7L12 12l8.7-5"/><path d="M12 22V12"/></svg>
+          Products</a></li>
+        <li><a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          Customers</a></li>
+        <li><a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><circle cx="7" cy="7" r="1"/></svg>
+          Discounts</a></li>
+      </ul>
+    </nav>
+
+    <nav class="nav-group" aria-label="Sales channels">
+      <h3>Channels</h3>
+      <ul class="nav">
+        <li><a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 010 20 15 15 0 010-20z"/></svg>
+          Online store</a></li>
+        <li><a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+          Wholesale</a></li>
+        <li><a href="#">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.6 15a1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.6a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+          Settings</a></li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-foot">
+      <strong>Holiday prep</strong>
+      Black Friday is in 23 days. 6 products are below their restock threshold.
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div class="store">
+        <span class="store-name">Fernwood Goods</span>
+        <span class="store-url">fernwoodgoods.com</span>
+      </div>
+      <label class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input type="search" placeholder="Search orders, products..." aria-label="Search">
+      </label>
+      <button class="icon-btn" aria-label="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span class="dot"></span>
+      </button>
+      <details class="user">
+        <summary>
+          <span class="avatar">MO</span>
+          <span class="user-meta"><b>Maya Okafor</b><span>Owner</span></span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </summary>
+        <div class="menu" role="menu">
+          <a href="#" role="menuitem">Your profile</a>
+          <a href="#" role="menuitem">Store settings</a>
+          <a href="#" role="menuitem">Billing</a>
+          <hr>
+          <a href="#" role="menuitem">Sign out</a>
+        </div>
+      </details>
+    </header>
+
+    <main class="content">
+      <div class="page-head">
+        <div>
+          <h1>Analytics</h1>
+          <p>Oct 6 – Nov 4, 2026 compared with the previous 30 days</p>
+        </div>
+        <div class="segmented" role="group" aria-label="Date range">
+          <button aria-pressed="false">7 days</button>
+          <button aria-pressed="true">30 days</button>
+          <button aria-pressed="false">90 days</button>
+          <button aria-pressed="false">12 months</button>
+        </div>
+      </div>
+
+      <section class="kpis" aria-label="Key metrics">
+        <article class="card kpi">
+          <div class="kpi-label">Revenue</div>
+          <div class="kpi-value num">$84,312</div>
+          <div class="kpi-foot">
+            <span><span class="delta up">&#9650; 12.4%</span> vs $75,010</span>
+            <svg class="spark" viewBox="0 0 84 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 22 L10 19 L19 20 L28 15 L37 16 L46 11 L55 13 L64 8 L73 9 L83 4"/></svg>
+          </div>
+        </article>
+        <article class="card kpi">
+          <div class="kpi-label">Orders</div>
+          <div class="kpi-value num">1,146</div>
+          <div class="kpi-foot">
+            <span><span class="delta up">&#9650; 8.1%</span> vs 1,060</span>
+            <svg class="spark" viewBox="0 0 84 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 18 L10 20 L19 16 L28 17 L37 13 L46 15 L55 12 L64 13 L73 9 L83 8"/></svg>
+          </div>
+        </article>
+        <article class="card kpi">
+          <div class="kpi-label">Conversion rate</div>
+          <div class="kpi-value num">2.87%</div>
+          <div class="kpi-foot">
+            <span><span class="delta down">&#9660; 0.21 pts</span> vs 3.08%</span>
+            <svg class="spark" viewBox="0 0 84 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 8 L10 10 L19 9 L28 13 L37 11 L46 14 L55 13 L64 17 L73 15 L83 18"/></svg>
+          </div>
+        </article>
+        <article class="card kpi">
+          <div class="kpi-label">Average order value</div>
+          <div class="kpi-value num">$73.57</div>
+          <div class="kpi-foot">
+            <span><span class="delta up">&#9650; 4.0%</span> vs $70.76</span>
+            <svg class="spark" viewBox="0 0 84 28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 16 L10 15 L19 17 L28 14 L37 15 L46 12 L55 14 L64 11 L73 12 L83 10"/></svg>
+          </div>
+        </article>
+      </section>
+
+      <div class="grid-2">
+        <section class="card" aria-labelledby="orders-title">
+          <div class="card-head">
+            <h2 id="orders-title">Recent orders</h2>
+            <a href="#">View all orders</a>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Customer</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th class="right">Items</th>
+                  <th class="right">Total</th>
+                </tr>
+              </thead>
+              <tbody class="num">
+                <tr>
+                  <td class="order-id">#FW-10482</td>
+                  <td class="cust"><b>Priya Raman</b><span>Austin, TX</span></td>
+                  <td class="muted">Nov 4, 4:12 PM</td>
+                  <td><span class="status pending">Pending</span></td>
+                  <td class="right">3</td>
+                  <td class="right">$142.00</td>
+                </tr>
+                <tr>
+                  <td class="order-id">#FW-10481</td>
+                  <td class="cust"><b>Daniel Whitaker</b><span>Portland, OR</span></td>
+                  <td class="muted">Nov 4, 2:47 PM</td>
+                  <td><span class="status paid">Paid</span></td>
+                  <td class="right">1</td>
+                  <td class="right">$68.00</td>
+                </tr>
+                <tr>
+                  <td class="order-id">#FW-10480</td>
+                  <td class="cust"><b>Sofia Marchetti</b><span>Brooklyn, NY</span></td>
+                  <td class="muted">Nov 4, 11:03 AM</td>
+                  <td><span class="status shipped">Shipped</span></td>
+                  <td class="right">2</td>
+                  <td class="right">$96.50</td>
+                </tr>
+                <tr>
+                  <td class="order-id">#FW-10479</td>
+                  <td class="cust"><b>Marcus Lee</b><span>Denver, CO</span></td>
+                  <td class="muted">Nov 3, 7:38 PM</td>
+                  <td><span class="status shipped">Shipped</span></td>
+                  <td class="right">4</td>
+                  <td class="right">$211.25</td>
+                </tr>
+                <tr>
+                  <td class="order-id">#FW-10478</td>
+                  <td class="cust"><b>Hannah Brooks</b><span>Asheville, NC</span></td>
+                  <td class="muted">Nov 3, 1:15 PM</td>
+                  <td><span class="status delivered">Delivered</span></td>
+                  <td class="right">1</td>
+                  <td class="right">$38.00</td>
+                </tr>
+                <tr>
+                  <td class="order-id">#FW-10477</td>
+                  <td class="cust"><b>Tomás Herrera</b><span>San Diego, CA</span></td>
+                  <td class="muted">Nov 2, 9:52 PM</td>
+                  <td><span class="status refunded">Refunded</span></td>
+                  <td class="right">2</td>
+                  <td class="right">$84.00</td>
+                </tr>
+                <tr>
+                  <td class="order-id">#FW-10476</td>
+                  <td class="cust"><b>Grace Nakamura</b><span>Seattle, WA</span></td>
+                  <td class="muted">Nov 2, 3:20 PM</td>
+                  <td><span class="status delivered">Delivered</span></td>
+                  <td class="right">5</td>
+                  <td class="right">$187.40</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="card" aria-labelledby="products-title">
+          <div class="card-head">
+            <h2 id="products-title">Top products</h2>
+            <a href="#">See report</a>
+          </div>
+          <ul class="products">
+            <li class="product">
+              <span class="thumb" style="background:#efe2cf" aria-hidden="true">&#127861;</span>
+              <div>
+                <div class="product-name">Stoneware Pour-Over Set</div>
+                <div class="product-sub num">214 sold</div>
+                <div class="bar"><i style="width:100%"></i></div>
+              </div>
+              <div class="product-rev num">$13,696<small>16.2%</small></div>
+            </li>
+            <li class="product">
+              <span class="thumb" style="background:#dfe8dc" aria-hidden="true">&#127807;</span>
+              <div>
+                <div class="product-name">Linen Apron, Olive</div>
+                <div class="product-sub num">301 sold</div>
+                <div class="bar"><i style="width:80%"></i></div>
+              </div>
+              <div class="product-rev num">$10,836<small>12.9%</small></div>
+            </li>
+            <li class="product">
+              <span class="thumb" style="background:#f2dcd3" aria-hidden="true">&#128367;</span>
+              <div>
+                <div class="product-name">Cedar &amp; Smoke Candle</div>
+                <div class="product-sub num">388 sold</div>
+                <div class="bar"><i style="width:63%"></i></div>
+              </div>
+              <div class="product-rev num">$8,536<small>10.1%</small></div>
+            </li>
+            <li class="product">
+              <span class="thumb" style="background:#dde3ee" aria-hidden="true">&#129379;</span>
+              <div>
+                <div class="product-name">Hand-thrown Mug, Slate</div>
+                <div class="product-sub num">243 sold</div>
+                <div class="bar"><i style="width:50%"></i></div>
+              </div>
+              <div class="product-rev num">$6,804<small>8.1%</small></div>
+            </li>
+            <li class="product">
+              <span class="thumb" style="background:#ece4d6" aria-hidden="true">&#129529;</span>
+              <div>
+                <div class="product-name">Walnut Serving Board</div>
+                <div class="product-sub num">71 sold</div>
+                <div class="bar"><i style="width:42%"></i></div>
+              </div>
+              <div class="product-rev num">$5,680<small>6.7%</small></div>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </main>
+  </div>
+</div>
+<script>
+  document.querySelectorAll('.segmented button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      b.parentElement.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
+      b.setAttribute('aria-pressed', 'true');
+    });
+  });
+  document.addEventListener('click', function (e) {
+    var u = document.querySelector('.user');
+    if (u.open && !u.contains(e.target)) u.open = false;
+  });
+</script>
+</body>
+</html>

@@ -54,10 +54,12 @@
   "scripts": {
     "build": "node scripts/build.mjs",
     "test": "playwright test",
-    "test:update": "playwright test --update-snapshots"
+    "test:update": "playwright test --update-snapshots",
+    "benchmark": "node scripts/benchmark.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.64.1",
+    "gpt-tokenizer": "^4.1.0",
     "lightningcss": "^1.33.0"
   },
   "bin": {
