@@ -31,7 +31,8 @@
         "span \"▲ 8.1% vs 1,060\" 4.09"
       ]
     },
-    "a11yErrors": []
+    "a11yErrors": [],
+    "similarity": null
   },
   {
     "file": "dashboard.tagbrush.html",
@@ -51,7 +52,8 @@
       "light": [],
       "dark": []
     },
-    "a11yErrors": []
+    "a11yErrors": [],
+    "similarity": null
   },
   {
     "file": "dashboard.tailwind.html",
@@ -79,7 +81,8 @@
         "footer \"Data refreshed Nov 4, 2026 at \" 4.24"
       ]
     },
-    "a11yErrors": []
+    "a11yErrors": [],
+    "similarity": null
   },
   {
     "file": "landing.plain-css.html",
@@ -113,7 +116,8 @@
         "span \"Tue\" 4.24"
       ]
     },
-    "a11yErrors": []
+    "a11yErrors": [],
+    "similarity": null
   },
   {
     "file": "landing.tagbrush.html",
@@ -133,7 +137,8 @@
       "light": [],
       "dark": []
     },
-    "a11yErrors": []
+    "a11yErrors": [],
+    "similarity": null
   },
   {
     "file": "landing.tailwind.html",
@@ -167,6 +172,7 @@
         "span \"SO\" 3.67"
       ]
     },
-    "a11yErrors": []
+    "a11yErrors": [],
+    "similarity": null
   }
 ]

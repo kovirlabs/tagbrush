@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fernwood Goods · Overview</title>
+<style>
+:root {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --border-soft: #eef2f6;
+  --text: #0f172a;
+  --text-2: #475569;
+  --muted: #64748b;
+  --faint: #94a3b8;
+  --brand: #1f7a55;
+  --brand-hover: #18664a;
+  --brand-soft: #e8f5ee;
+  --brand-text: #1f6b4b;
+  --up-bg: #ecfdf3; --up-fg: #15803d;
+  --down-bg: #fef2f2; --down-fg: #dc2626;
+  --line-up: #2f8f68; --line-down: #f43f5e;
+  --track: #e8edf2;
+  --hover: #f1f5f9;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b1120;
+    --surface: #111827;
+    --border: #1f2a3a;
+    --border-soft: #1a2433;
+    --text: #e5e7eb;
+    --text-2: #cbd5e1;
+    --muted: #94a3b8;
+    --faint: #64748b;
+    --brand: #2b9468;
+    --brand-hover: #33a575;
+    --brand-soft: #123326;
+    --brand-text: #5fd0a0;
+    --up-bg: #0f2e20; --up-fg: #4ade80;
+    --down-bg: #3a1218; --down-fg: #f87171;
+    --line-up: #4fbf8e; --line-down: #fb7185;
+    --track: #1f2937;
+    --hover: #1a2433;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; padding: 0; }
+svg { flex-shrink: 0; }
+
+.app { display: grid; grid-template-columns: 256px 1fr; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh;
+}
+.brand { height: 64px; display: flex; align-items: center; gap: 10px; padding: 0 20px; border-bottom: 1px solid var(--border); }
+.logo { width: 32px; height: 32px; border-radius: 8px; background: var(--brand); color: #fff; display: grid; place-items: center; }
+.brand-name { font-weight: 600; font-size: 14px; line-height: 1.2; }
+.brand-sub { font-size: 12px; color: var(--muted); }
+.nav { padding: 20px 12px; flex: 1; }
+.nav a {
+  display: flex; align-items: center; gap: 12px;
+  height: 36px; padding: 0 12px; margin-bottom: 4px;
+  border-radius: 8px; color: var(--text-2); font-size: 14px;
+}
+.nav a:hover { background: var(--hover); }
+.nav a.active { background: var(--brand-soft); color: var(--brand-text); font-weight: 500; }
+.nav svg { width: 20px; height: 20px; color: var(--muted); }
+.nav a.active svg { color: var(--brand-text); }
+.nav .count { margin-left: auto; font-size: 12px; background: var(--hover); color: var(--text-2); border-radius: 999px; padding: 1px 8px; font-weight: 500; }
+.nav-label { font-size: 12px; font-weight: 600; letter-spacing: .06em; color: var(--muted); padding: 22px 12px 10px; }
+.dot { width: 7px; height: 7px; border-radius: 50%; margin: 0 5px 0 0; }
+.sidebar-foot { border-top: 1px solid var(--border); padding: 10px 12px; }
+.sidebar-foot a { display: flex; align-items: center; gap: 12px; height: 40px; padding: 0 12px; color: var(--text-2); border-radius: 8px; }
+.sidebar-foot svg { width: 20px; height: 20px; color: var(--muted); }
+
+/* Topbar */
+.main { min-width: 0; display: flex; flex-direction: column; }
+.topbar {
+  height: 64px; display: flex; align-items: center; gap: 16px;
+  padding: 0 24px; background: var(--surface); border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 5;
+}
+.icon-btn.menu-btn { display: none; }
+.store-title { font-size: 18px; font-weight: 600; line-height: 1.2; }
+.store-sub { font-size: 12px; color: var(--muted); }
+.top-right { margin-left: auto; display: flex; align-items: center; gap: 12px; }
+.search {
+  width: 256px; height: 38px; display: flex; align-items: center; gap: 10px;
+  padding: 0 12px; border: 1px solid var(--border); border-radius: 8px; background: var(--bg); color: var(--faint);
+  margin-right: 4px;
+}
+.search input { border: 0; background: transparent; outline: 0; font: inherit; color: var(--text); width: 100%; }
+.search input::placeholder { color: var(--faint); }
+.icon-btn { width: 36px; height: 36px; display: grid; place-items: center; border-radius: 8px; color: var(--muted); position: relative; }
+.icon-btn:hover { background: var(--hover); }
+.icon-btn .ping { position: absolute; top: 6px; right: 7px; width: 8px; height: 8px; border-radius: 50%; background: #f43f5e; border: 2px solid var(--surface); box-sizing: content-box; transform: translate(2px,-2px); }
+.user { display: flex; align-items: center; gap: 8px; margin-left: 2px; }
+.avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #2f8f68, #1f6b4b); color: #fff; display: grid; place-items: center; font-size: 12px; font-weight: 600; }
+.user-name { font-size: 14px; font-weight: 500; line-height: 1.2; }
+.user-role { font-size: 12px; color: var(--muted); }
+.user .chev { color: var(--faint); margin-left: 6px; }
+
+/* Content */
+.content { padding: 28px 32px 0; }
+.page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+h1 { font-size: 24px; font-weight: 600; margin: 0 0 6px; letter-spacing: -.01em; line-height: 1.25; }
+.page-sub { color: var(--muted); font-size: 14px; margin: 0; }
+.actions { display: flex; gap: 8px; margin-top: 15px; }
+.seg { display: flex; padding: 3px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
+.seg button { height: 30px; padding: 0 11px; border-radius: 6px; color: var(--text-2); font-size: 14px; }
+.seg button.on { background: var(--hover); color: var(--text); font-weight: 500; }
+.btn-primary { height: 36px; display: inline-flex; align-items: center; gap: 8px; padding: 0 14px; background: var(--brand); color: #fff; border-radius: 6px; font-weight: 500; }
+.btn-primary:hover { background: var(--brand-hover); }
+
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 1px 2px rgba(15,23,42,.04); }
+
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-bottom: 24px; }
+.kpi { padding: 20px; display: flex; flex-direction: column; min-height: 206px; }
+.kpi-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.kpi-label { color: var(--text-2); font-size: 14px; line-height: 20px; }
+.delta { display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 600; padding: 1px 7px; border-radius: 999px; white-space: nowrap; }
+.delta.up { background: var(--up-bg); color: var(--up-fg); }
+.delta.down { background: var(--down-bg); color: var(--down-fg); }
+.kpi-value { font-size: 30px; font-weight: 600; letter-spacing: -.01em; margin: 10px 0 2px; line-height: 1.25; }
+.kpi-note { font-size: 12px; color: var(--muted); }
+.spark { margin-top: auto; padding-top: 18px; width: 100%; height: 52px; }
+.spark path { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+
+.grid2 { display: grid; grid-template-columns: minmax(0, 1fr) 304px; gap: 24px; align-items: start; }
+.card-head { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px 16px; border-bottom: 1px solid var(--border); }
+.card-title { font-size: 16px; font-weight: 600; line-height: 1.3; }
+.card-sub { font-size: 12px; color: var(--muted); }
+.link { color: var(--brand-text); font-size: 14px; font-weight: 500; }
+.link:hover { text-decoration: underline; }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 12px; font-weight: 600; letter-spacing: .04em; color: var(--muted); padding: 12px 20px; border-bottom: 1px solid var(--border); background: var(--bg); white-space: nowrap; }
+td { padding: 0 20px; height: 65px; border-bottom: 1px solid var(--border-soft); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+th:last-child, td:last-child { text-align: right; padding-right: 6px; }
+.order-id { font-weight: 500; }
+.cust { font-weight: 500; line-height: 1.2; }
+.cust-sub { font-size: 12px; color: var(--muted); }
+.date { color: var(--muted); }
+.total { font-weight: 500; }
+.total s { color: var(--faint); font-weight: 400; }
+.status { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 500; padding: 1px 8px; border-radius: 999px; border: 1px solid; }
+.status::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+.s-processing { color: #1d4ed8; background: #eff6ff; border-color: #bfdbfe; }
+.s-paid { color: #15803d; background: #f0fdf4; border-color: #bbf7d0; }
+.s-shipped { color: #6d28d9; background: #f5f3ff; border-color: #ddd6fe; }
+.s-delivered { color: #334155; background: #f8fafc; border-color: #cbd5e1; }
+.s-pending { color: #b45309; background: #fffbeb; border-color: #fde68a; }
+.s-refunded { color: #be123c; background: #fff1f2; border-color: #fecdd3; }
+@media (prefers-color-scheme: dark) {
+  .s-processing { color: #93c5fd; background: #172554; border-color: #1e3a8a; }
+  .s-paid { color: #86efac; background: #052e16; border-color: #14532d; }
+  .s-shipped { color: #c4b5fd; background: #2e1065; border-color: #4c1d95; }
+  .s-delivered { color: #cbd5e1; background: #1e293b; border-color: #334155; }
+  .s-pending { color: #fcd34d; background: #422006; border-color: #78350f; }
+  .s-refunded { color: #fda4af; background: #4c0519; border-color: #881337; }
+}
+
+.products { list-style: none; margin: 0; padding: 0; }
+.products li { padding: 16px 20px 18px; border-bottom: 1px solid var(--border); }
+.prod-row { display: flex; gap: 12px; align-items: center; }
+.thumb { width: 40px; height: 40px; border-radius: 8px; display: grid; place-items: center; }
+.thumb svg { width: 20px; height: 20px; }
+.t-amber { background: #fef3c7; color: #d97706; }
+.t-sky { background: #e0f2fe; color: #0284c7; }
+.t-green { background: #d1fae5; color: #059669; }
+.t-violet { background: #ede9fe; color: #7c3aed; }
+.t-rose { background: #ffe4e6; color: #e11d48; }
+@media (prefers-color-scheme: dark) {
+  .t-amber { background: #3b2a0a; color: #fbbf24; }
+  .t-sky { background: #0c2a3f; color: #38bdf8; }
+  .t-green { background: #0b2e22; color: #34d399; }
+  .t-violet { background: #2a1f4a; color: #a78bfa; }
+  .t-rose { background: #3f1220; color: #fb7185; }
+}
+.prod-info { min-width: 0; flex: 1; }
+.prod-line { display: flex; justify-content: space-between; gap: 8px; }
+.prod-name { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.prod-rev { font-weight: 600; }
+.prod-sub { font-size: 12px; color: var(--muted); }
+.bar { height: 6px; border-radius: 999px; background: var(--track); margin-top: 14px; overflow: hidden; }
+.bar span { display: block; height: 100%; background: var(--line-up); border-radius: 999px; }
+.prod-foot { padding: 14px 20px 18px; font-size: 12px; color: var(--muted); }
+.prod-foot b { color: var(--text); font-weight: 600; }
+
+.refreshed { text-align: center; color: var(--faint); font-size: 13px; padding: 26px 0 32px; }
+
+/* Responsive */
+@media (max-width: 1180px) {
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid2 { grid-template-columns: 1fr; }
+}
+@media (max-width: 900px) {
+  .app { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .icon-btn.menu-btn { display: grid; }
+  .search, .user-meta, .user .chev, .store-sub { display: none; }
+  .topbar { padding: 0 12px 0 16px; gap: 12px; }
+  .top-right { gap: 8px; }
+  .store-title { font-size: 16px; }
+  .user .avatar { width: 34px; height: 34px; }
+}
+@media (max-width: 640px) {
+  .content { padding: 24px 16px 0; }
+  .page-head { margin-bottom: 24px; gap: 0; }
+  .actions { margin-top: 12px; }
+  .kpis { grid-template-columns: 1fr; gap: 16px; }
+  .kpi { min-height: 0; }
+  .spark { height: 44px; padding-top: 16px; }
+  .refreshed { padding: 24px 16px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4 3 6 6.5 6 10a6 6 0 0 1-12 0c0-3.5 2-7 6-10z"/><path d="M12 21v-9"/></svg>
+      </div>
+      <div>
+        <div class="brand-name">Fernwood Goods</div>
+        <div class="brand-sub">Store admin</div>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="#" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>Analytics</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14l-1 13H6L5 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>Orders<span class="count">14</span></a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg>Products</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14a6.5 6.5 0 0 1 3.5 6"/></svg>Customers</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9-9-9z"/><circle cx="7.5" cy="7.5" r="1.3"/></svg>Discounts</a>
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3L10 14"/><path d="M21 3l-7 18-4-7-7-4 18-7z"/></svg>Marketing</a>
+      <div class="nav-label">SALES CHANNELS</div>
+      <a href="#"><span class="dot" style="background:#22a06b"></span>Online store</a>
+      <a href="#"><span class="dot" style="background:#0ea5e9"></span>Wholesale</a>
+      <a href="#"><span class="dot" style="background:#f59e0b"></span>Pop-up POS</a>
+    </nav>
+    <div class="sidebar-foot">
+      <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Settings</a>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn menu-btn" aria-label="Open menu"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+      <div>
+        <div class="store-title">Fernwood Goods</div>
+        <div class="store-sub">fernwoodgoods.com · Live</div>
+      </div>
+      <div class="top-right">
+        <label class="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <span hidden>Search</span>
+          <input type="search" placeholder="Search orders, products…" aria-label="Search">
+        </label>
+        <button class="icon-btn" aria-label="Toggle dark mode"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg></button>
+        <button class="icon-btn" aria-label="Notifications"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg><span class="ping"></span></button>
+        <div class="user">
+          <div class="avatar">MO</div>
+          <div class="user-meta">
+            <div class="user-name">Maya Okafor</div>
+            <div class="user-role">Owner</div>
+          </div>
+          <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <div class="page-head">
+        <div>
+          <h1>Overview</h1>
+          <p class="page-sub">Oct 6 – Nov 4, 2026 compared with the previous 30 days</p>
+        </div>
+        <div class="actions">
+          <div class="seg" role="group" aria-label="Date range">
+            <button>7d</button><button class="on">30d</button><button>90d</button>
+          </div>
+          <button class="btn-primary"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5"/><path d="M4 17v3h16v-3"/></svg>Export</button>
+        </div>
+      </div>
+
+      <section class="kpis">
+        <article class="card kpi">
+          <div class="kpi-top"><span class="kpi-label">Revenue</span><span class="delta up"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>12.4%</span></div>
+          <div class="kpi-value">$84,215</div>
+          <div class="kpi-note">vs $74,920 previous period</div>
+          <svg class="spark" viewBox="0 0 186 30" preserveAspectRatio="none"><path stroke="var(--line-up)" d="M0 26 L15 24 L31 25 L46 20 L62 22 L77 17 L93 18 L108 13 L124 15 L139 9 L155 11 L170 5 L186 3"/></svg>
+        </article>
+        <article class="card kpi">
+          <div class="kpi-top"><span class="kpi-label">Orders</span><span class="delta up"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>8.1%</span></div>
+          <div class="kpi-value">1,284</div>
+          <div class="kpi-note">vs 1,188 previous period</div>
+          <svg class="spark" viewBox="0 0 186 30" preserveAspectRatio="none"><path stroke="var(--line-up)" d="M0 24 L15 26 L31 21 L46 23 L62 19 L77 21 L93 17 L108 19 L124 15 L139 17 L155 12 L170 13 L186 8"/></svg>
+        </article>
+        <article class="card kpi">
+          <div class="kpi-top"><span class="kpi-label">Conversion rate</span><span class="delta down"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>0.3 pts</span></div>
+          <div class="kpi-value">3.2%</div>
+          <div class="kpi-note">40,125 sessions · was 3.5%</div>
+          <svg class="spark" viewBox="0 0 186 30" preserveAspectRatio="none"><path stroke="var(--line-down)" d="M0 8 L15 9 L31 7 L46 10 L62 9 L77 12 L93 11 L108 14 L124 13 L139 16 L155 15 L170 18 L186 17"/></svg>
+        </article>
+        <article class="card kpi">
+          <div class="kpi-top"><span class="kpi-label">Average order value</span><span class="delta up"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 15l6-6 6 6"/></svg>4.0%</span></div>
+          <div class="kpi-value">$65.59</div>
+          <div class="kpi-note">vs $63.06 previous period</div>
+          <svg class="spark" viewBox="0 0 186 30" preserveAspectRatio="none"><path stroke="var(--line-up)" d="M0 22 L15 20 L31 23 L46 19 L62 21 L77 17 L93 19 L108 16 L124 18 L139 14 L155 15 L170 12 L186 13"/></svg>
+        </article>
+      </section>
+
+      <section class="grid2">
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Recent orders</div>
+              <div class="card-sub">Last 24 hours</div>
+            </div>
+            <a href="#" class="link">View all</a>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>ORDER</th><th>CUSTOMER</th><th>DATE</th><th>STATUS</th><th>TOTAL</th></tr></thead>
+              <tbody>
+                <tr><td class="order-id">#FW-10482</td><td><div class="cust">Priya Raman</div><div class="cust-sub">3 items</div></td><td class="date">Nov 4, 4:12 PM</td><td><span class="status s-processing">Processing</span></td><td class="total">$142.00</td></tr>
+                <tr><td class="order-id">#FW-10481</td><td><div class="cust">Daniel Whitaker</div><div class="cust-sub">1 item</div></td><td class="date">Nov 4, 3:47 PM</td><td><span class="status s-paid">Paid</span></td><td class="total">$38.50</td></tr>
+                <tr><td class="order-id">#FW-10480</td><td><div class="cust">Sofia Marquez</div><div class="cust-sub">2 items</div></td><td class="date">Nov 4, 2:05 PM</td><td><span class="status s-shipped">Shipped</span></td><td class="total">$96.25</td></tr>
+                <tr><td class="order-id">#FW-10479</td><td><div class="cust">Kenji Watanabe</div><div class="cust-sub">5 items</div></td><td class="date">Nov 4, 11:38 AM</td><td><span class="status s-delivered">Delivered</span></td><td class="total">$231.80</td></tr>
+                <tr><td class="order-id">#FW-10478</td><td><div class="cust">Amara Nwosu</div><div class="cust-sub">2 items</div></td><td class="date">Nov 4, 9:54 AM</td><td><span class="status s-pending">Pending</span></td><td class="total">$64.00</td></tr>
+                <tr><td class="order-id">#FW-10477</td><td><div class="cust">Liam O'Connell</div><div class="cust-sub">1 item</div></td><td class="date">Nov 3, 10:21 PM</td><td><span class="status s-refunded">Refunded</span></td><td class="total"><s>$48.00</s></td></tr>
+                <tr><td class="order-id">#FW-10476</td><td><div class="cust">Hannah Becker</div><div class="cust-sub">4 items</div></td><td class="date">Nov 3, 7:09 PM</td><td><span class="status s-shipped">Shipped</span></td><td class="total">$178.40</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <div class="card-title">Top products</div>
+              <div class="card-sub">By revenue, last 30 days</div>
+            </div>
+            <a href="#" class="link">Report</a>
+          </div>
+          <ul class="products">
+            <li>
+              <div class="prod-row">
+                <div class="thumb t-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="9" width="12" height="12" rx="3"/><path d="M12 9V6M12 3.5c1 1 1 2 0 2.5"/></svg></div>
+                <div class="prod-info"><div class="prod-line"><span class="prod-name">Cedar &amp; Smoke Soy Candle</span><span class="prod-rev">$12,480</span></div><div class="prod-sub">416 sold · 9 oz</div></div>
+              </div>
+              <div class="bar"><span style="width:100%"></span></div>
+            </li>
+            <li>
+              <div class="prod-row">
+                <div class="thumb t-sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h12v8a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V8z"/><path d="M16 10h2a2 2 0 0 1 0 4h-2"/></svg></div>
+                <div class="prod-info"><div class="prod-line"><span class="prod-name">Speckled Stoneware Mug</span><span class="prod-rev">$9,612</span></div><div class="prod-sub">356 sold · 12 oz</div></div>
+              </div>
+              <div class="bar"><span style="width:77%"></span></div>
+            </li>
+            <li>
+              <div class="prod-row">
+                <div class="thumb t-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="1.5"/><path d="M3 10h18M3 14h18"/></svg></div>
+                <div class="prod-info"><div class="prod-line"><span class="prod-name">Waffle Linen Throw Blanket</span><span class="prod-rev">$8,190</span></div><div class="prod-sub">63 sold · Sage</div></div>
+              </div>
+              <div class="bar"><span style="width:66%"></span></div>
+            </li>
+            <li>
+              <div class="prod-row">
+                <div class="thumb t-violet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-9"/><path d="M12 12c0-4-3-6-7-6 0 4 3 6 7 6zM12 12c0-4 3-6 7-6 0 4-3 6-7 6z"/></svg></div>
+                <div class="prod-info"><div class="prod-line"><span class="prod-name">Terracotta Herb Planter Set</span><span class="prod-rev">$6,342</span></div><div class="prod-sub">151 sold · Set of 3</div></div>
+              </div>
+              <div class="bar"><span style="width:51%"></span></div>
+            </li>
+            <li>
+              <div class="prod-row">
+                <div class="thumb t-rose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="9" width="10" height="12" rx="2"/><path d="M10 9V5h4v4M10 5h-2"/><path d="M7 14h10"/></svg></div>
+                <div class="prod-info"><div class="prod-line"><span class="prod-name">Lavender Hand &amp; Body Wash</span><span class="prod-rev">$4,968</span></div><div class="prod-sub">276 sold · 16 oz</div></div>
+              </div>
+              <div class="bar"><span style="width:40%"></span></div>
+            </li>
+          </ul>
+          <div class="prod-foot">Top 5 account for <b>49.6%</b> of revenue</div>
+        </div>
+      </section>
+
+      <p class="refreshed">Data refreshed Nov 4, 2026 at 4:30 PM PT</p>
+    </main>
+  </div>
+</div>
+</body>
+</html>

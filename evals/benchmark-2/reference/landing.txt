@@ -1,0 +1,202 @@
+Skip to content
+Lumen
+Features
+Pricing
+Customers
+FAQ
+Sign in
+Start free
+New: automatic invoice reminders
+Know where your hours go. Get paid for every one.
+
+Lumen is the time tracker built for freelancers. Start a timer in one click, turn tracked hours into a clean invoice, and see which clients are actually worth your time.
+
+Start your 14-day free trial
+See how it works
+
+No credit card required. Free plan available forever.
+
+MR
+AK
+JO
+TS
+Trusted by 38,000+ designers, developers and writers
+Tracking now
+Brightwave · Homepage redesign
+01:42:18
+Client call: sprint review
+Northfield Studio · billable
+0:45
+API integration for checkout
+Parcel & Co. · billable
+2:30
+Bookkeeping and admin
+Internal · non-billable
+0:35
+This week
+31h 20m · $2,740 billable
+Mon
+Tue
+Wed
+Thu
+Fri
+Sat
+Sun
+Invoice #1047 paid
+$1,860.00 from Northfield Studio
+
+Freelancers at Lumen work with teams like
+
+Northfield
+Parcel&Co
+Brightwave
+Oakline
+Harbor Labs
+Kettle
+FEATURES
+Everything between "start timer" and "payment received"
+
+Lumen replaces the spreadsheet, the invoice template and the sticky note that says "remember to bill for Tuesday."
+
+One-click timers
+
+Start tracking from the menu bar, browser extension or your phone. Forgot to start? Lumen notices idle time and asks what you were working on.
+
+Invoices in seconds
+
+Select a date range, pick a client, and Lumen builds an itemized invoice from your tracked hours. Send it with Stripe or PayPal payment links attached.
+
+Client profitability
+
+See your real hourly rate per client after revisions, calls and scope creep. Find out which projects pay off and which ones quietly drain you.
+
+Budgets and alerts
+
+Set an hour or fee cap for each project. Lumen warns you at 75% and 100%, so you can have the "this is out of scope" talk before it is too late.
+
+Calendar sync
+
+Connect Google or Outlook and turn meetings into time entries with one tap. Your calendar becomes a timesheet you already filled in.
+
+Client portal
+
+Share a private link where clients can see hours, approve timesheets and pay invoices. Fewer "can you send me a breakdown?" emails.
+
+PRICING
+Simple pricing that pays for itself
+
+Most freelancers recover the cost of Lumen in the first week from hours they used to forget to bill.
+
+Monthly
+Yearly Save 20%
+Starter
+
+For side projects and freelancers just getting going.
+
+$0
+/ month
+
+Free forever
+
+Unlimited time tracking
+Up to 2 active clients
+3 invoices per month
+Desktop, web and mobile apps
+Get started free
+Most popular
+Pro
+
+For full-time freelancers who bill by the hour.
+
+$9
+/ month
+
+Billed $108 yearly
+
+Everything in Starter
+Unlimited clients and invoices
+Stripe and PayPal payments
+Profitability reports and budgets
+Calendar sync and automatic reminders
+Start 14-day free trial
+Studio
+
+For small agencies and freelance collectives up to 10 people.
+
+$24
+/ month
+
+Billed $288 yearly, includes 3 seats
+
+Everything in Pro
+Team timesheets and approvals
+Branded client portal
+QuickBooks and Xero export
+Priority support
+Start 14-day free trial
+
+Prices in USD. Extra Studio seats are $6 per month. Cancel anytime from your account settings.
+
+CUSTOMERS
+Freelancers bill more with Lumen
+
+On average, Pro users invoice 11% more hours in their first three months.
+
+★★★★★
+"I used to reconstruct my week from Slack messages every Friday. Now I hit one shortcut when I switch tasks and the invoice is basically written for me. I found almost six unbilled hours in my first month."
+MR
+Maya Reyes
+Brand designer, Austin
+★★★★★
+"The profitability report was a wake-up call. My favorite client was paying me an effective $41 an hour once you counted all the calls. I renegotiated, and we are both happier with a fixed retainer."
+AK
+Arjun Kapoor
+Full-stack developer, Toronto
+★★★★★
+"We moved our five-person studio from spreadsheets to Lumen in an afternoon. Timesheet approvals take minutes now, and clients love paying straight from the portal."
+JO
+Jess Okafor
+Founder, Kettle Studio
+38,000+
+freelancers and studios
+$410M
+invoiced through Lumen
+4.8 / 5
+average app store rating
+FAQ
+Questions, answered
+Is the free plan really free?
+
+Yes. Starter is free with no time limit and no credit card. You can track unlimited hours for up to two clients and send three invoices a month. Upgrade only when you need more.
+
+Can I import my data from Toggl, Harvest or Clockify?
+Does Lumen work offline?
+How do clients pay my invoices?
+Can I set different rates for different clients or tasks?
+What happens to my data if I cancel?
+Stop guessing what last week was worth.
+
+Set up in two minutes. Your first invoice could go out today.
+
+Start tracking free
+Lumen
+
+Time tracking and invoicing for independent professionals. Made by a small team in Portland, Oregon.
+
+PRODUCT
+Features
+Pricing
+Download apps
+Changelog
+RESOURCES
+Help center
+Rate calculator
+Invoice templates
+Blog
+COMPANY
+About
+Careers
+Contact
+Status
+© 2026 Lumen Software, Inc.
+PrivacyTermsSecurity

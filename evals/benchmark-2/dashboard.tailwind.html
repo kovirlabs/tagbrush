@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fernwood Goods · Overview</title>
+<script>
+  // Apply dark mode before paint
+  (function () {
+    var s = null;
+    try { s = localStorage.getItem('theme'); } catch (e) {}
+    if (s === 'dark' || (!s && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    }
+  })();
+</script>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    darkMode: 'class',
+    theme: {
+      extend: {
+        fontFamily: { sans: ['Inter', 'ui-sans-serif', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'] },
+        colors: {
+          brand: { 50: '#ecf7f1', 100: '#d3eee0', 500: '#2f8a63', 600: '#25774f', 700: '#1f6a47', 800: '#185638' }
+        }
+      }
+    }
+  };
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-slate-50 text-slate-900 font-sans antialiased dark:bg-slate-950 dark:text-slate-100">
+<div class="min-h-screen lg:flex">
+
+  <!-- Sidebar -->
+  <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 -translate-x-full transition-transform lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen flex flex-col shrink-0 border-r border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800">
+    <div class="h-16 flex items-center gap-3 px-5 border-b border-slate-200 dark:border-slate-800">
+      <div class="h-8 w-8 rounded-lg bg-brand-600 grid place-items-center text-white">
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c-4-3-6-6.5-6-10.5C6 7 9 3.5 12 2c3 1.5 6 5 6 9.5 0 4-2 7.5-6 10.5z"/><path d="M12 22V9"/></svg>
+      </div>
+      <div class="leading-tight">
+        <div class="text-sm font-semibold">Fernwood Goods</div>
+        <div class="text-xs text-slate-500 dark:text-slate-400">Store admin</div>
+      </div>
+    </div>
+
+    <nav class="flex-1 overflow-y-auto px-3 py-5 text-sm">
+      <ul class="space-y-1">
+        <li><a href="#" class="flex items-center gap-3 rounded-lg px-3 h-9 bg-brand-50 text-brand-700 font-medium dark:bg-brand-500/15 dark:text-brand-100">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m7 15 4-5 3 3 5-6"/></svg>Analytics</a></li>
+        <li><a href="#" class="flex items-center gap-3 rounded-lg px-3 h-9 text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800">
+          <svg class="h-5 w-5 text-slate-500 dark:text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14l-1 13H6L5 7z"/><path d="M9 7V5a3 3 0 0 1 6 0v2"/></svg>Orders
+          <span class="ml-auto rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-800 dark:text-slate-300">14</span></a></li>
+        <li><a href="#" class="flex items-center gap-3 rounded-lg px-3 h-9 text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800">
+          <svg class="h-5 w-5 text-slate-500 dark:text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg>Products</a></li>
+        <li><a href="#" class="flex items-center gap-3 rounded-lg px-3 h-9 text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800">
+          <svg class="h-5 w-5 text-slate-500 dark:text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.5 3.3-5.5 6.5-5.5s5.9 2 6.5 5.5"/><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.8c2 .7 3.2 2.4 3.5 5.2"/></svg>Customers</a></li>
+        <li><a href="#" class="flex items-center gap-3 rounded-lg px-3 h-9 text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800">
+          <svg class="h-5 w-5 text-slate-500 dark:text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12V4a1 1 0 0 1 1-1h8l9 9-9 9-9-9z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>Discounts</a></li>
+        <li><a href="#" class="flex items-center gap-3 rounded-lg px-3 h-9 text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800">
+          <svg class="h-5 w-5 text-slate-500 dark:text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>Marketing</a></li>
+      </ul>
+
+      <p class="mt-7 mb-2 px-3 text-xs font-semibold tracking-wider text-slate-400 dark:text-slate-500">SALES CHANNELS</p>
+      <ul class="space-y-1">
+        <li><a href="#" class="flex items-center gap-3 rounded-lg px-3 h-9 text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"><span class="h-2 w-2 rounded-full bg-emerald-500"></span>Online store</a></li>
+        <li><a href="#" class="flex items-center gap-3 rounded-lg px-3 h-9 text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"><span class="h-2 w-2 rounded-full bg-sky-500"></span>Wholesale</a></li>
+        <li><a href="#" class="flex items-center gap-3 rounded-lg px-3 h-9 text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800"><span class="h-2 w-2 rounded-full bg-amber-500"></span>Pop-up POS</a></li>
+      </ul>
+    </nav>
+
+    <div class="border-t border-slate-200 p-3 dark:border-slate-800">
+      <a href="#" class="flex items-center gap-3 rounded-lg px-3 h-10 text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800">
+        <svg class="h-5 w-5 text-slate-500 dark:text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        Settings</a>
+    </div>
+  </aside>
+  <div id="scrim" class="fixed inset-0 z-30 hidden bg-slate-900/40 lg:hidden"></div>
+
+  <!-- Main column -->
+  <div class="flex-1 min-w-0 flex flex-col">
+    <header class="sticky top-0 z-20 h-16 flex items-center gap-3 px-4 sm:px-6 border-b border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800">
+      <button id="menuBtn" class="lg:hidden -ml-1 p-2 rounded-lg text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800" aria-label="Open menu">
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div class="leading-tight min-w-0">
+        <div class="text-base lg:text-lg font-semibold truncate">Fernwood Goods</div>
+        <div class="hidden lg:block text-xs text-slate-500 dark:text-slate-400">fernwoodgoods.com · Live</div>
+      </div>
+
+      <div class="ml-auto flex items-center gap-2 sm:gap-3">
+        <label class="hidden md:flex items-center gap-2 w-64 h-9 px-3 rounded-lg border border-slate-200 bg-slate-50 text-sm text-slate-400 dark:bg-slate-800 dark:border-slate-700">
+          <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+          <span class="sr-only">Search</span>
+          <input type="search" placeholder="Search orders, products…" class="w-full bg-transparent outline-none placeholder:text-slate-400 text-slate-700 dark:text-slate-200">
+        </label>
+        <button id="themeBtn" class="p-2 rounded-lg text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800" aria-label="Toggle dark mode">
+          <svg class="h-5 w-5 dark:hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg class="h-5 w-5 hidden dark:block" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+        <button class="relative p-2 rounded-lg text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800" aria-label="Notifications">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/></svg>
+          <span class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-rose-500 ring-2 ring-white dark:ring-slate-900"></span>
+        </button>
+        <div class="flex items-center gap-2.5">
+          <div class="h-8 w-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-700 grid place-items-center text-xs font-semibold text-white">MO</div>
+          <div class="hidden lg:block leading-tight">
+            <div class="text-sm font-medium">Maya Okafor</div>
+            <div class="text-xs text-slate-500 dark:text-slate-400">Owner</div>
+          </div>
+          <svg class="hidden lg:block h-4 w-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-1 px-4 py-6 sm:px-8 sm:py-7">
+      <!-- Page header -->
+      <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <h1 class="text-2xl font-semibold tracking-tight">Overview</h1>
+          <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">Oct 6 – Nov 4, 2026 compared with the previous 30 days</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="inline-flex rounded-lg border border-slate-200 bg-white p-0.5 text-sm dark:bg-slate-900 dark:border-slate-700">
+            <button class="px-3 h-8 rounded-md text-slate-600 dark:text-slate-300">7d</button>
+            <button class="px-3 h-8 rounded-md bg-slate-100 font-medium text-slate-900 dark:bg-slate-800 dark:text-white">30d</button>
+            <button class="px-3 h-8 rounded-md text-slate-600 dark:text-slate-300">90d</button>
+          </div>
+          <button class="inline-flex items-center gap-2 h-9 px-3.5 rounded-lg bg-brand-600 text-sm font-medium text-white shadow-sm hover:bg-brand-700">
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M4 17v3h16v-3"/></svg>
+            Export
+          </button>
+        </div>
+      </div>
+
+      <!-- KPI cards -->
+      <section class="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+          <div class="flex items-start justify-between gap-2">
+            <h2 class="text-sm text-slate-600 dark:text-slate-400">Revenue</h2>
+            <span class="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+              <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m6 15 6-6 6 6"/></svg>12.4%</span>
+          </div>
+          <p class="mt-2 text-3xl font-semibold tracking-tight">$84,215</p>
+          <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">vs $74,920 previous period</p>
+          <svg class="mt-5 h-10 w-full text-brand-500" viewBox="0 0 186 40" preserveAspectRatio="none" fill="none"><polyline vector-effect="non-scaling-stroke" stroke="currentColor" stroke-width="2" stroke-linejoin="round" points="0,32 15,30 31,31 46,26 62,28 77,23 93,25 108,20 124,22 139,16 155,18 170,13 186,11"/></svg>
+        </article>
+
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+          <div class="flex items-start justify-between gap-2">
+            <h2 class="text-sm text-slate-600 dark:text-slate-400">Orders</h2>
+            <span class="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+              <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m6 15 6-6 6 6"/></svg>8.1%</span>
+          </div>
+          <p class="mt-2 text-3xl font-semibold tracking-tight">1,284</p>
+          <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">vs 1,188 previous period</p>
+          <svg class="mt-5 h-10 w-full text-brand-500" viewBox="0 0 186 40" preserveAspectRatio="none" fill="none"><polyline vector-effect="non-scaling-stroke" stroke="currentColor" stroke-width="2" stroke-linejoin="round" points="0,28 15,30 31,26 46,28 62,24 77,26 93,22 108,24 124,21 139,23 155,19 170,20 186,16"/></svg>
+        </article>
+
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+          <div class="flex items-start justify-between gap-2">
+            <h2 class="text-sm text-slate-600 dark:text-slate-400">Conversion rate</h2>
+            <span class="inline-flex items-center gap-0.5 whitespace-nowrap rounded-full bg-rose-50 px-2 py-0.5 text-xs font-semibold text-rose-600 dark:bg-rose-500/15 dark:text-rose-300">
+              <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m6 9 6 6 6-6"/></svg>0.3 pts</span>
+          </div>
+          <p class="mt-2 text-3xl font-semibold tracking-tight">3.2%</p>
+          <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">40,125 sessions · was 3.5%</p>
+          <svg class="mt-5 h-10 w-full text-rose-500" viewBox="0 0 186 40" preserveAspectRatio="none" fill="none"><polyline vector-effect="non-scaling-stroke" stroke="currentColor" stroke-width="2" stroke-linejoin="round" points="0,12 15,13 31,11 46,14 62,12 77,15 93,14 108,17 124,16 139,18 155,17 170,19 186,18"/></svg>
+        </article>
+
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:bg-slate-900 dark:border-slate-800">
+          <div class="flex items-start justify-between gap-2">
+            <h2 class="text-sm text-slate-600 dark:text-slate-400">Average order value</h2>
+            <span class="inline-flex items-center gap-0.5 rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-semibold text-emerald-700 dark:bg-emerald-500/15 dark:text-emerald-300">
+              <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="m6 15 6-6 6 6"/></svg>4.0%</span>
+          </div>
+          <p class="mt-2 text-3xl font-semibold tracking-tight">$65.59</p>
+          <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">vs $63.06 previous period</p>
+          <svg class="mt-5 h-10 w-full text-brand-500" viewBox="0 0 186 40" preserveAspectRatio="none" fill="none"><polyline vector-effect="non-scaling-stroke" stroke="currentColor" stroke-width="2" stroke-linejoin="round" points="0,26 15,24 31,27 46,23 62,25 77,22 93,24 108,21 124,23 139,20 155,21 170,19 186,20"/></svg>
+        </article>
+      </section>
+
+      <!-- Orders + products -->
+      <section class="mt-6 grid gap-6 xl:grid-cols-[minmax(0,1fr)_19rem]">
+        <!-- Recent orders -->
+        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm overflow-hidden dark:bg-slate-900 dark:border-slate-800">
+          <div class="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-800">
+            <div>
+              <h2 class="text-base font-semibold">Recent orders</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Last 24 hours</p>
+            </div>
+            <a href="#" class="text-sm font-medium text-brand-600 hover:underline dark:text-emerald-400">View all</a>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full min-w-[600px] text-sm">
+              <thead class="bg-slate-50 text-xs font-semibold tracking-wide text-slate-500 dark:bg-slate-800/60 dark:text-slate-400">
+                <tr>
+                  <th class="px-5 h-10 text-left">ORDER</th>
+                  <th class="px-5 h-10 text-left">CUSTOMER</th>
+                  <th class="px-5 h-10 text-left">DATE</th>
+                  <th class="px-5 h-10 text-left">STATUS</th>
+                  <th class="px-5 h-10 text-right">TOTAL</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                <tr class="h-16">
+                  <td class="px-5 font-medium">#FW-10482</td>
+                  <td class="px-5"><div class="font-medium">Priya Raman</div><div class="text-xs text-slate-500 dark:text-slate-400">3 items</div></td>
+                  <td class="px-5 text-slate-500 dark:text-slate-400 whitespace-nowrap">Nov 4, 4:12 PM</td>
+                  <td class="px-5"><span class="inline-flex items-center gap-1.5 rounded-full border border-sky-200 bg-sky-50 px-2 py-0.5 text-xs font-medium text-sky-700 dark:border-sky-500/30 dark:bg-sky-500/10 dark:text-sky-300"><span class="h-1.5 w-1.5 rounded-full bg-sky-500"></span>Processing</span></td>
+                  <td class="px-5 text-right font-medium">$142.00</td>
+                </tr>
+                <tr class="h-16">
+                  <td class="px-5 font-medium">#FW-10481</td>
+                  <td class="px-5"><div class="font-medium">Daniel Whitaker</div><div class="text-xs text-slate-500 dark:text-slate-400">1 item</div></td>
+                  <td class="px-5 text-slate-500 dark:text-slate-400 whitespace-nowrap">Nov 4, 3:47 PM</td>
+                  <td class="px-5"><span class="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700 dark:border-emerald-500/30 dark:bg-emerald-500/10 dark:text-emerald-300"><span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>Paid</span></td>
+                  <td class="px-5 text-right font-medium">$38.50</td>
+                </tr>
+                <tr class="h-16">
+                  <td class="px-5 font-medium">#FW-10480</td>
+                  <td class="px-5"><div class="font-medium">Sofia Marquez</div><div class="text-xs text-slate-500 dark:text-slate-400">2 items</div></td>
+                  <td class="px-5 text-slate-500 dark:text-slate-400 whitespace-nowrap">Nov 4, 2:05 PM</td>
+                  <td class="px-5"><span class="inline-flex items-center gap-1.5 rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-xs font-medium text-violet-700 dark:border-violet-500/30 dark:bg-violet-500/10 dark:text-violet-300"><span class="h-1.5 w-1.5 rounded-full bg-violet-500"></span>Shipped</span></td>
+                  <td class="px-5 text-right font-medium">$96.25</td>
+                </tr>
+                <tr class="h-16">
+                  <td class="px-5 font-medium">#FW-10479</td>
+                  <td class="px-5"><div class="font-medium">Kenji Watanabe</div><div class="text-xs text-slate-500 dark:text-slate-400">5 items</div></td>
+                  <td class="px-5 text-slate-500 dark:text-slate-400 whitespace-nowrap">Nov 4, 11:38 AM</td>
+                  <td class="px-5"><span class="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-xs font-medium text-slate-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300"><span class="h-1.5 w-1.5 rounded-full bg-slate-400"></span>Delivered</span></td>
+                  <td class="px-5 text-right font-medium">$231.80</td>
+                </tr>
+                <tr class="h-16">
+                  <td class="px-5 font-medium">#FW-10478</td>
+                  <td class="px-5"><div class="font-medium">Amara Nwosu</div><div class="text-xs text-slate-500 dark:text-slate-400">2 items</div></td>
+                  <td class="px-5 text-slate-500 dark:text-slate-400 whitespace-nowrap">Nov 4, 9:54 AM</td>
+                  <td class="px-5"><span class="inline-flex items-center gap-1.5 rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300"><span class="h-1.5 w-1.5 rounded-full bg-amber-500"></span>Pending</span></td>
+                  <td class="px-5 text-right font-medium">$64.00</td>
+                </tr>
+                <tr class="h-16">
+                  <td class="px-5 font-medium">#FW-10477</td>
+                  <td class="px-5"><div class="font-medium">Liam O'Connell</div><div class="text-xs text-slate-500 dark:text-slate-400">1 item</div></td>
+                  <td class="px-5 text-slate-500 dark:text-slate-400 whitespace-nowrap">Nov 3, 10:21 PM</td>
+                  <td class="px-5"><span class="inline-flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-xs font-medium text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-300"><span class="h-1.5 w-1.5 rounded-full bg-rose-500"></span>Refunded</span></td>
+                  <td class="px-5 text-right font-medium text-slate-400 line-through">$48.00</td>
+                </tr>
+                <tr class="h-16">
+                  <td class="px-5 font-medium">#FW-10476</td>
+                  <td class="px-5"><div class="font-medium">Hannah Becker</div><div class="text-xs text-slate-500 dark:text-slate-400">4 items</div></td>
+                  <td class="px-5 text-slate-500 dark:text-slate-400 whitespace-nowrap">Nov 3, 7:09 PM</td>
+                  <td class="px-5"><span class="inline-flex items-center gap-1.5 rounded-full border border-violet-200 bg-violet-50 px-2 py-0.5 text-xs font-medium text-violet-700 dark:border-violet-500/30 dark:bg-violet-500/10 dark:text-violet-300"><span class="h-1.5 w-1.5 rounded-full bg-violet-500"></span>Shipped</span></td>
+                  <td class="px-5 text-right font-medium">$178.40</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Top products -->
+        <div class="rounded-2xl border border-slate-200 bg-white shadow-sm flex flex-col dark:bg-slate-900 dark:border-slate-800">
+          <div class="flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-800">
+            <div>
+              <h2 class="text-base font-semibold">Top products</h2>
+              <p class="text-xs text-slate-500 dark:text-slate-400">By revenue, last 30 days</p>
+            </div>
+            <a href="#" class="text-sm font-medium text-brand-600 hover:underline dark:text-emerald-400">Report</a>
+          </div>
+          <ul class="divide-y divide-slate-100 dark:divide-slate-800">
+            <li class="px-5 py-4">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 shrink-0 rounded-lg bg-amber-100 grid place-items-center text-amber-600 dark:bg-amber-500/15 dark:text-amber-300">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="9" width="12" height="12" rx="4"/><path d="M12 9V6M10 3h4"/></svg>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-baseline justify-between gap-2"><span class="truncate text-sm font-medium">Cedar &amp; Smoke Soy Candle</span><span class="text-sm font-semibold">$12,480</span></div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">416 sold · 9 oz</div>
+                </div>
+              </div>
+              <div class="mt-3 h-1.5 rounded-full bg-slate-100 dark:bg-slate-800"><div class="h-full rounded-full bg-brand-500" style="width:100%"></div></div>
+            </li>
+            <li class="px-5 py-4">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 shrink-0 rounded-lg bg-sky-100 grid place-items-center text-sky-600 dark:bg-sky-500/15 dark:text-sky-300">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h12v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V7z"/><path d="M16 9h2a2 2 0 0 1 0 4h-2"/></svg>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-baseline justify-between gap-2"><span class="truncate text-sm font-medium">Speckled Stoneware Mug</span><span class="text-sm font-semibold">$9,612</span></div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">356 sold · 12 oz</div>
+                </div>
+              </div>
+              <div class="mt-3 h-1.5 rounded-full bg-slate-100 dark:bg-slate-800"><div class="h-full rounded-full bg-brand-500" style="width:77%"></div></div>
+            </li>
+            <li class="px-5 py-4">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 shrink-0 rounded-lg bg-emerald-100 grid place-items-center text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-300">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"><rect x="4" y="6" width="16" height="12" rx="1.5"/><path d="M4 10h16M4 14h16"/></svg>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-baseline justify-between gap-2"><span class="truncate text-sm font-medium">Waffle Linen Throw Blanket</span><span class="text-sm font-semibold">$8,190</span></div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">63 sold · Sage</div>
+                </div>
+              </div>
+              <div class="mt-3 h-1.5 rounded-full bg-slate-100 dark:bg-slate-800"><div class="h-full rounded-full bg-brand-500" style="width:66%"></div></div>
+            </li>
+            <li class="px-5 py-4">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 shrink-0 rounded-lg bg-violet-100 grid place-items-center text-violet-600 dark:bg-violet-500/15 dark:text-violet-300">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21v-9"/><path d="M12 12c0-4 3-6 7-6 0 4-3 6-7 6zM12 14c0-3-2.5-5-6-5 0 3 2.5 5 6 5z"/></svg>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-baseline justify-between gap-2"><span class="truncate text-sm font-medium">Terracotta Herb Planter Set</span><span class="text-sm font-semibold">$6,342</span></div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">151 sold · Set of 3</div>
+                </div>
+              </div>
+              <div class="mt-3 h-1.5 rounded-full bg-slate-100 dark:bg-slate-800"><div class="h-full rounded-full bg-brand-500" style="width:51%"></div></div>
+            </li>
+            <li class="px-5 py-4">
+              <div class="flex items-center gap-3">
+                <div class="h-10 w-10 shrink-0 rounded-lg bg-rose-100 grid place-items-center text-rose-600 dark:bg-rose-500/15 dark:text-rose-300">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="9" width="8" height="12" rx="2"/><path d="M10 9V6h4v3M12 3v3"/></svg>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-baseline justify-between gap-2"><span class="truncate text-sm font-medium">Lavender Hand &amp; Body Wash</span><span class="text-sm font-semibold">$4,968</span></div>
+                  <div class="text-xs text-slate-500 dark:text-slate-400">276 sold · 16 oz</div>
+                </div>
+              </div>
+              <div class="mt-3 h-1.5 rounded-full bg-slate-100 dark:bg-slate-800"><div class="h-full rounded-full bg-brand-500" style="width:40%"></div></div>
+            </li>
+          </ul>
+          <div class="mt-auto border-t border-slate-200 px-5 py-4 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
+            Top 5 account for <strong class="font-semibold text-slate-900 dark:text-white">49.6%</strong> of revenue
+          </div>
+        </div>
+      </section>
+
+      <p class="mt-8 mb-2 text-center text-xs text-slate-400 dark:text-slate-500">Data refreshed Nov 4, 2026 at 4:30 PM PT</p>
+    </main>
+  </div>
+</div>
+
+<script>
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    var dark = document.documentElement.classList.toggle('dark');
+    try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (e) {}
+  });
+  var sidebar = document.getElementById('sidebar'), scrim = document.getElementById('scrim');
+  function setMenu(open) {
+    sidebar.classList.toggle('-translate-x-full', !open);
+    scrim.classList.toggle('hidden', !open);
+  }
+  document.getElementById('menuBtn').addEventListener('click', function () { setMenu(true); });
+  scrim.addEventListener('click', function () { setMenu(false); });
+</script>
+</body>
+</html>

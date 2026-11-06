@@ -1,0 +1,146 @@
+Fernwood Goods
+
+Store admin
+
+Analytics
+Orders
+14
+Products
+Customers
+Discounts
+Marketing
+
+SALES CHANNELS
+
+Online store
+Wholesale
+Pop-up POS
+Settings
+Fernwood Goods
+
+fernwoodgoods.com · Live
+
+Search
+MO
+Maya Okafor
+Owner
+Overview
+
+Oct 6 – Nov 4, 2026 compared with the previous 30 days
+
+7d
+30d
+90d
+Export
+
+Revenue
+
+12.4%
+
+$84,215
+
+vs $74,920 previous period
+
+Orders
+
+8.1%
+
+1,284
+
+vs 1,188 previous period
+
+Conversion rate
+
+0.3 pts
+
+3.2%
+
+40,125 sessions · was 3.5%
+
+Average order value
+
+4.0%
+
+$65.59
+
+vs $63.06 previous period
+
+Recent orders
+
+Last 24 hours
+
+View all
+ORDER	CUSTOMER	DATE	STATUS	TOTAL
+#FW-10482	
+Priya Raman
+3 items
+	Nov 4, 4:12 PM	
+Processing	$142.00
+#FW-10481	
+Daniel Whitaker
+1 item
+	Nov 4, 3:47 PM	
+Paid	$38.50
+#FW-10480	
+Sofia Marquez
+2 items
+	Nov 4, 2:05 PM	
+Shipped	$96.25
+#FW-10479	
+Kenji Watanabe
+5 items
+	Nov 4, 11:38 AM	
+Delivered	$231.80
+#FW-10478	
+Amara Nwosu
+2 items
+	Nov 4, 9:54 AM	
+Pending	$64.00
+#FW-10477	
+Liam O'Connell
+1 item
+	Nov 3, 10:21 PM	
+Refunded	$48.00
+#FW-10476	
+Hannah Becker
+4 items
+	Nov 3, 7:09 PM	
+Shipped	$178.40
+Top products
+
+By revenue, last 30 days
+
+Report
+
+Cedar & Smoke Soy Candle
+
+$12,480
+
+416 sold · 9 oz
+
+Speckled Stoneware Mug
+
+$9,612
+
+356 sold · 12 oz
+
+Waffle Linen Throw Blanket
+
+$8,190
+
+63 sold · Sage
+
+Terracotta Herb Planter Set
+
+$6,342
+
+151 sold · Set of 3
+
+Lavender Hand & Body Wash
+
+$4,968
+
+276 sold · 16 oz
+
+Top 5 account for 49.6% of revenue
+Data refreshed Nov 4, 2026 at 4:30 PM PT
