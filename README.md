@@ -2,9 +2,11 @@
 
 <p align="center"><strong>TagBrush.css</strong></p>
 
-**A tiny, no-build CSS library that makes plain semantic HTML look clean and modern.**
+**Make plain HTML look finished. One `<link>`, no classes.**
 
-One file, about 4 KB gzipped. No classes required. No PostCSS, bundler, or JavaScript. Dark mode built in. Theme it by overriding a few CSS variables, and your own CSS always wins. Works with any static site or framework: Astro, Next.js, React, Vue, Nuxt, Angular, SvelteKit, Web Components, and more.
+You know HTML and want a page that looks good now: a landing page, docs, a blog, a Markdown export, an internal tool. Add one stylesheet and write ordinary HTML. The page is laid out, the forms and tables are styled, dark mode follows the system, and any brand color you pick stays readable. No classes to learn, no build step, no JavaScript, about 5 KB gzipped.
+
+When you do want to customize, a few CSS variables re-theme everything, and any CSS you write wins without `!important`. The same file works in plain HTML, static site generators, and every major framework.
 
 👉 **See it in action:** [kovirlabs.github.io/tagbrush](https://kovirlabs.github.io/tagbrush/) has a live demo of every styled element, plus a theme builder that writes your custom CSS for you.
 
@@ -57,16 +59,36 @@ Or just [download `tagbrush.css`](tagbrush.css) and host it yourself.
 
 ## Features
 
-- **No build step** – plain CSS you can link, copy, or import.
 - **Classless page layout** – `header`, `main`, and `footer` center themselves with full-width backgrounds, and the footer stays at the bottom of short pages. Markdown output without a `<main>` is centered too.
-- **Classless by default** – typography, lists, media, forms, tables, dialogs, and more are styled automatically.
-- **Themeable** – colors, fonts, type scale, spacing, and radius are semantic CSS custom properties. Hover and focus colors derive from `--color-primary`, so one variable re-themes everything.
-- **Easy to override** – everything lives in a `@layer`, so any CSS you write wins without `!important`.
+- **Classless everything else** – typography, lists, media, forms, tables, dialogs, and more are styled automatically. Common components come from the HTML and ARIA you'd write anyway: `role="switch"` makes a toggle, `aria-busy="true"` shows a spinner, `<nav aria-label="Breadcrumb">` gets separators.
+- **Markdown-ready** – task lists, footnotes, column alignment, and wide tables from GitHub-flavored Markdown, Pandoc, markdown-it, and Hugo all look right.
+- **Any color stays readable** – pick any `--color-primary` and button text switches between white and black, while links darken or lighten as needed. The tests check WCAG AA contrast for 10 different primary colors in light and dark mode.
 - **Dark mode** – follows the system setting automatically, or force it per page or per element with `data-theme`.
-- **Accessible** – default colors meet WCAG AA contrast in light and dark mode (checked by the tests), visible keyboard focus rings, respects `prefers-reduced-motion`, and includes print styles.
-- **Layout helpers included** – `.grid`, `.card`, and `role="group"` cover the layouts most sites need.
-- **Tiny and dependency-free** – about 4 KB minified and gzipped.
+- **Easy to override** – everything lives in a `@layer`, so any CSS you write wins without `!important`.
+- **Themeable** – colors, fonts, type scale, spacing, and radius are semantic CSS variables, and one variable re-themes everything. The [theme builder](https://kovirlabs.github.io/tagbrush/#theming) writes the CSS for you.
+- **Accessible** – WCAG AA contrast, visible keyboard focus rings, `prefers-reduced-motion`, forced-colors support, and print styles.
+- **Small helpers when you want them** – `.grid`, `.card`, `.container`, and `role="group"` cover the layouts most sites need.
+- **No build step, no dependencies** – plain CSS you can link, copy, or import. About 5 KB minified and gzipped.
 - **Works with any framework** – import it once in your root layout. [Setup guides](frameworks/README.md) cover Astro, Next.js, React, Vue, Nuxt, Angular, SvelteKit, Solid, Web Components, and Tailwind.
+
+## How it compares
+
+TagBrush.css sits in the same family as [Pico CSS](https://picocss.com), [Simple.css](https://simplecss.org), and [Water.css](https://watercss.kognise.dev): drop-in stylesheets for semantic HTML. They're all good choices. Here's where they differ, measured from each package's current npm release (TagBrush.css 1.x, Pico 2.1.1, Simple.css 2.3.7, Water.css 2.1.1) in November 2026:
+
+| | TagBrush.css | Pico CSS | Simple.css | Water.css |
+|---|---|---|---|---|
+| Size (minified, gzipped) | 5.2 KB | 11.4 KB (10.1 KB classless) | 2.7 KB | 3.5 KB |
+| Works without classes | Yes | Yes (classless build) | Yes | Yes |
+| Your CSS wins without `!important` (`@layer`) | Yes | No | No | No |
+| Dark mode from the system setting | Yes | Yes | Yes | Yes |
+| Force light or dark on any element | Yes (`data-theme`) | Yes (`data-theme`) | No | Separate light and dark files |
+| Readable button text for a custom accent color | Automatic | Set by hand (`--pico-primary-inverse`), or use a prebuilt color theme | Set by hand (`--accent-text`) | Set by hand |
+| Page layout with no classes | Centered landmarks, full-width backgrounds, sticky footer | Centered `main` (classless build) | Centered column | Centered body |
+| Toggle switch, loading spinner | Yes | Yes | No | No |
+| Style only part of a page | Yes (`@scope`, `class="tagbrush"`) | Yes (`class="pico"` builds) | No | No |
+| Inside Web Components (Shadow DOM) | Yes (shadow build) | Yes | No | No |
+
+**Choose Simple.css or Water.css** if the smallest possible file matters most and you don't need components like toggle switches or dialogs laid out for you. **Choose Pico** if you want its larger set of components, such as dropdown menus and tooltips. **Choose TagBrush.css** if you want plain HTML to look finished without classes, need your own CSS to win cleanly, or want any brand color to stay readable.
 
 ## What gets styled
 
