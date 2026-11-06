@@ -1176,6 +1176,16 @@
     margin-bottom: var(--spacing-md);
   }
 
+    /* A heading spans every column the grid could hold, so empty columns
+     don't collapse. With two or three articles, cap the columns at that
+     number so the cards still fill the width. */
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))):where(:has(> article:nth-of-type(2):last-of-type)) { --_articles: 2; }
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))):where(:has(> article:nth-of-type(3):last-of-type)) { --_articles: 3; }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))):where(:has(> article:nth-of-type(2):last-of-type, > article:nth-of-type(3):last-of-type)) {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, max(var(--grid-min-column), (100% - (var(--_articles) - 1) * var(--grid-gap)) / var(--_articles))), 1fr));
+  }
+
   :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))) > :not(article) {
     grid-column: 1 / -1;
     margin-bottom: 0;

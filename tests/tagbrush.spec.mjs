@@ -575,6 +575,21 @@ test.describe('article grid', () => {
     expect(await style(page, '#mixed', 'display')).toBe('block');
   });
 
+  test('two or three cards fill the width even with a heading above them', async ({ page }) => {
+    for (const count of [2, 3]) {
+      await page.evaluate((n) => {
+        const posts = document.querySelector('#posts');
+        posts.querySelectorAll('article').forEach((a, i) => { if (i >= n) a.remove(); });
+      }, count);
+      const widths = await page.locator('#posts > article').evaluateAll((els) => els.map((el) => el.getBoundingClientRect().width));
+      const section = await page.locator('#posts').evaluate((el) => el.getBoundingClientRect().width);
+      const gap = 24;
+      expect(widths).toHaveLength(count);
+      for (const width of widths) expect(Math.abs(width - (section - (count - 1) * gap) / count)).toBeLessThan(1);
+      await page.reload();
+    }
+  });
+
   test('cards wrap to one column on a phone', async ({ page }) => {
     await page.setViewportSize({ width: 360, height: 800 });
     const lefts = await page.locator('#posts > article').evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().left)));
