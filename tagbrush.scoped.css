@@ -27,7 +27,6 @@
 
     /* Colors */
     --color-primary: #2563eb;
-    --color-on-primary: #ffffff; /* text on primary-colored buttons */
     --color-background: light-dark(#ffffff, #111827);
     --color-surface: light-dark(#f3f4f6, #1f2937);
     --color-text: light-dark(#1f2937, #f3f4f6);
@@ -41,9 +40,11 @@
 
     /*
      * Optional, derived automatically when unset:
-     *   --color-link            (default: --color-primary, lightened in dark mode for contrast)
+     *   --color-on-primary      (default: white or black, whichever is more readable on --color-primary)
+     *   --color-link            (default: --color-primary, darkened in light mode / lightened in
+     *                            dark mode as far as needed to stay readable on the background)
      *   --color-link-hover      (default: link color, darkened in light mode / lightened in dark mode)
-     *   --color-primary-hover   (default: primary mixed with 15% black)
+     *   --color-primary-hover   (default: primary, darker under white text / lighter under black text)
      *   --focus-ring-color      (default: primary at 50% opacity)
      *   --color-marker          (default: --color-text-muted; list bullets and numbers)
      */
@@ -176,13 +177,13 @@
   }
 
   :where(a) {
-    color: var(--color-link, light-dark(var(--color-primary), color-mix(in srgb, var(--color-primary), white 35%)));
+    color: var(--color-link, light-dark(oklch(from var(--color-primary) min(l, 0.5) c h), oklch(from var(--color-primary) max(l, 0.77) min(c, 0.15) h)));
     text-decoration: none;
     text-underline-offset: 0.15em;
   }
 
   :where(a:hover) {
-    color: var(--color-link-hover, color-mix(in srgb, var(--color-link, light-dark(var(--color-primary), color-mix(in srgb, var(--color-primary), white 35%))), light-dark(black, white) 20%));
+    color: var(--color-link-hover, color-mix(in srgb, var(--color-link, light-dark(oklch(from var(--color-primary) min(l, 0.5) c h), oklch(from var(--color-primary) max(l, 0.77) min(c, 0.15) h))), light-dark(black, white) 20%));
     text-decoration: underline;
   }
 
@@ -655,8 +656,12 @@
      ========================================================================== */
   :where(button, input:is([type="submit"], [type="button"], [type="reset"]), .button) {
     --_btn-bg: var(--color-primary);
-    --_btn-bg-hover: var(--color-primary-hover, color-mix(in srgb, var(--color-primary), black 15%));
-    --_btn-color: var(--color-on-primary);
+    /* White text on darker primaries, black on lighter ones. 0.5636 is the OKLCH
+       lightness where white and black text have the same contrast (about 4.6:1),
+       so the chosen one always has at least that much. Hover moves away from the
+       text color so the label stays readable. */
+    --_btn-bg-hover: var(--color-primary-hover, oklch(from var(--color-primary) calc(l + 0.08 * clamp(-1, (l - 0.5636) * 1000, 1)) c h));
+    --_btn-color: var(--color-on-primary, oklch(from var(--color-primary) clamp(0, (0.5636 - l) * 1000, 1) 0 0));
     --_btn-border: transparent;
 
     display: inline-block;
@@ -713,7 +718,7 @@
   :where(.outline) {
     --_btn-bg: transparent;
     --_btn-bg-hover: color-mix(in srgb, var(--color-primary) 8%, transparent);
-    --_btn-color: var(--color-link, light-dark(var(--color-primary), color-mix(in srgb, var(--color-primary), white 35%)));
+    --_btn-color: var(--color-link, light-dark(oklch(from var(--color-primary) min(l, 0.5) c h), oklch(from var(--color-primary) max(l, 0.77) min(c, 0.15) h)));
     --_btn-border: var(--color-primary);
   }
 
@@ -766,7 +771,7 @@
     background-clip: padding-box;
     border: var(--border-width) solid var(--color-border);
     border-radius: var(--input-radius);
-    caret-color: var(--color-link, light-dark(var(--color-primary), color-mix(in srgb, var(--color-primary), white 35%)));
+    caret-color: var(--color-link, light-dark(oklch(from var(--color-primary) min(l, 0.5) c h), oklch(from var(--color-primary) max(l, 0.77) min(c, 0.15) h)));
     transition: border-color var(--transition-duration) ease-in-out,
                 box-shadow var(--transition-duration) ease-in-out;
   }

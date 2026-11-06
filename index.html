@@ -28,8 +28,6 @@
         .card p { color: var(--color-text-muted); }
         .muted { color: var(--color-text-muted); }
         .swatches button[aria-pressed="true"] { box-shadow: 0 0 0 3px var(--color-text); }
-        .builder-output { position: relative; }
-        .builder-output button { position: absolute; top: var(--spacing-sm); right: var(--spacing-sm); }
         .site-footer { text-align: center; }
     </style>
 </head>
@@ -104,7 +102,7 @@
 
         <section aria-labelledby="theming">
             <h2 id="theming">Build your theme</h2>
-            <p>Every component on this page reads from a handful of CSS variables. Change them here and the whole page updates live, then copy the CSS into your site. Hover colors and focus rings are derived from <code>--color-primary</code> automatically.</p>
+            <p>Every component on this page reads from a handful of CSS variables. Change them here and the whole page updates live, then copy the CSS into your site or share a link to your theme. Hover colors, focus rings, and button text are derived from <code>--color-primary</code> automatically: buttons switch between white and black text, and links are adjusted to stay readable.</p>
             <div class="grid">
                 <form id="builder" onsubmit="event.preventDefault();">
                     <label for="b-primary">Primary color</label>
@@ -143,13 +141,22 @@
                         </label>
                     </div>
                     <label><input type="checkbox" id="b-pill"> Pill-shaped buttons</label>
+                    <p><small id="b-contrast" aria-live="polite"></small></p>
                     <div role="group">
                         <button type="button" class="secondary" id="b-reset">Reset to defaults</button>
                     </div>
                 </form>
                 <div class="builder-output">
+                    <div role="group" aria-label="Theme preview">
+                        <button type="button" id="b-sample-button" style="transition: none">Button</button>
+                        <button type="button" class="outline">Outline</button>
+                        <a href="#theming" id="b-sample-link">A link</a>
+                    </div>
                     <pre><code id="theme-code">/* Using the defaults */</code></pre>
-                    <button type="button" class="secondary" id="b-copy">Copy</button>
+                    <div role="group">
+                        <button type="button" class="secondary" id="b-copy">Copy CSS</button>
+                        <button type="button" class="secondary" id="b-link">Copy link to this theme</button>
+                    </div>
                 </div>
             </div>
 
@@ -585,10 +592,67 @@ function greet(name) {
 
             const lines = Object.entries(vars).map(([name, value]) => `  ${name}: ${value};`);
             code.textContent = lines.length ? `:root {\n${lines.join('\n')}\n}` : '/* Using the defaults */';
+            saveToUrl();
+            showContrast();
+        };
+
+        // Share: the theme is kept in the page URL (?primary=…&font=…), so the
+        // address bar always holds a link to the current theme.
+        const fontKey = (select) => select.selectedIndex ? select.options[select.selectedIndex].text.toLowerCase() : '';
+        const setFontByKey = (select, key) => {
+            const option = [...select.options].find((o) => o.text.toLowerCase() === key);
+            if (option) select.value = option.value;
+        };
+        const saveToUrl = () => {
+            const params = new URLSearchParams();
+            const primary = el('b-primary').value;
+            if (primary !== defaults.primary) params.set('primary', primary.slice(1));
+            if (fontKey(el('b-font'))) params.set('font', fontKey(el('b-font')));
+            if (fontKey(el('b-heading-font'))) params.set('heading', fontKey(el('b-heading-font')));
+            if (el('b-radius').value !== defaults.radius) params.set('radius', el('b-radius').value);
+            if (el('b-spacing').value !== defaults.spacing) params.set('spacing', el('b-spacing').value);
+            if (el('b-pill').checked) params.set('pill', '1');
+            const query = params.toString();
+            history.replaceState(null, '', location.pathname + (query ? '?' + query : '') + location.hash);
+        };
+        const loadFromUrl = () => {
+            const params = new URLSearchParams(location.search);
+            const primary = params.get('primary');
+            if (primary && /^[0-9a-f]{6}$/i.test(primary)) el('b-primary').value = '#' + primary.toLowerCase();
+            if (params.has('font')) setFontByKey(el('b-font'), params.get('font'));
+            if (params.has('heading')) setFontByKey(el('b-heading-font'), params.get('heading'));
+            if (params.has('radius')) el('b-radius').value = params.get('radius');
+            if (params.has('spacing')) el('b-spacing').value = params.get('spacing');
+            el('b-pill').checked = params.get('pill') === '1';
+        };
+
+        // Contrast readout for the current color scheme, measured from the page itself.
+        const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+        const luminance = (color) => {
+            ctx.clearRect(0, 0, 1, 1);
+            ctx.fillStyle = color;
+            ctx.fillRect(0, 0, 1, 1);
+            const lin = (c) => ((c /= 255) <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+            const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+            return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+        };
+        const ratio = (a, b) => {
+            const [hi, lo] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+            return (hi + 0.05) / (lo + 0.05);
+        };
+        const showContrast = () => {
+            const button = getComputedStyle(el('b-sample-button'));
+            const link = getComputedStyle(el('b-sample-link'));
+            const page = getComputedStyle(document.body).backgroundColor;
+            const results = [['Button text', ratio(button.color, button.backgroundColor)], ['Links', ratio(link.color, page)]];
+            el('b-contrast').textContent = 'Contrast: ' + results
+                .map(([name, value]) => `${name} ${value.toFixed(1)}:1 ${value >= 4.5 ? '✓' : '⚠ below 4.5:1'}`)
+                .join(' · ');
         };
 
         swatches.forEach((btn) => {
-            btn.style.backgroundColor = btn.dataset.primary;
+            // Each swatch is a button in its own primary color, so its text color is picked automatically.
+            btn.style.setProperty('--color-primary', btn.dataset.primary);
             btn.addEventListener('click', () => { el('b-primary').value = btn.dataset.primary; updateTheme(); });
         });
         el('builder').addEventListener('input', updateTheme);
@@ -597,15 +661,20 @@ function greet(name) {
             el('builder').reset();
             updateTheme();
         });
-        el('b-copy').addEventListener('click', async () => {
+        const copyButton = (button, text) => button.addEventListener('click', async () => {
+            const label = button.textContent;
             try {
-                await navigator.clipboard.writeText(code.textContent);
-                el('b-copy').textContent = 'Copied!';
+                await navigator.clipboard.writeText(text());
+                button.textContent = 'Copied!';
             } catch (e) {
-                el('b-copy').textContent = 'Select and copy';
+                button.textContent = 'Copy from the address bar';
             }
-            setTimeout(() => { el('b-copy').textContent = 'Copy'; }, 1500);
+            setTimeout(() => { button.textContent = label; }, 1500);
         });
+        copyButton(el('b-copy'), () => code.textContent);
+        copyButton(el('b-link'), () => location.href);
+        loadFromUrl();
+        updateTheme();
 
         // Color scheme switcher: sets data-theme on <html> and remembers it.
         const themeSelect = document.getElementById('theme-select');
@@ -614,10 +683,13 @@ function greet(name) {
         };
         try { themeSelect.value = localStorage.getItem('tagbrush-theme') || ''; } catch (e) {}
         applyTheme(themeSelect.value);
+        showContrast();
         themeSelect.addEventListener('change', () => {
             applyTheme(themeSelect.value);
             try { localStorage.setItem('tagbrush-theme', themeSelect.value); } catch (e) {}
+            showContrast();
         });
+        matchMedia('(prefers-color-scheme: dark)').addEventListener('change', showContrast);
 
         // Dialog demo
         const dialog = document.getElementById('demo-dialog');

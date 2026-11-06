@@ -18,8 +18,10 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 - A `<textarea>` without a `rows` attribute grows as you type, starting at three lines.
 - Read-only fields (`readonly`) get the surface background but keep full-contrast text.
 - The text cursor in fields uses the theme's link color.
+- Theme builder: shows the contrast of button text and links as you pick colors, keeps the theme in the page URL so you can share it, and has a live preview.
 
 ### Changed
+- Any `--color-primary` now stays readable: button text switches automatically between white and black (`--color-on-primary` was always white, which failed contrast on lighter colors like amber or emerald), hover goes darker or lighter to match, and links and outline buttons are darkened (light mode) or lightened (dark mode) only as far as needed. The default link color is a slightly darker blue. Setting `--color-on-primary` or `--color-link` still overrides this.
 - The select arrow follows the theme (`--color-text-muted`) instead of a fixed gray image.
 - Tables are as wide as their content and scroll sideways inside themselves when they don't fit, so wide tables no longer widen the page on phones. Tables inside `<figure>` still fill the full width.
 - Pages that use `<main>` without `.container` were full width and are now centered. Add `data-layout="full"` to `<body>` to keep the old behavior. Pages using `.container` look the same as before. The scoped and Shadow DOM builds are unchanged.
