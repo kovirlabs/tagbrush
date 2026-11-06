@@ -852,6 +852,102 @@ test.describe('agent-written pages', () => {
   }
 });
 
+test.describe('app patterns', () => {
+  const box = (page, selector) => page.locator(selector).first().evaluate((el) => {
+    const r = el.getBoundingClientRect();
+    return { left: Math.round(r.left), right: Math.round(r.right), top: Math.round(r.top), bottom: Math.round(r.bottom), width: Math.round(r.width) };
+  });
+
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1200, height: 800 });
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+  });
+
+  test('<aside> next to <main> becomes a sidebar column', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/app.html'));
+    expect(await style(page, 'body', 'display')).toBe('grid');
+    const aside = await box(page, 'body > aside');
+    const main = await box(page, 'body > main');
+    const header = await box(page, 'body > header');
+    expect(aside.left).toBe(0);
+    expect(main.left).toBe(aside.right);
+    expect(aside.top).toBe(main.top);
+    expect(header.width).toBe(1200);
+    expect((await box(page, 'body > footer')).bottom).toBe(800);
+    expect(await style(page, 'body > main', 'paddingLeft')).toBe('16px');
+  });
+
+  test('the sidebar stacks above main on a phone', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 800 });
+    await page.goto(fileUrl('tests/fixtures/app.html'));
+    const aside = await box(page, 'body > aside');
+    const main = await box(page, 'body > main');
+    expect(aside.width).toBe(390);
+    expect(main.top).toBeGreaterThanOrEqual(aside.bottom);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+  });
+
+  test('navigation in an aside is a vertical list with the current page highlighted', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/app.html'));
+    expect(await style(page, 'aside nav > ul', 'flexDirection')).toBe('column');
+    const [first, second] = await page.locator('aside nav > ul > li').evaluateAll((els) => els.slice(0, 2).map((el) => el.getBoundingClientRect().left));
+    expect(first).toBe(second);
+    expect(await style(page, 'aside [aria-current]', 'backgroundColor')).not.toBe('rgba(0, 0, 0, 0)');
+    // The top bar's nav stays a row.
+    expect(await style(page, 'body > header nav ul', 'flexDirection')).toBe('row');
+  });
+
+  test('a <dl> of <div>s becomes stat tiles; a plain <dl> stays a list', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/app.html'));
+    expect(await style(page, '#stats', 'display')).toBe('grid');
+    const tops = await page.locator('#stats > div').evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().top)));
+    expect(new Set(tops).size).toBe(1);
+    expect(await style(page, '#stats > div', 'backgroundColor')).toBe(await token(page, 'var(--color-surface)'));
+    expect(parseFloat(await style(page, '#stats dd', 'fontSize'))).toBeGreaterThan(20);
+    expect(await style(page, '#plain', 'display')).toBe('block');
+  });
+
+  test('a header with a title and a button puts them on one row', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/app.html'));
+    const title = await box(page, 'main > header > h1');
+    const button = await box(page, 'main > header > button');
+    expect(button.top).toBeLessThan(title.bottom);
+    expect(button.right).toBe((await box(page, 'main > header')).right);
+  });
+
+  test('<search> lays out its fields in a row', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/app.html'));
+    const tops = await page.locator('search > *').evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().top)));
+    expect(new Set(tops).size).toBe(1);
+  });
+
+  test('an aside next to an article in main is a sticky table of contents', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/docs-sidebar.html'));
+    expect(await style(page, 'main', 'display')).toBe('grid');
+    expect(await style(page, 'main > aside', 'position')).toBe('sticky');
+    const aside = await box(page, 'main > aside');
+    const article = await box(page, 'main > article');
+    expect(article.left).toBeGreaterThan(aside.right);
+    expect(article.left - aside.right).toBeLessThanOrEqual(40);
+    expect(aside.top).toBe(article.top);
+  });
+
+  test('an hgroup in the page header is a centered hero', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/hero.html'));
+    expect(await style(page, 'header > hgroup', 'textAlign')).toBe('center');
+    expect(parseFloat(await style(page, 'header > hgroup > h1', 'fontSize'))).toBeGreaterThan(40);
+    expect(await style(page, 'header > [role=group]', 'justifyContent')).toBe('center');
+  });
+
+  test('the scoped and Shadow DOM builds leave the page-level sidebar and hero out', async () => {
+    for (const file of ['tagbrush.scoped.css', 'tagbrush.shadow.css']) {
+      const text = readFileSync(file, 'utf8');
+      expect(text).not.toContain('grid-template-areas: "header header"');
+      expect(text).not.toContain('header > hgroup');
+    }
+  });
+});
+
 test.describe('accessibility', () => {
   // WCAG AA asks for 4.5:1 between normal-size text and its background.
   const AA = 4.5;

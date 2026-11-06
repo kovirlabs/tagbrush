@@ -500,6 +500,25 @@
                 <article><h4>Features</h4><p>Anything you'd show side by side.</p></article>
             </section>
 
+            <h3>App patterns</h3>
+            <p>Dashboards and admin pages need no classes either. A <code>&lt;dl&gt;</code> of <code>&lt;div&gt;</code>s becomes stat tiles, a <code>&lt;header&gt;</code> with a heading and a button puts them on one row, and <code>&lt;search&gt;</code> lays out filters. An <code>&lt;aside&gt;</code> next to <code>&lt;main&gt;</code> becomes a sidebar layout.</p>
+            <article id="app-demo">
+                <header>
+                    <h4>Orders</h4>
+                    <button type="button">New order</button>
+                </header>
+                <dl>
+                    <div><dt>Revenue</dt><dd>$84,312</dd><dd><ins>+12.4%</ins> vs. last month</dd></div>
+                    <div><dt>Orders</dt><dd>1,148</dd></div>
+                    <div><dt>Conversion</dt><dd>2.86%</dd></div>
+                </dl>
+                <search>
+                    <input type="search" aria-label="Search orders" placeholder="Search orders">
+                    <select aria-label="Status"><option>All statuses</option><option>Shipped</option></select>
+                    <button type="button" class="secondary">Filter</button>
+                </search>
+            </article>
+
             <h3>Layout helpers</h3>
             <p>A few optional classes cover the layouts almost every site needs: <code>.grid</code> for responsive columns, <code>.card</code> for boxed content, and <code>role="group"</code> for rows of buttons.</p>
             <div class="grid">

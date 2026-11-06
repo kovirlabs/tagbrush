@@ -619,7 +619,7 @@
     font-size: var(--font-size-sm);
   }
 
-  search {
+  :where(search) {
     display: block;
   }
 
@@ -1304,6 +1304,155 @@
   }
 
   :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))) > article > :last-child {
+    margin-bottom: 0;
+  }
+
+  /* ==========================================================================
+     App Patterns
+     ========================================================================== */
+
+  /* A sidebar inside <main>: <main><aside>…</aside><article>…</article></main>
+     (a docs page with a table of contents). The aside stays in view while
+     the article scrolls. */
+  :where(main:has(> aside):has(> article)) {
+    display: grid;
+    grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
+    gap: var(--spacing-xl);
+    align-items: start;
+  }
+
+  :where(main:has(> article ~ aside):has(> article)) {
+    grid-template-columns: minmax(0, 1fr) minmax(10rem, 14rem);
+  }
+
+  :where(main:has(> aside):has(> article)) > :where(aside) {
+    position: sticky;
+    top: var(--spacing-md);
+    max-height: calc(100dvh - 2 * var(--spacing-md));
+    overflow-y: auto;
+    font-size: var(--font-size-sm);
+  }
+
+  /* The article keeps its reading width but sits next to the sidebar */
+  :where(main:has(> aside):has(> article)) > :where(article) {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  :where(main:has(> aside):has(> article)) > :where(:not(aside, article)) {
+    grid-column: 1 / -1;
+  }
+
+  @media (max-width: 48rem) {
+    :where(main:has(> aside):has(> article)) {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    :where(main:has(> aside):has(> article)) > :where(aside) {
+      position: static;
+      max-height: none;
+    }
+  }
+
+  /* Navigation in a sidebar is a vertical list; the current page is highlighted */
+  :where(aside nav) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  aside nav :is(ul, ol, menu) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  aside nav :is(ul, ol, menu) :is(ul, ol, menu) {
+    padding-inline-start: var(--spacing-md);
+  }
+
+  :where(aside nav a) {
+    display: block;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius);
+    text-decoration: none;
+  }
+
+  :where(aside nav a:hover) {
+    background-color: color-mix(in srgb, var(--color-primary) 8%, transparent);
+  }
+
+  :where(aside nav [aria-current]:not([aria-current="false"])) {
+    background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
+  }
+
+  /* Key numbers: a <dl> whose items are wrapped in <div>s becomes a row of
+     tiles. <dl><div><dt>Revenue</dt><dd>$84,312</dd></div>…</dl> */
+  :where(dl:has(> div)) {
+    display: grid;
+    gap: var(--spacing-md);
+    grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
+  }
+
+  :where(dl:has(> div)) > div {
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--card-radius);
+    background-color: var(--color-surface);
+  }
+
+  :where(dl:has(> div)) > div > dt {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+  }
+
+  :where(dl:has(> div)) > div > dd {
+    margin: var(--spacing-xs) 0 0;
+    font-size: var(--font-size-h3);
+    font-weight: var(--font-weight-heading);
+    line-height: var(--line-height-heading);
+    font-variant-numeric: tabular-nums;
+  }
+
+  :where(dl:has(> div)) > div > dd + dd {
+    font-size: var(--font-size-sm);
+    font-weight: 400;
+    color: var(--color-text-muted);
+  }
+
+  /* A header with a title and actions: <header><h1>Users</h1><button>Invite</button></header> */
+  :where(main, article, section) header:where(:has(> :is(h1, h2, h3, h4, hgroup)):has(> :is(button, .button, [role="group"]))) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-sm) var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+  }
+
+  :where(main, article, section) header:where(:has(> :is(h1, h2, h3, h4, hgroup)):has(> :is(button, .button, [role="group"]))) > * {
+    margin: 0;
+  }
+
+  /* Search and filters: <search> or <form role="search"> lays its fields in a row */
+  :where(search, form[role="search"]) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+  }
+
+  :where(search, form[role="search"]) > * {
+    margin-bottom: 0;
+  }
+
+  :where(search, form[role="search"]) > :where(input:not([type="checkbox"], [type="radio"]), select, label, [role="group"], form) {
+    flex: 1 1 12rem;
+    width: auto;
+  }
+
+  :where(search, form[role="search"]) :where(input, select) {
     margin-bottom: 0;
   }
 

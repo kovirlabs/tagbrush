@@ -104,6 +104,7 @@ TagBrush.css sits in the same family as [Pico CSS](https://picocss.com), [Simple
 | Code highlighting | Token colors for Prism, highlight.js, Hugo (Chroma), Jekyll (Rouge), Pandoc, and Pygments output, and Shiki's dual themes and `css-variables` theme. Follows the theme and dark mode; a highlighter theme you load yourself still wins |
 | Markdown   | Footnotes from GitHub-flavored Markdown, markdown-it, and Pandoc (smaller, muted, highlighted when linked to); long URLs and words wrap instead of widening the page |
 | Article grids | A `<section>` of two or more `<article>`s becomes a responsive grid of cards |
+| App patterns | `<aside>` next to `<main>` is a sidebar layout (vertical navigation, stacks on phones); `<aside>` next to an `<article>` in `<main>` is a sticky table of contents; a `<dl>` of `<div>`s is stat tiles; a `<header>` with a heading and buttons is one row; `<search>` lays out filters; an `<hgroup>` in the page header is a hero |
 | Structure  | `nav` (with `ul`/`menu` rendered as a horizontal menu, `aria-current` highlighted), `header`, `main`, `footer`, `search`, `article aside` (callout), breadcrumbs (`<nav aria-label="Breadcrumb">` gets `/` separators) |
 | Buttons    | `button`, `input[type=submit/button/reset]`, `.button`, `:disabled`, `aria-disabled` |
 | Loading    | `aria-busy="true"` on a button or any element shows a spinner |
