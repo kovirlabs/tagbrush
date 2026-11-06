@@ -228,11 +228,42 @@ test.describe('page layout', () => {
     expect((await rect(page, 'body > footer')).bottom).toBe(WIDE.height);
   });
 
-  test('a page without <main> is centered as a whole', async ({ page }) => {
+  // 70ch in the body font, measured in the page.
+  const readingWidth = (page) => page.evaluate(() => {
+    const probe = document.body.appendChild(document.createElement('div'));
+    probe.style.width = '70ch';
+    const width = probe.getBoundingClientRect().width;
+    probe.remove();
+    return width;
+  });
+
+  test('a page without <main> is centered at a comfortable reading width', async ({ page }) => {
     await load(page, '<h1>Markdown title</h1><p>Paragraph</p><pre>code</pre>');
-    expect(await style(page, 'body', 'paddingLeft')).toBe('56px');
+    const width = await readingWidth(page);
     expect(await style(page, 'body', 'display')).toBe('block');
-    expect(await rect(page, 'pre')).toMatchObject({ left: 56, width: 1168 });
+    const pre = await page.locator('pre').evaluate((el) => el.getBoundingClientRect());
+    expect(Math.abs(pre.width - width)).toBeLessThan(1);
+    expect(Math.abs(pre.left - (WIDE.width - width) / 2)).toBeLessThan(1);
+  });
+
+  test('--reading-width can widen text pages', async ({ page }) => {
+    await load(page, '<p>Paragraph</p>');
+    await page.addStyleTag({ content: ':root { --reading-width: 1168px; }' });
+    expect(await style(page, 'body', 'paddingLeft')).toBe('56px');
+  });
+
+  test('a single article in main is kept at reading width', async ({ page }) => {
+    await load(page, '<main><article><h1>Post</h1><p>Text</p></article></main>');
+    const width = await readingWidth(page);
+    const article = await page.locator('article').evaluate((el) => el.getBoundingClientRect());
+    expect(Math.abs(article.width - width)).toBeLessThan(1);
+    expect(Math.abs(article.left - (WIDE.width - width) / 2)).toBeLessThan(1);
+
+    await load(page, '<main><article><p>One</p></article><article><p>Two</p></article></main>');
+    expect((await rect(page, 'article')).width).toBe(1168);
+
+    await load(page, '<main><article data-layout="full"><p>Wide</p></article></main>');
+    expect((await rect(page, 'article')).width).toBe(1168);
   });
 
   test('a classless framework wrapper counts as the page', async ({ page }) => {
@@ -513,6 +544,41 @@ test.describe('markdown output', () => {
   test('long words wrap', async ({ page }) => {
     await page.goto(MARKDOWN);
     expect(await style(page, 'p', 'overflowWrap')).toBe('break-word');
+  });
+});
+
+test.describe('article grid', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1100, height: 800 });
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.goto(fileUrl('tests/fixtures/articles.html'));
+  });
+
+  test('a section of articles becomes a grid of cards', async ({ page }) => {
+    expect(await style(page, '#posts', 'display')).toBe('grid');
+    const tops = await page.locator('#posts > article').evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().top)));
+    expect(new Set(tops).size).toBe(1);
+    expect(await style(page, '#posts > article', 'backgroundColor')).toBe('rgb(243, 244, 246)');
+    expect(await style(page, '#posts > article', 'paddingLeft')).toBe('24px');
+    expect(await style(page, '#posts > article > p', 'marginBottom')).toBe('0px');
+  });
+
+  test('headings and intro text span the full width above the cards', async ({ page }) => {
+    expect(await style(page, '#posts > h2', 'gridColumnStart')).toBe('1');
+    expect(await style(page, '#posts > h2', 'gridColumnEnd')).toBe('-1');
+    expect(await style(page, '#posts > h2', 'marginBottom')).toBe('0px');
+  });
+
+  test('a single article or a mixed section is left alone', async ({ page }) => {
+    expect(await style(page, '#single', 'display')).toBe('block');
+    expect(await style(page, '#single > article', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#mixed', 'display')).toBe('block');
+  });
+
+  test('cards wrap to one column on a phone', async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 800 });
+    const lefts = await page.locator('#posts > article').evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().left)));
+    expect(new Set(lefts).size).toBe(1);
   });
 });
 

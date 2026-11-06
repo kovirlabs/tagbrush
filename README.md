@@ -98,6 +98,7 @@ TagBrush.css sits in the same family as [Pico CSS](https://picocss.com), [Simple
 | Lists      | `ul`, `ol`, `menu` (including nested lists, muted `::marker`), Markdown task lists (checkbox replaces the bullet), `dl`, `dt`, `dd` |
 | Media      | `img`, `picture`, `video`, `audio`, `canvas`, `svg`, `iframe`, `object`, `embed` (scale to fit), `figure`, `figcaption` |
 | Markdown   | Footnotes from GitHub-flavored Markdown, markdown-it, and Pandoc (smaller, muted, highlighted when linked to); long URLs and words wrap instead of widening the page |
+| Article grids | A `<section>` of two or more `<article>`s becomes a responsive grid of cards |
 | Structure  | `nav` (with `ul`/`menu` rendered as a horizontal menu, `aria-current` highlighted), `header`, `main`, `footer`, `search`, `article aside` (callout), breadcrumbs (`<nav aria-label="Breadcrumb">` gets `/` separators) |
 | Buttons    | `button`, `input[type=submit/button/reset]`, `.button`, `:disabled`, `aria-disabled` |
 | Loading    | `aria-busy="true"` on a button or any element shows a spinner |
@@ -136,7 +137,8 @@ Write the usual page landmarks and TagBrush.css lays them out:
 
 - `header`, `main`, and `footer` stretch across the window, so a background color on them reaches the edges, while their content stays centered within `--container-max-width` (1200px) with `--container-padding` on the sides.
 - On short pages the footer sits at the bottom of the window.
-- A page without `<main>`, such as plain Markdown output, is centered as a whole.
+- A page without `<main>`, such as plain Markdown output, is centered at a comfortable reading width (`--reading-width`, 70 characters), and so is a `<main>` holding a single `<article>`, like a blog post or docs page. Pages with more varied content use the wider `--container-max-width`.
+- A `<section>` of two or more `<article>`s lays them out as a responsive grid of cards. Headings and paragraphs in the section span the full width above them.
 - A wrapper element without a class around the landmarks counts as the page too, so framework wrappers like `<div id="root">`, `<div id="__nuxt">`, and Angular's `<app-root>` work without changes.
 - Pages that already use `.container` look exactly as before.
 
@@ -253,8 +255,9 @@ Button variants only change a few private variables, so you can add your own in 
 | `--line-height` / `--line-height-heading` | `1.6` / `1.2` | Body text / headings |
 | `--spacing`             | `1rem`       | Base unit; `--spacing-xs` … `--spacing-xl` are 0.25× – 2× of it |
 | `--spacing-xs` … `--spacing-xl` | `0.25rem` – `2rem` | Margins and padding throughout |
-| `--grid-min-column` / `--grid-gap` | `16rem` / `1.5rem` | `.grid` column width before wrapping, and gap |
-| `--container-max-width` | `1200px`     | `.container` width                        |
+| `--grid-min-column` / `--grid-gap` | `16rem` / `1.5rem` | Column width before wrapping, and gap, for `.grid` and article grids |
+| `--container-max-width` | `1200px`     | Page width, and `.container` width        |
+| `--reading-width`       | `70ch`       | Line length for text pages (no `<main>`, or `<main>` with one `<article>`) |
 | `--container-padding`   | `1rem`       | `.container` side padding                 |
 | `--border-radius`       | `0.375rem`   | Buttons, inputs, code, dialogs            |
 | `--border-width`        | `1px`        | Inputs, buttons, table rules              |

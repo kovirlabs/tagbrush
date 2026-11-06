@@ -5,6 +5,8 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ## Unreleased
 
 ### Added
+- Reading width: pages without `<main>` (such as Markdown output) and a `<main>` holding a single `<article>` are kept to `--reading-width` (70 characters) for comfortable reading.
+- Article grids: a `<section>` of two or more `<article>`s becomes a responsive grid of cards, no classes needed.
 - Classless page layout: `header`, `main`, and `footer` stretch edge to edge with their content centered in `--container-max-width`, and the footer stays at the bottom of short pages. A page without `<main>` (such as Markdown output) is centered as a whole. Works through a framework wrapper without a class (`<div id="root">`, `<app-root>`).
 - `data-layout="full"` on `<body>`, a wrapper, or one landmark turns page layout off there.
 - Markdown output: task-list checkboxes replace the list bullet, footnotes (GitHub-flavored Markdown, markdown-it, Pandoc) are smaller and muted and highlight when linked to, and the `align` attribute on table cells is respected.

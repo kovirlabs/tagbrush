@@ -73,6 +73,7 @@
     --spacing-lg: calc(var(--spacing) * 1.5);
     --spacing-xl: calc(var(--spacing) * 2);
     --container-max-width: 1200px;
+    --reading-width: 70ch; /* comfortable line length for long text */
     --container-padding: var(--spacing-md);
     --grid-min-column: 16rem;
     --grid-gap: var(--spacing-lg);
@@ -1118,6 +1119,33 @@
   :where([role="group"]) > :where(input:not([type="checkbox"], [type="radio"], [type="color"]), select) {
     flex: 1 1 12rem;
     width: auto;
+  }
+
+  /* A <section> of two or more <article>s (posts, products, features) lays
+     them out as a grid of cards. Headings, paragraphs, a header or a footer
+     in the section span the full width above or below the cards. */
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))) {
+    display: grid;
+    gap: var(--grid-gap);
+    grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-min-column), 100%), 1fr));
+    margin-bottom: var(--spacing-md);
+  }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))) > :not(article) {
+    grid-column: 1 / -1;
+    margin-bottom: 0;
+  }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))) > :where(article) {
+    min-width: 0;
+    padding: var(--card-padding);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--card-radius);
+    background-color: var(--color-surface);
+  }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))) > article > :last-child {
+    margin-bottom: 0;
   }
 
   /* Hide visually but keep available to screen readers */
