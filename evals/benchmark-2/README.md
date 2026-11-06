@@ -72,7 +72,7 @@ The two TagBrush.css + small CSS pages were written again by new agents with the
 | Dashboard, before | 6,535 | 2,182 | 87 | 7 | 2 / 4 | 87.1% |
 | Dashboard, after | **6,138** | **1,200** | **60** | **0** | 0 / 1 | 86.1% |
 | Landing, before | 7,970 | 3,548 | 133 | 10 | 14 / 1 | 88.4% |
-| Landing, after | 8,073 | 3,806 | 138 | 9 | 13 / 2 | 85.8% |
+| Landing, after | 8,073 | 3,806 | 138 | 12 | 13 / 2 | 85.8% |
 
 - **The dashboard needed 45% less CSS and no classes.** The agent used the full-height sidebar, badges, and icons as built, and wrote CSS only for the segmented period switch, the product rows, and the sparkline colors.
 - **The landing page didn't get smaller.** Its CSS goes mostly to parts no stylesheet ships: the app mockup with its bar chart and toast, the pricing toggle, the FAQ's look, a dark call-to-action box. The agent did use the new hero with a picture and the label above headings, but had to move paragraphs after the buttons back beside the picture; that gap was fixed in the same change, so a run today would need a few lines less.
