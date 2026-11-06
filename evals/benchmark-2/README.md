@@ -62,3 +62,20 @@ TagBrush.css plus a small stylesheet produced the same pages with **about 35% fe
 - A full-height sidebar with the top bar beside it, rather than a header across the top. One agent turned the built-in layout off and wrote its own grid.
 - `<hgroup>` with a small label before the heading (`<hgroup><p>Pricing</p><h2>…</h2></hgroup>`, allowed by HTML) mutes the heading, because TagBrush.css mutes every child after the first.
 - Status colors: both agents invented the same fix, an inline `--tone` variable per badge turned into a tinted background by one rule. That's a good candidate for a built-in pattern.
+
+## Re-run after chunk 21 (November 2026)
+
+The two TagBrush.css + small CSS pages were written again by new agents with the same instructions, after TagBrush.css gained status badges (`data-tone`), icon sizing, a hero with a picture, a full-height sidebar, footer columns, and `<hgroup>` labels. They're in [`rerun/`](rerun/), with side-by-side screenshots (reference, before, after) in `rerun/*-compare.png`. Run `node scripts/benchmark.mjs evals/benchmark-2/rerun` to measure them.
+
+| | Output tokens | CSS tokens | Lines of CSS | Classes | Contrast failures (light / dark) | Similarity |
+|---|---:|---:|---:|---:|---|---:|
+| Dashboard, before | 6,535 | 2,182 | 87 | 7 | 2 / 4 | 87.1% |
+| Dashboard, after | **6,138** | **1,200** | **60** | **0** | 0 / 1 | 86.1% |
+| Landing, before | 7,970 | 3,548 | 133 | 10 | 14 / 1 | 88.4% |
+| Landing, after | 8,073 | 3,806 | 138 | 12 | 13 / 2 | 85.8% |
+
+- **The dashboard needed 45% less CSS and no classes.** The agent used the full-height sidebar, badges, and icons as built, and wrote CSS only for the segmented period switch, the product rows, and the sparkline colors.
+- **The landing page didn't get smaller.** Its CSS goes mostly to parts no stylesheet ships: the app mockup with its bar chart and toast, the pricing toggle, the FAQ's look, a dark call-to-action box. The agent did use the new hero with a picture and the label above headings, but had to move paragraphs after the buttons back beside the picture; that gap was fixed in the same change, so a run today would need a few lines less.
+- **Contrast failures are unchanged in kind:** they come from the agents' own colors, mostly white text on the reference's orange (3.6:1), which TagBrush.css would have drawn in black.
+- **The re-run dashboard scrolls 8px sideways on a phone** because its own CSS forces the top bar onto one row; the original didn't.
+- Single runs vary; a difference of a few hundred tokens on the landing page is within that noise.

@@ -145,18 +145,19 @@ So agents find and use TagBrush.css on their own, not only when told to:
 
 The benchmark (`evals/benchmark/`) showed TagBrush.css pages cost 3–4× less markup per word and have no contrast failures, but look plainer than what agents build with Tailwind or their own CSS. Make the default result look as designed as theirs, still without classes:
 
-- [ ] Status colors for badges (`<mark>` variants or a small attribute), the gap agents reported most.
-- [ ] A richer hero (a visual or figure beside the heading, a subtle background), and feature cards with an accent.
-- [ ] Inline SVG icons sized and aligned automatically in buttons, navigation, and headings.
-- [ ] A full-height sidebar variant: `<aside>` before `<header>` puts the top bar beside the sidebar instead of above it (benchmark 2).
-- [ ] Fix `<hgroup>`: mute the paragraphs, never the heading, so a label before the heading works (benchmark 2).
-- [ ] Consider a built-in `--tone` pattern for badges and icons, as both benchmark 2 agents invented it.
-- [ ] Re-run the benchmarks and compare screenshots side by side.
+- [x] Status colors for badges (`<mark>` variants or a small attribute), the gap agents reported most.
+- [x] A richer hero (a visual or figure beside the heading, a subtle background), and feature cards with an accent.
+- [x] Inline SVG icons sized and aligned automatically in buttons, navigation, and headings.
+- [x] A full-height sidebar variant: `<aside>` before `<header>` puts the top bar beside the sidebar instead of above it (benchmark 2).
+- [x] Fix `<hgroup>`: mute the paragraphs, never the heading, so a label before the heading works (benchmark 2).
+- [x] Consider a built-in `--tone` pattern for badges and icons, as both benchmark 2 agents invented it. (Done as `data-tone` plus `--tone`.)
+- [x] Footer columns: a footer with several `<nav>`s, which both landing pages built by hand.
+- [x] Re-run the benchmarks and compare screenshots side by side (benchmark 2, `evals/benchmark-2/rerun/`: dashboard CSS down 45%, landing unchanged).
 
 ## Release
 
 - [x] Prepare 1.1.0 with chunks 2–18 (version bump, dated CHANGELOG, comparison and size claims updated).
-- [ ] Publish: merge the release PR, `npm publish` (maintainer, two-factor), tag `v1.1.0`, GitHub release. Until then `tagbrush@1` on the CDN serves 1.0.0, which agents following `llms.txt` will see.
+- [x] Publish: merge the release PR, `npm publish` (maintainer, two-factor), tag `v1.1.0`, GitHub release. Published 2026-11-05.
 
 ## Open questions
 

@@ -761,8 +761,8 @@ test.describe('llms.txt contract', () => {
       const value = attribute.split('=')[1];
       return !source.includes(value ? `${name}=${value}` : name);
     });
-    // aria-label and aria-current="page" on links are for assistive tech; label is not styled by itself.
-    expect(missing.filter((a) => a !== 'aria-label')).toEqual([]);
+    // aria-label and aria-hidden are for assistive tech only and aren't styled.
+    expect(missing.filter((a) => a !== 'aria-label' && a !== 'aria-hidden')).toEqual([]);
   });
 
   test('every CSS variable llms.txt mentions is defined in tagbrush.css', async () => {
@@ -963,6 +963,100 @@ test.describe('app patterns', () => {
       expect(text).not.toContain('grid-template-areas: "header header"');
       expect(text).not.toContain('header > hgroup');
     }
+  });
+});
+
+test.describe('polish: badges, icons, hero, sidebar, footer', () => {
+  const rect = (page, selector) => page.locator(selector).first().evaluate((el) => el.getBoundingClientRect().toJSON());
+
+  test('a label before the heading in an hgroup leaves the heading unmuted', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/polish.html'));
+    expect(await style(page, '#label-heading', 'color')).toBe(await token(page, 'var(--color-heading)'));
+    expect(await style(page, '#label', 'textTransform')).toBe('uppercase');
+    expect(await style(page, '#section-head > p:last-child', 'color')).toBe(await token(page, 'var(--color-text-muted)'));
+    expect(await style(page, '#hero-title', 'color')).toBe(await token(page, 'var(--color-heading)'));
+  });
+
+  test('a mark with a tone is a tinted badge; a plain mark stays a highlight', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/polish.html'));
+    const success = await style(page, '#badge-success', 'backgroundColor');
+    expect(success).not.toBe(await style(page, '#plain-mark', 'backgroundColor'));
+    expect(success).not.toBe(await style(page, 'mark[data-tone=error]', 'backgroundColor'));
+    expect(parseFloat(await style(page, '#badge-success', 'borderTopLeftRadius'))).toBeGreaterThan(5);
+    expect(await style(page, '#plain-mark', 'backgroundColor')).toBe(await token(page, 'var(--color-highlight)'));
+    expect(await style(page, 'mark[style]', 'backgroundColor')).not.toBe(success);
+    expect(await style(page, '#callout', 'borderLeftColor')).toBe(await token(page, 'var(--color-warning)'));
+  });
+
+  test('icons are sized to the text; a feature card icon sits on a tile', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/polish.html'));
+    expect((await rect(page, '#icon-button svg')).width).toBe(20);
+    expect(await style(page, '#icon-only', 'display')).toBe('inline-flex');
+    expect((await rect(page, '#nav-icon svg')).width).toBe(20);
+    expect((await rect(page, '#icon-only svg')).width).toBe(20);
+    const tile = await rect(page, '#features > article > svg');
+    expect(tile.width).toBe(44);
+    expect(await style(page, '#features > article > svg', 'backgroundColor')).not.toBe('rgba(0, 0, 0, 0)');
+    // An illustration with a width attribute, and a chart outside these places, keep their size.
+    expect((await rect(page, '#hero-figure svg')).width).toBeGreaterThan(200);
+  });
+
+  test('a hero with a figure puts it beside the text, and below it on phones', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(fileUrl('tests/fixtures/polish.html'));
+    const [hero, figure] = [await rect(page, '#hero'), await rect(page, '#hero-figure')];
+    expect(figure.left).toBeGreaterThan(hero.right);
+    expect((await rect(page, '#hero-note')).right).toBeLessThan(figure.left);
+    expect(await style(page, '#hero', 'textAlign')).toBe('start');
+    expect(await style(page, 'body > header', 'backgroundImage')).toContain('radial-gradient');
+    await page.setViewportSize({ width: 390, height: 900 });
+    const [heroPhone, figurePhone] = [await rect(page, '#hero'), await rect(page, '#hero-figure')];
+    expect(figurePhone.top).toBeGreaterThan(heroPhone.bottom);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(390);
+  });
+
+  test('the hero subtitle stays readable on the hero background', async ({ page }) => {
+    for (const scheme of ['light', 'dark']) {
+      await page.emulateMedia({ colorScheme: scheme });
+      await page.goto(fileUrl('tests/fixtures/polish.html'));
+      const ratio = await page.evaluate(() => {
+        const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+        const rgb = (color) => { ctx.fillStyle = color; ctx.fillRect(0, 0, 1, 1); return [...ctx.getImageData(0, 0, 1, 1).data].slice(0, 3); };
+        const probe = document.createElement('i');
+        // The strongest point of the wash: 9% primary over the page background.
+        probe.style.color = 'color-mix(in oklab, var(--color-primary) 9%, var(--color-background))';
+        document.body.append(probe);
+        const bg = rgb(getComputedStyle(probe).color);
+        const fg = rgb(getComputedStyle(document.querySelector('#hero-sub')).color);
+        const lum = ([r, g, b]) => [r, g, b].map((c) => ((c /= 255) <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4)).reduce((s, c, i) => s + c * [0.2126, 0.7152, 0.0722][i], 0);
+        const [hi, lo] = [lum(fg), lum(bg)].sort((a, b) => b - a);
+        return (hi + 0.05) / (lo + 0.05);
+      });
+      expect(ratio, scheme).toBeGreaterThanOrEqual(4.5);
+    }
+  });
+
+  test('an aside before the header runs the full height, with the header beside it', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(fileUrl('tests/fixtures/app-full.html'));
+    const [aside, header, main] = [await rect(page, 'body > aside'), await rect(page, 'body > header'), await rect(page, 'body > main')];
+    expect(aside.top).toBe(0);
+    expect(aside.height).toBe(900);
+    expect(header.left).toBeGreaterThanOrEqual(aside.right - 1);
+    expect(main.left).toBeGreaterThanOrEqual(aside.right - 1);
+    await page.setViewportSize({ width: 390, height: 900 });
+    const [asidePhone, headerPhone] = [await rect(page, 'body > aside'), await rect(page, 'body > header')];
+    expect(headerPhone.bottom).toBeLessThanOrEqual(asidePhone.top + 1);
+  });
+
+  test('a footer with several navs lays them out as columns', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(fileUrl('tests/fixtures/polish.html'));
+    const tops = await page.locator('body > footer > nav').evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().top)));
+    expect(new Set(tops).size).toBe(1);
+    expect(await style(page, 'body > footer > nav ul', 'flexDirection')).toBe('column');
+    const copyright = await rect(page, '#copyright');
+    expect(copyright.top).toBeGreaterThan(tops[0]);
   });
 });
 

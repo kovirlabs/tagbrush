@@ -4,7 +4,7 @@
 
 **Make plain HTML look finished. One `<link>`, no classes.**
 
-You know HTML and want a page that looks good now: a landing page, docs, a blog, a Markdown export, an internal tool. Add one stylesheet and write ordinary HTML. The page is laid out, the forms and tables are styled, dark mode follows the system, and any brand color you pick stays readable. No classes to learn, no build step, no JavaScript, about 7 KB gzipped.
+You know HTML and want a page that looks good now: a landing page, docs, a blog, a Markdown export, an internal tool. Add one stylesheet and write ordinary HTML. The page is laid out, the forms and tables are styled, dark mode follows the system, and any brand color you pick stays readable. No classes to learn, no build step, no JavaScript, about 8 KB gzipped.
 
 When you do want to customize, a few CSS variables re-theme everything, and any CSS you write wins without `!important`. The same file works in plain HTML, static site generators, and every major framework.
 
@@ -72,7 +72,7 @@ Or just [download `tagbrush.css`](tagbrush.css) and host it yourself.
 - **Themeable** – colors, fonts, type scale, spacing, and radius are semantic CSS variables, and one variable re-themes everything. The [theme builder](https://kovirlabs.github.io/tagbrush/#theming) writes the CSS for you.
 - **Accessible** – WCAG AA contrast, visible keyboard focus rings, `prefers-reduced-motion`, forced-colors support, and print styles.
 - **Small helpers when you want them** – `.grid`, `.card`, `.container`, and `role="group"` cover the layouts most sites need.
-- **No build step, no dependencies** – plain CSS you can link, copy, or import. About 7 KB minified and gzipped.
+- **No build step, no dependencies** – plain CSS you can link, copy, or import. About 8 KB minified and gzipped.
 - **Works with any framework** – import it once in your root layout. [Setup guides](frameworks/README.md) cover Astro, Next.js, React, Vue, Nuxt, Angular, SvelteKit, Solid, Web Components, and Tailwind.
 
 ## How it compares
@@ -81,7 +81,7 @@ TagBrush.css sits in a family of drop-in stylesheets for semantic HTML. [Pico CS
 
 | | TagBrush.css | Blades CSS (Pico fork) | Oat | Simple.css | Water.css |
 |---|---|---|---|---|---|
-| Size (minified, gzipped) | 7.4 KB | 12.1 KB | 7.1 KB CSS + 4.0 KB JS | 2.7 KB | 3.5 KB |
+| Size (minified, gzipped) | 8.1 KB | 12.1 KB | 7.1 KB CSS + 4.0 KB JS | 2.7 KB | 3.5 KB |
 | Actively maintained | Yes | Yes | Yes | Yes | No commits since early 2024 |
 | JavaScript needed | No | No | For tabs, dropdowns, and toasts | No | No |
 | Your CSS wins without `!important` (`@layer`) | Yes | No | Yes | No | No |
@@ -100,13 +100,14 @@ TagBrush.css sits in a family of drop-in stylesheets for semantic HTML. [Pico CS
 
 | Category   | Elements                                                                 |
 |------------|--------------------------------------------------------------------------|
-| Typography | `h1`–`h6`, `hgroup` (muted subtitle), `p`, `a`, `strong`, `small`, `mark`, `abbr`, `del`, `ins`, `s`, `dfn`, `q`, `sub`, `sup`, `hr`, `address`, `blockquote` (with `footer` attribution), `code`, `pre`, `kbd`, `samp`, `output` |
+| Typography | `h1`–`h6`, `hgroup` (muted subtitle; a `<p>` before the heading is an uppercase label), `p`, `a`, `strong`, `small`, `mark`, `abbr`, `del`, `ins`, `s`, `dfn`, `q`, `sub`, `sup`, `hr`, `address`, `blockquote` (with `footer` attribution), `code`, `pre`, `kbd`, `samp`, `output` |
 | Lists      | `ul`, `ol`, `menu` (including nested lists, muted `::marker`), Markdown task lists (checkbox replaces the bullet), `dl`, `dt`, `dd` |
-| Media      | `img`, `picture`, `video`, `audio`, `canvas`, `svg`, `iframe`, `object`, `embed` (scale to fit), `figure`, `figcaption` |
+| Media      | `img`, `picture`, `video`, `audio`, `canvas`, `svg`, `iframe`, `object`, `embed` (scale to fit), `figure`, `figcaption`. Inline SVG icons without `width`/`height` in buttons, links, headings, labels, list items, and badges are sized to the text |
 | Code highlighting | Token colors for Prism, highlight.js, Hugo (Chroma), Jekyll (Rouge), Pandoc, and Pygments output, and Shiki's dual themes and `css-variables` theme. Follows the theme and dark mode; a highlighter theme you load yourself still wins |
 | Markdown   | Footnotes from GitHub-flavored Markdown, markdown-it, and Pandoc (smaller, muted, highlighted when linked to); long URLs and words wrap instead of widening the page |
-| Article grids | A `<section>` of two or more `<article>`s becomes a responsive grid of cards |
-| App patterns | `<aside>` next to `<main>` is a sidebar layout (vertical navigation, stacks on phones); `<aside>` next to an `<article>` in `<main>` is a sticky table of contents; a `<dl>` of `<div>`s is stat tiles; a `<header>` with a heading and buttons is one row; `<search>` lays out filters; an `<hgroup>` in the page header is a hero |
+| Article grids | A `<section>` of two or more `<article>`s becomes a responsive grid of cards; an icon `<svg>` first in a card sits on a tinted tile |
+| Status badges | `<mark data-tone="success">` (also `warning`, `error`, `info`, `neutral`, or any color with `style="--tone: …"`) is a tinted pill that stays readable in both schemes; `data-tone` on an `article aside` colors the callout |
+| App patterns | `<aside>` next to `<main>` is a sidebar layout (vertical navigation, stacks on phones), full height when the `<aside>` comes before the `<header>`; `<aside>` next to an `<article>` in `<main>` is a sticky table of contents; a `<dl>` of `<div>`s is stat tiles; a `<header>` with a heading and buttons is one row; `<search>` lays out filters; an `<hgroup>` in the page header is a hero, with a `<figure>` or image beside it if you add one; a page `<footer>` with two or more `<nav>`s is a site map in columns |
 | Structure  | `nav` (with `ul`/`menu` rendered as a horizontal menu, `aria-current` highlighted), `header`, `main`, `footer`, `search`, `article aside` (callout), breadcrumbs (`<nav aria-label="Breadcrumb">` gets `/` separators) |
 | Buttons    | `button`, `input[type=submit/button/reset]`, `.button`, `:disabled`, `aria-disabled` |
 | Loading    | `aria-busy="true"` on a button or any element shows a spinner |
@@ -186,6 +187,9 @@ Write the usual page landmarks and TagBrush.css lays them out:
 - A page without `<main>`, such as plain Markdown output, is centered at a comfortable reading width (`--reading-width`, 70 characters), and so is a `<main>` holding a single `<article>`, like a blog post or docs page. Pages with more varied content use the wider `--container-max-width`.
 - A `<section>` of two or more `<article>`s lays them out as a responsive grid of cards. Headings and paragraphs in the section span the full width above them.
 - A wrapper element without a class around the landmarks counts as the page too, so framework wrappers like `<div id="root">`, `<div id="__nuxt">`, and Angular's `<app-root>` work without changes.
+- An `<hgroup>` in the page `<header>` is a hero on a soft tint of the primary color (`--hero-background`). Add a `<figure>`, `<img>`, or `<svg>` after it to put a picture beside the text.
+- An `<aside>` next to `<main>` is a sidebar. Put it before the `<header>` and it runs the full height of the window, with the header as a top bar beside it.
+- A page `<footer>` with two or more `<nav>`s lays them out as columns of links; a last paragraph (the copyright line) spans the width below them.
 - Pages that already use `.container` look exactly as before.
 
 To lay out the page yourself, add `data-layout="full"` to `<body>` (or to the wrapper). To let just one landmark go edge to edge, for example a full-width hero, put it on that element: `<header data-layout="full">`. Giving the wrapper element a class also tells TagBrush.css it's your own layout.
@@ -287,7 +291,7 @@ Button variants only change a few private variables, so you can add your own in 
 | `--color-highlight`     | `#fef08a` / `#713f12` | `<mark>` background             |
 | `--color-error`         | `#dc2626` / `#f87171` | Invalid fields and their help text |
 | `--color-success`       | `#16a34a` / `#4ade80` | Fields marked `aria-invalid="false"`, good `meter` values, `<ins>` |
-| `--color-warning`       | `#d97706` / `#fbbf24` | Middling `meter` values         |
+| `--color-warning`       | `#d97706` / `#fbbf24` | Middling `meter` values, `data-tone="warning"` |
 | `--color-marker`        | *derived*    | List bullets and numbers, `summary` arrows (defaults to muted text) |
 | `--focus-ring-color`    | *derived*    | Focus outlines (primary at 50% opacity)   |
 | `--focus-ring-width`    | `3px`        | Focus outlines and input focus rings      |
@@ -308,7 +312,9 @@ Button variants only change a few private variables, so you can add your own in 
 | `--border-radius`       | `0.375rem`   | Buttons, inputs, code, dialogs            |
 | `--border-width`        | `1px`        | Inputs, buttons, table rules              |
 | `--code-comment`, `--code-keyword`, `--code-string`, `--code-function`, `--code-constant`, `--code-tag` | muted text, then violet, green, blue, amber, rose | Syntax highlighting colors, each with a light and a dark value |
-| `--shadow` / `--shadow-lg` | soft shadows | Available for your components / dialogs |
+| `--shadow` / `--shadow-lg` | soft shadows | Available for your components / dialogs; hero images |
+| `--hero-background` | soft primary tint | Background of the page-header hero; `none` turns it off |
+| `--tone` | *from `data-tone`* | Color of a badge (`<mark>`), callout, or card icon; set it inline for any color |
 | `--transition-duration` | `0.15s`      | Hover and focus transitions (`0s` with reduced motion) |
 | `--button-padding` / `--button-radius` / `--button-font-weight` | spacing, radius, `500` | Buttons and file-picker buttons |
 | `--input-padding` / `--input-radius` | spacing, radius | Text inputs, selects, textareas |

@@ -1,0 +1,56 @@
+[
+  {
+    "file": "dashboard.tagbrush-plus.html",
+    "total": 6138,
+    "textTokens": 553,
+    "overhead": 5585,
+    "cssTokens": 1200,
+    "classes": 0,
+    "classTokens": 0,
+    "svgTokens": 3043,
+    "darkMode": true,
+    "overflowPhone": true,
+    "overflowDesktop": false,
+    "contrastLight": 0,
+    "contrastDark": 1,
+    "contrastExamples": {
+      "light": [],
+      "dark": [
+        "abbr \"MO\" 4.21"
+      ]
+    },
+    "a11yErrors": [],
+    "similarity": 0.860761257046569
+  },
+  {
+    "file": "landing.tagbrush-plus.html",
+    "total": 8073,
+    "textTokens": 1153,
+    "overhead": 6920,
+    "cssTokens": 3806,
+    "classes": 12,
+    "classTokens": 14,
+    "svgTokens": 881,
+    "darkMode": true,
+    "overflowPhone": false,
+    "overflowDesktop": false,
+    "contrastLight": 13,
+    "contrastDark": 2,
+    "contrastExamples": {
+      "light": [
+        "a \"Start free\" 3.69",
+        "p \"New: automatic invoice reminde\" 2.96",
+        "a \"Start your 14-day free trial\" 3.69",
+        "p \"Features\" 3.51",
+        "p \"Pricing\" 3.26",
+        "mark \"Most popular\" 3.69"
+      ],
+      "dark": [
+        "mark \"Most popular\" 2.47",
+        "a \"Start tracking free\" 3.69"
+      ]
+    },
+    "a11yErrors": [],
+    "similarity": 0.858159572916668
+  }
+]
