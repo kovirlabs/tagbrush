@@ -741,22 +741,22 @@
   }
 
   /* A hero: an <hgroup> (and buttons) in the page header after the <nav> */
-  :where(body, body > :not([class])) > header > hgroup {
+  :where(body, body > :not([class]):has(> main)) > header > hgroup {
     margin-block: var(--spacing-xl);
     text-align: center;
   }
 
-  :where(body, body > :not([class])) > header > hgroup > :first-child {
+  :where(body, body > :not([class]):has(> main)) > header > hgroup > :first-child {
     font-size: clamp(2.25rem, 1.6rem + 3vw, 3.5rem);
   }
 
-  :where(body, body > :not([class])) > header > hgroup > :not(:first-child) {
+  :where(body, body > :not([class]):has(> main)) > header > hgroup > :not(:first-child) {
     max-width: var(--reading-width);
     margin-inline: auto;
     font-size: 1.25rem;
   }
 
-  :where(body, body > :not([class])) > header > hgroup + [role="group"] {
+  :where(body, body > :not([class]):has(> main)) > header > hgroup + [role="group"] {
     justify-content: center;
     margin-bottom: var(--spacing-xl);
   }
@@ -1489,6 +1489,19 @@
     flex-direction: column;
     align-items: stretch;
     gap: 0;
+  }
+
+  /* A menu in a popover (a user menu in the top bar) is a vertical list too */
+  :where([popover] nav, nav[popover]) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  [popover] nav :is(ul, ol, menu),
+  nav[popover] :is(ul, ol, menu) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-xs);
   }
 
   aside nav :is(ul, ol, menu) :is(ul, ol, menu) {

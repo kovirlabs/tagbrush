@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Getting started · shipit docs</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <strong>shipit</strong>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/docs/" aria-current="page">Docs</a></li>
+        <li><a href="/changelog/">Changelog</a></li>
+        <li><a href="https://github.com/shipit-cli/shipit">GitHub</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <aside>
+      <nav aria-label="On this page">
+        <ul>
+          <li><a href="#install">Installation</a></li>
+          <li><a href="#first-deploy">Your first deploy</a></li>
+          <li><a href="#options">Command-line options</a></li>
+          <li><a href="#shortcuts">Keyboard shortcuts</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <article>
+      <nav aria-label="Breadcrumb">
+        <ol>
+          <li><a href="/">Home</a></li>
+          <li><a href="/docs/">Docs</a></li>
+          <li><a aria-current="page">Getting started</a></li>
+        </ol>
+      </nav>
+
+      <hgroup>
+        <h1>Getting started with shipit</h1>
+        <p>Install the CLI, connect a project, and ship your first release in under five minutes.</p>
+      </hgroup>
+
+      <p><code>shipit</code> is a single-binary command-line tool that builds your project, uploads the artifacts, and promotes the release through your environments. It works with any language that produces files on disk and needs nothing installed on your servers beyond SSH.</p>
+
+      <section id="install">
+        <h2>Installation</h2>
+        <p>shipit runs on macOS, Linux, and Windows (via WSL2). Pick one of the methods below.</p>
+
+        <h3>1. Install the binary</h3>
+        <p>With Homebrew on macOS or Linux:</p>
+        <pre><code>brew install shipit-cli/tap/shipit</code></pre>
+        <p>Or with the install script, which places the binary in <code>~/.local/bin</code>:</p>
+        <pre><code>curl -fsSL https://get.shipit.dev/install.sh | sh</code></pre>
+        <p>Or with npm, if you already have Node.js 18 or newer:</p>
+        <pre><code>npm install --global @shipit/cli</code></pre>
+
+        <h3>2. Check the installation</h3>
+        <pre><code>$ shipit --version
+shipit 2.4.1 (darwin/arm64, built 2026-10-14)</code></pre>
+
+        <h3>3. Log in</h3>
+        <p>Authenticate once per machine. This opens your browser and stores a token in <code>~/.config/shipit/credentials</code>.</p>
+        <pre><code>shipit login</code></pre>
+      </section>
+
+      <aside>
+        <p><strong>Warning:</strong> <code>shipit deploy --force</code> skips the health check and replaces the running release immediately. If the new build fails to start, your service will be down until you run <code>shipit rollback</code>. Never use <code>--force</code> on production from CI.</p>
+      </aside>
+
+      <section id="first-deploy">
+        <h2>Your first deploy</h2>
+        <p>From the root of your project, create a config file and deploy to the default <code>staging</code> environment:</p>
+        <pre><code>shipit init
+shipit deploy</code></pre>
+        <p><code>shipit init</code> writes a <code>shipit.toml</code> like this one:</p>
+        <pre><code>[project]
+name = "acme-web"
+build = "npm run build"
+output = "dist/"
+
+[env.staging]
+hosts = ["staging-1.acme.internal"]
+
+[env.production]
+hosts = ["web-1.acme.internal", "web-2.acme.internal"]
+require_approval = true</code></pre>
+        <p>When the staging release looks good, promote it:</p>
+        <pre><code>shipit promote staging production</code></pre>
+      </section>
+
+      <section id="options">
+        <h2>Command-line options</h2>
+        <p>These flags work with <code>shipit deploy</code>. Run <code>shipit help deploy</code> for the full list.</p>
+        <figure>
+          <table class="striped">
+            <thead>
+              <tr>
+                <th>Option</th>
+                <th>Short</th>
+                <th>Default</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>--env &lt;name&gt;</code></td>
+                <td><code>-e</code></td>
+                <td><code>staging</code></td>
+                <td>Environment to deploy to, as named in <code>shipit.toml</code>.</td>
+              </tr>
+              <tr>
+                <td><code>--config &lt;path&gt;</code></td>
+                <td><code>-c</code></td>
+                <td><code>./shipit.toml</code></td>
+                <td>Path to the config file.</td>
+              </tr>
+              <tr>
+                <td><code>--dry-run</code></td>
+                <td><code>-n</code></td>
+                <td>off</td>
+                <td>Build and show what would change, but do not upload anything.</td>
+              </tr>
+              <tr>
+                <td><code>--parallel &lt;n&gt;</code></td>
+                <td><code>-p</code></td>
+                <td><code>4</code></td>
+                <td>Number of hosts to deploy to at once.</td>
+              </tr>
+              <tr>
+                <td><code>--tag &lt;label&gt;</code></td>
+                <td><code>-t</code></td>
+                <td>git SHA</td>
+                <td>Label for the release, shown in <code>shipit releases</code>.</td>
+              </tr>
+              <tr>
+                <td><code>--force</code></td>
+                <td></td>
+                <td>off</td>
+                <td>Skip the health check. <mark>Dangerous</mark></td>
+              </tr>
+              <tr>
+                <td><code>--quiet</code></td>
+                <td><code>-q</code></td>
+                <td>off</td>
+                <td>Print only errors and the final release URL.</td>
+              </tr>
+            </tbody>
+          </table>
+        </figure>
+      </section>
+
+      <section id="shortcuts">
+        <h2>Keyboard shortcuts</h2>
+        <p>While <code>shipit deploy</code> shows its live progress view, you can use these keys:</p>
+        <figure>
+          <table>
+            <thead>
+              <tr>
+                <th>Keys</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><kbd>l</kbd></td>
+                <td>Toggle the full build log</td>
+              </tr>
+              <tr>
+                <td><kbd>p</kbd></td>
+                <td>Pause after the current host finishes</td>
+              </tr>
+              <tr>
+                <td><kbd>r</kbd></td>
+                <td>Resume a paused deploy</td>
+              </tr>
+              <tr>
+                <td><kbd>Ctrl</kbd> + <kbd>C</kbd></td>
+                <td>Cancel and roll back hosts already updated</td>
+              </tr>
+              <tr>
+                <td><kbd>Ctrl</kbd> + <kbd>\</kbd></td>
+                <td>Cancel without rolling back</td>
+              </tr>
+              <tr>
+                <td><kbd>?</kbd></td>
+                <td>Show this list in the terminal</td>
+              </tr>
+            </tbody>
+          </table>
+        </figure>
+      </section>
+
+      <section id="faq">
+        <h2>FAQ</h2>
+        <details name="faq">
+          <summary>Does shipit need an agent running on my servers?</summary>
+          <p>No. shipit connects over SSH using your existing keys, uploads the release to <code>/srv/&lt;project&gt;/releases/</code>, and switches a symlink. Nothing stays running on the host.</p>
+        </details>
+        <details name="faq">
+          <summary>How do I roll back a bad release?</summary>
+          <p>Run <code>shipit rollback --env production</code>. It points the symlink back to the previous release, which takes a few seconds because the old files are still on disk. shipit keeps the last five releases by default.</p>
+        </details>
+        <details name="faq">
+          <summary>Can I use shipit from GitHub Actions?</summary>
+          <p>Yes. Create a token with <code>shipit tokens create --scope deploy</code>, store it as the <code>SHIPIT_TOKEN</code> secret, and add <code>shipit deploy --env staging --quiet</code> as a step. See <a href="/docs/ci/">Continuous integration</a>.</p>
+        </details>
+        <details name="faq">
+          <summary>Where are logs stored?</summary>
+          <p>Each deploy writes a log to <code>~/.local/state/shipit/logs/</code>. Run <code>shipit logs --last</code> to open the most recent one.</p>
+        </details>
+      </section>
+
+      <nav aria-label="Pagination">
+        <ul>
+          <li><a rel="prev" href="/docs/introduction/">← Introduction</a></li>
+          <li><a rel="next" href="/docs/configuration/">Configuration →</a></li>
+        </ul>
+      </nav>
+    </article>
+  </main>
+
+  <footer>
+    <p>shipit is open source under the MIT license. <a href="https://github.com/shipit-cli/shipit/edit/main/docs/getting-started.md">Edit this page on GitHub</a>.</p>
+  </footer>
+</body>
+</html>

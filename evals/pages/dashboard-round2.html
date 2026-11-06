@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dashboard · Fernwood Goods</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+</head>
+<body>
+  <header>
+    <nav aria-label="Account">
+      <strong>Fernwood Goods</strong>
+      <ul>
+        <li><a href="/store" target="_blank" rel="noopener">View store</a></li>
+        <li><a href="/notifications">Notifications</a></li>
+        <li><button class="outline" popovertarget="user-menu">Maya Chen ▾</button></li>
+      </ul>
+    </nav>
+    <div popover id="user-menu">
+      <nav aria-label="User menu">
+        <ul>
+          <li><a href="/account">Profile</a></li>
+          <li><a href="/settings">Store settings</a></li>
+          <li><a href="/billing">Billing</a></li>
+          <li><a href="/logout">Log out</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <aside>
+    <nav aria-label="Sections">
+      <ul>
+        <li><a href="/" aria-current="page">Dashboard</a></li>
+        <li><a href="/orders">Orders</a></li>
+        <li><a href="/products">Products</a></li>
+        <li><a href="/customers">Customers</a></li>
+        <li><a href="/discounts">Discounts</a></li>
+        <li><a href="/analytics">Analytics</a></li>
+        <li><a href="/settings">Settings</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <main>
+    <header>
+      <hgroup>
+        <h1>Dashboard</h1>
+        <p>October 6 – November 4, 2026 · compared with the previous 30 days</p>
+      </hgroup>
+      <a class="button outline" href="/reports/export">Export report</a>
+    </header>
+
+    <section aria-label="Key numbers">
+      <dl>
+        <div>
+          <dt>Revenue</dt>
+          <dd>$84,312</dd>
+          <dd><ins>+12.4%</ins> vs. previous 30 days</dd>
+        </div>
+        <div>
+          <dt>Orders</dt>
+          <dd>1,148</dd>
+          <dd><ins>+8.1%</ins> vs. previous 30 days</dd>
+        </div>
+        <div>
+          <dt>Conversion rate</dt>
+          <dd>2.9%</dd>
+          <dd><del>−0.3 pts</del> vs. previous 30 days</dd>
+        </div>
+        <div>
+          <dt>Average order value</dt>
+          <dd>$73.44</dd>
+          <dd><ins>+4.0%</ins> vs. previous 30 days</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section>
+      <article>
+        <header>
+          <h2>Recent orders</h2>
+          <a class="button secondary" href="/orders">View all</a>
+        </header>
+        <search>
+          <input type="search" aria-label="Search orders" placeholder="Order # or customer">
+          <select aria-label="Status">
+            <option>All statuses</option>
+            <option>Paid</option>
+            <option>Shipped</option>
+            <option>Pending</option>
+            <option>Refunded</option>
+          </select>
+          <button>Filter</button>
+        </search>
+        <figure>
+          <table class="striped">
+            <thead>
+              <tr>
+                <th scope="col">Order</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Date</th>
+                <th scope="col">Total</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="/orders/10482">#10482</a></td>
+                <td>Priya Raman</td>
+                <td>Nov 4</td>
+                <td>$128.00</td>
+                <td><mark>Paid</mark></td>
+              </tr>
+              <tr>
+                <td><a href="/orders/10481">#10481</a></td>
+                <td>Daniel Okafor</td>
+                <td>Nov 4</td>
+                <td>$54.50</td>
+                <td><mark>Pending</mark></td>
+              </tr>
+              <tr>
+                <td><a href="/orders/10480">#10480</a></td>
+                <td>Lena Fischer</td>
+                <td>Nov 3</td>
+                <td>$212.75</td>
+                <td><mark>Shipped</mark></td>
+              </tr>
+              <tr>
+                <td><a href="/orders/10479">#10479</a></td>
+                <td>Marcus Bell</td>
+                <td>Nov 3</td>
+                <td>$39.00</td>
+                <td><mark>Refunded</mark></td>
+              </tr>
+              <tr>
+                <td><a href="/orders/10478">#10478</a></td>
+                <td>Sofia Alvarez</td>
+                <td>Nov 2</td>
+                <td>$96.20</td>
+                <td><mark>Shipped</mark></td>
+              </tr>
+              <tr>
+                <td><a href="/orders/10477">#10477</a></td>
+                <td>Kenji Watanabe</td>
+                <td>Nov 2</td>
+                <td>$67.80</td>
+                <td><mark>Paid</mark></td>
+              </tr>
+            </tbody>
+          </table>
+        </figure>
+      </article>
+
+      <article>
+        <header>
+          <h2>Top products</h2>
+          <a class="button secondary" href="/products">All products</a>
+        </header>
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Product</th>
+              <th scope="col">Units</th>
+              <th scope="col">Revenue</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Linen Throw Blanket</td>
+              <td>214</td>
+              <td>$14,766</td>
+            </tr>
+            <tr>
+              <td>Stoneware Mug Set</td>
+              <td>389</td>
+              <td>$11,281</td>
+            </tr>
+            <tr>
+              <td>Beeswax Candle Trio</td>
+              <td>301</td>
+              <td>$8,428</td>
+            </tr>
+            <tr>
+              <td>Walnut Serving Board</td>
+              <td>122</td>
+              <td>$7,198</td>
+            </tr>
+            <tr>
+              <td>Cotton Tea Towels (3)</td>
+              <td>276</td>
+              <td>$5,244</td>
+            </tr>
+          </tbody>
+        </table>
+        <p><small>Inventory for Linen Throw Blanket is low.</small></p>
+        <meter value="0.18" low="0.25" high="0.6" optimum="0.9" aria-label="Linen Throw Blanket stock level">18%</meter>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 Fernwood Goods · Data updated 5 minutes ago</p>
+  </footer>
+</body>
+</html>

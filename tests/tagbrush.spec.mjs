@@ -939,6 +939,22 @@ test.describe('app patterns', () => {
     expect(await style(page, 'header > [role=group]', 'justifyContent')).toBe('center');
   });
 
+  test('a header inside main is not a hero, even with an hgroup', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/layout.html'));
+    await page.evaluate(() => { document.body.innerHTML = '<header><nav><strong>Site</strong></nav></header><main><header><hgroup><h1>Dashboard</h1><p>Last 30 days</p></hgroup><button>Export</button></header></main>'; });
+    expect(await style(page, 'main hgroup', 'textAlign')).not.toBe('center');
+    expect(parseFloat(await style(page, 'main h1', 'fontSize'))).toBeLessThanOrEqual(40);
+  });
+
+  test('a menu in a popover is a vertical list', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/layout.html'));
+    await page.evaluate(() => { document.body.innerHTML = '<header><nav><strong>Site</strong><ul><li><button popovertarget="m">Me</button></li></ul></nav></header><div popover id="m"><nav aria-label="Account"><ul><li><a href="#">Profile</a></li><li><a href="#">Sign out</a></li></ul></nav></div>'; });
+    await page.click('[popovertarget=m]');
+    const lefts = await page.locator('#m li').evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().left)));
+    expect(new Set(lefts).size).toBe(1);
+    expect(await style(page, 'header nav ul', 'flexDirection')).toBe('row');
+  });
+
   test('the scoped and Shadow DOM builds leave the page-level sidebar and hero out', async () => {
     for (const file of ['tagbrush.scoped.css', 'tagbrush.shadow.css']) {
       const text = readFileSync(file, 'utf8');

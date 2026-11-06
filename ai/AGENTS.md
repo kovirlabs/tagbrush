@@ -46,6 +46,7 @@ Add this to `<head>`:
 - Accordion: neighboring `<details><summary>Question</summary><p>Answer</p></details>`. Give them the same `name="…"` so only one opens at a time.
 - Modal: `<dialog><form method="dialog"><header><h2>Title</h2><button aria-label="Close">✕</button></header><p>…</p><footer><button class="secondary" value="cancel">Cancel</button><button value="ok">OK</button></footer></form></dialog>`, opened with `dialog.showModal()`.
 - Popover: `<button popovertarget="tip">?</button><div popover id="tip">…</div>`.
+- A dropdown menu (a user menu in the top bar): `<li><button class="outline" popovertarget="account">Maya</button></li>` in the header nav, and `<div popover id="account"><nav aria-label="Account"><ul><li><a href="/profile">Profile</a></li><li><a href="/logout">Sign out</a></li></ul></nav></div>`. A menu in a popover is a vertical list.
 - Progress: `<progress value="40" max="100">`. Meter (turns green, amber, red): `<meter value="0.7" low="0.5" high="0.8" optimum="0.2">`.
 
 ### Forms
