@@ -5,6 +5,18 @@ import { resolve } from 'node:path';
 const fileUrl = (path) => pathToFileURL(resolve(path)).href;
 const DEMO = fileUrl('index.html');
 
+// Resolves a color expression such as 'var(--color-surface)' the way the
+// browser computes it inside `within` (also inside its shadow root, if any).
+const token = (page, value, within = 'body') =>
+  page.locator(within).first().evaluate((el, value) => {
+    const probe = document.createElement('i');
+    probe.style.color = value;
+    (el.shadowRoot ?? el).append(probe);
+    const color = getComputedStyle(probe).color;
+    probe.remove();
+    return color;
+  }, value);
+
 const style = (page, selector, prop, pseudo = null) =>
   page.locator(selector).first().evaluate(
     (el, [prop, pseudo]) => getComputedStyle(el, pseudo)[prop],
@@ -35,15 +47,16 @@ test.describe('cascade and defaults', () => {
   });
 
   test('buttons and variants', async ({ page }) => {
-    expect(await style(page, 'button.secondary', 'backgroundColor')).toBe('rgb(243, 244, 246)');
-    expect(await style(page, 'button[type=reset]', 'backgroundColor')).toBe('rgb(243, 244, 246)');
+    const surface = await token(page, 'var(--color-surface)');
+    expect(await style(page, 'button.secondary', 'backgroundColor')).toBe(surface);
+    expect(await style(page, 'button[type=reset]', 'backgroundColor')).toBe(surface);
     expect(await style(page, 'button.outline', 'borderTopColor')).toBe('rgb(37, 99, 235)');
   });
 
   test('nav lists, current page, and menu toolbars', async ({ page }) => {
     expect(await style(page, 'nav[aria-label="Example site"] ul', 'display')).toBe('flex');
     expect(await style(page, 'nav [aria-current="page"]', 'fontWeight')).toBe('600');
-    expect(await style(page, 'nav [aria-current="page"]', 'color')).toBe('rgb(31, 41, 55)');
+    expect(await style(page, 'nav [aria-current="page"]', 'color')).toBe(await token(page, 'var(--color-text)'));
     expect(await style(page, '#nav-demo menu', 'display')).toBe('flex');
     expect(await style(page, '#nav-demo menu', 'listStyleType')).toBe('none');
   });
@@ -76,21 +89,28 @@ test.describe('color schemes', () => {
   test('follows the system dark preference', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'dark' });
     await page.goto(DEMO);
-    expect(await style(page, 'body', 'backgroundColor')).toBe('rgb(17, 24, 39)');
+    const background = await style(page, 'body', 'backgroundColor');
+    expect(background).toBe(await token(page, 'var(--color-background)'));
+    expect(background).not.toBe('rgb(255, 255, 255)');
   });
 
   test('data-theme forces a scheme on a subtree', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'light' });
     await page.goto(DEMO);
-    expect(await style(page, '.card[data-theme=dark] .muted', 'color')).toBe('rgb(156, 163, 175)');
-    expect(await style(page, '.card[data-theme=light] .muted', 'color')).toBe('rgb(100, 107, 118)');
+    const dark = await style(page, '.card[data-theme=dark] .muted', 'color');
+    const light = await style(page, '.card[data-theme=light] .muted', 'color');
+    expect(dark).toBe(await token(page, 'var(--color-text-muted)', '.card[data-theme=dark]'));
+    expect(light).toBe(await token(page, 'var(--color-text-muted)', '.card[data-theme=light]'));
+    expect(dark).not.toBe(light);
   });
 
   test('switcher on the demo page sets data-theme on <html>', async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'light' });
     await page.goto(DEMO);
+    const before = await style(page, 'body', 'backgroundColor');
     await page.selectOption('#theme-select', 'dark');
-    expect(await style(page, 'body', 'backgroundColor')).toBe('rgb(17, 24, 39)');
+    expect(await style(page, 'body', 'backgroundColor')).not.toBe(before);
+    expect(await style(page, 'body', 'backgroundColor')).toBe(await token(page, 'var(--color-background)'));
   });
 });
 
@@ -173,7 +193,8 @@ test.describe('build output', () => {
     expect(await style(page, '#light-host', 'display')).toBe('block');
     expect(await style(page, '#light-host', 'fontFamily')).toContain('system-ui');
     expect(await style(page, '#light-host', 'backgroundColor')).toBe('rgb(255, 255, 255)');
-    expect(await style(page, '#dark-host', 'backgroundColor')).toBe('rgb(17, 24, 39)');
+    expect(await style(page, '#dark-host', 'backgroundColor')).toBe(await token(page, 'var(--color-background)', '#dark-host'));
+    expect(await style(page, '#dark-host', 'backgroundColor')).not.toBe('rgb(255, 255, 255)');
     // Page CSS aimed at the host element beats the :host defaults inside the shadow root.
     await page.addStyleTag({ content: '#light-host { --color-primary: rgb(16, 185, 129); }' });
     expect(await style(page, '#light-host button', 'backgroundColor')).toBe('rgb(16, 185, 129)');
@@ -336,7 +357,7 @@ test.describe('semantic components', () => {
     expect(await style(page, on, 'appearance')).toBe('none');
     expect(await style(page, on, 'width')).toBe('36px');
     expect(await style(page, on, 'backgroundColor')).toBe('rgb(37, 99, 235)');
-    expect(await style(page, off, 'backgroundColor')).toBe('rgb(100, 107, 118)');
+    expect(await style(page, off, 'backgroundColor')).toBe(await token(page, 'var(--color-text-muted)'));
     expect(await style(page, on, 'backgroundPositionX')).toBe('100%');
     expect(await style(page, off, 'backgroundPositionX')).toBe('0px');
     // Plain checkboxes are unchanged.
@@ -405,8 +426,8 @@ test.describe('form finishing touches', () => {
   });
 
   test('read-only fields look fixed but keep readable text', async ({ page }) => {
-    expect(await style(page, '#readonly-input', 'backgroundColor')).toBe('rgb(243, 244, 246)');
-    expect(await style(page, '#readonly-input', 'color')).toBe('rgb(31, 41, 55)');
+    expect(await style(page, '#readonly-input', 'backgroundColor')).toBe(await token(page, 'var(--color-surface)'));
+    expect(await style(page, '#readonly-input', 'color')).toBe(await token(page, 'var(--color-text)'));
     expect(await style(page, '#name', 'backgroundColor')).toBe('rgb(255, 255, 255)');
   });
 
@@ -418,7 +439,7 @@ test.describe('form finishing touches', () => {
   test('the select arrow is drawn in the muted text color', async ({ page }) => {
     const image = await style(page, '#topic', 'backgroundImage');
     expect(image).toContain('linear-gradient');
-    expect(image).toContain('rgb(100, 107, 118)');
+    expect(image).toContain(await token(page, 'var(--color-text-muted)'));
   });
 });
 
@@ -558,7 +579,7 @@ test.describe('article grid', () => {
     expect(await style(page, '#posts', 'display')).toBe('grid');
     const tops = await page.locator('#posts > article').evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().top)));
     expect(new Set(tops).size).toBe(1);
-    expect(await style(page, '#posts > article', 'backgroundColor')).toBe('rgb(243, 244, 246)');
+    expect(await style(page, '#posts > article', 'backgroundColor')).toBe(await token(page, 'var(--color-surface)'));
     expect(await style(page, '#posts > article', 'paddingLeft')).toBe('24px');
     expect(await style(page, '#posts > article > p', 'marginBottom')).toBe('0px');
   });
@@ -601,7 +622,6 @@ test.describe('code highlighting', () => {
   const CODE = fileUrl('tests/fixtures/code.html');
   const KEYWORD = 'rgb(124, 58, 237)';
   const STRING = 'rgb(21, 128, 61)';
-  const COMMENT = 'rgb(100, 107, 118)';
 
   test.beforeEach(async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'light' });
@@ -609,6 +629,7 @@ test.describe('code highlighting', () => {
   });
 
   test('Prism, highlight.js, Chroma and Rouge tokens get theme colors', async ({ page }) => {
+    const COMMENT = await token(page, 'var(--code-comment)');
     for (const [keyword, string, comment] of [
       ['.token.keyword', '.token.string', '.token.comment'],
       ['.hljs-keyword', '.hljs-string', '.hljs-comment'],

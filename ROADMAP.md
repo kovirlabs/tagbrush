@@ -91,7 +91,7 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 ## Chunk 12: Visual identity
 
-- [ ] A design pass so a TagBrush page is recognizable: type scale, spacing rhythm, neutral palette, and a few signature details, without adding anything users must learn.
+- [x] A design pass so a TagBrush page is recognizable: type scale, spacing rhythm, neutral palette, and a few signature details, without adding anything users must learn.
 
 ## Release
 
