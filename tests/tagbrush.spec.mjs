@@ -597,6 +597,55 @@ test.describe('article grid', () => {
   });
 });
 
+test.describe('code highlighting', () => {
+  const CODE = fileUrl('tests/fixtures/code.html');
+  const KEYWORD = 'rgb(124, 58, 237)';
+  const STRING = 'rgb(21, 128, 61)';
+  const COMMENT = 'rgb(100, 107, 118)';
+
+  test.beforeEach(async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.goto(CODE);
+  });
+
+  test('Prism, highlight.js, Chroma and Rouge tokens get theme colors', async ({ page }) => {
+    for (const [keyword, string, comment] of [
+      ['.token.keyword', '.token.string', '.token.comment'],
+      ['.hljs-keyword', '.hljs-string', '.hljs-comment'],
+      ['.chroma .kd', '.chroma .s', '.chroma .c1'],
+      ['pre.highlight .k', 'pre.highlight .s2', 'pre.highlight .c1'],
+    ]) {
+      expect(await style(page, keyword, 'color')).toBe(KEYWORD);
+      expect(await style(page, string, 'color')).toBe(STRING);
+      expect(await style(page, comment, 'color')).toBe(COMMENT);
+      expect(await style(page, comment, 'fontStyle')).toBe('italic');
+    }
+  });
+
+  test('token colors switch in dark mode', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark' });
+    expect(await style(page, '.token.keyword', 'color')).toBe('rgb(196, 181, 253)');
+  });
+
+  test('Shiki dual themes follow the color scheme', async ({ page }) => {
+    const token = 'pre.shiki-themes .line > span:first-child';
+    expect(await style(page, token, 'color')).toBe('rgb(215, 58, 73)');
+    expect(await style(page, 'pre.shiki-themes', 'backgroundColor')).toBe('rgb(255, 255, 255)');
+    await page.emulateMedia({ colorScheme: 'dark' });
+    expect(await style(page, token, 'color')).toBe('rgb(249, 117, 131)');
+    expect(await style(page, 'pre.shiki-themes', 'backgroundColor')).toBe('rgb(36, 41, 46)');
+  });
+
+  test("Shiki's css-variables theme uses the TagBrush palette", async ({ page }) => {
+    expect(await style(page, 'pre.css-variables .line > span:first-child', 'color')).toBe(KEYWORD);
+  });
+
+  test('a highlighter theme you load yourself wins', async ({ page }) => {
+    await page.addStyleTag({ content: '.token.keyword { color: rgb(1, 2, 3); }' });
+    expect(await style(page, '.token.keyword', 'color')).toBe('rgb(1, 2, 3)');
+  });
+});
+
 test.describe('accessibility', () => {
   // WCAG AA asks for 4.5:1 between normal-size text and its background.
   const AA = 4.5;

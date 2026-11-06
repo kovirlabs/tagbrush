@@ -97,6 +97,7 @@ TagBrush.css sits in the same family as [Pico CSS](https://picocss.com), [Simple
 | Typography | `h1`–`h6`, `hgroup` (muted subtitle), `p`, `a`, `strong`, `small`, `mark`, `abbr`, `del`, `ins`, `s`, `dfn`, `q`, `sub`, `sup`, `hr`, `address`, `blockquote` (with `footer` attribution), `code`, `pre`, `kbd`, `samp`, `output` |
 | Lists      | `ul`, `ol`, `menu` (including nested lists, muted `::marker`), Markdown task lists (checkbox replaces the bullet), `dl`, `dt`, `dd` |
 | Media      | `img`, `picture`, `video`, `audio`, `canvas`, `svg`, `iframe`, `object`, `embed` (scale to fit), `figure`, `figcaption` |
+| Code highlighting | Token colors for Prism, highlight.js, Hugo (Chroma), Jekyll (Rouge), and Pygments output, and Shiki's dual themes and `css-variables` theme. Follows the theme and dark mode; a highlighter theme you load yourself still wins |
 | Markdown   | Footnotes from GitHub-flavored Markdown, markdown-it, and Pandoc (smaller, muted, highlighted when linked to); long URLs and words wrap instead of widening the page |
 | Article grids | A `<section>` of two or more `<article>`s becomes a responsive grid of cards |
 | Structure  | `nav` (with `ul`/`menu` rendered as a horizontal menu, `aria-current` highlighted), `header`, `main`, `footer`, `search`, `article aside` (callout), breadcrumbs (`<nav aria-label="Breadcrumb">` gets `/` separators) |
@@ -261,6 +262,7 @@ Button variants only change a few private variables, so you can add your own in 
 | `--container-padding`   | `1rem`       | `.container` side padding                 |
 | `--border-radius`       | `0.375rem`   | Buttons, inputs, code, dialogs            |
 | `--border-width`        | `1px`        | Inputs, buttons, table rules              |
+| `--code-comment`, `--code-keyword`, `--code-string`, `--code-function`, `--code-constant`, `--code-tag` | muted text, then violet, green, blue, amber, rose | Syntax highlighting colors, each with a light and a dark value |
 | `--shadow` / `--shadow-lg` | soft shadows | Available for your components / dialogs |
 | `--transition-duration` | `0.15s`      | Hover and focus transitions (`0s` with reduced motion) |
 | `--button-padding` / `--button-radius` / `--button-font-weight` | spacing, radius, `500` | Buttons and file-picker buttons |

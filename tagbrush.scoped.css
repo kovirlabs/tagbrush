@@ -86,6 +86,29 @@
     --shadow-lg: 0 10px 25px rgb(0 0 0 / 0.15), 0 4px 10px rgb(0 0 0 / 0.1);
     --transition-duration: 0.15s;
 
+    /* Code highlighting: token colors for Prism, highlight.js, Hugo/Chroma,
+       Jekyll/Rouge, Pygments and Shiki's css-variables theme. Each meets
+       4.5:1 on --color-surface in its scheme. */
+    --code-comment: var(--color-text-muted);
+    --code-keyword: light-dark(#7c3aed, #c4b5fd);
+    --code-string: light-dark(#15803d, #86efac);
+    --code-function: light-dark(#1d4ed8, #93c5fd);
+    --code-constant: light-dark(#b45309, #fcd34d);
+    --code-tag: light-dark(#be123c, #fda4af);
+
+    /* Shiki's css-variables theme reads these */
+    --shiki-foreground: var(--color-text);
+    --shiki-background: var(--color-surface);
+    --shiki-token-comment: var(--code-comment);
+    --shiki-token-keyword: var(--code-keyword);
+    --shiki-token-string: var(--code-string);
+    --shiki-token-string-expression: var(--code-string);
+    --shiki-token-function: var(--code-function);
+    --shiki-token-constant: var(--code-constant);
+    --shiki-token-parameter: var(--color-text);
+    --shiki-token-punctuation: var(--color-text);
+    --shiki-token-link: var(--code-string);
+
     /* Components: default to the global tokens above */
     --button-padding: var(--spacing-sm) var(--spacing-md);
     --button-radius: var(--border-radius);
@@ -325,6 +348,89 @@
     background-color: var(--color-surface);
     color: var(--color-text);
     white-space: nowrap;
+  }
+
+  /* ==========================================================================
+     Code Highlighting
+     --------------------------------------------------------------------------
+     Syntax highlighters wrap tokens in classes like .token.keyword (Prism),
+     .hljs-keyword (highlight.js) or .k (Pygments, Rouge, Hugo's Chroma).
+     These come from the tool, not from you, so they're styled here and
+     follow the theme and dark mode. A highlighter theme you load yourself
+     still wins: every selector has zero specificity.
+     ========================================================================== */
+  :where(
+    .token:is(.comment, .prolog, .doctype, .cdata),
+    .hljs-comment, .hljs-quote,
+    :is(.highlight, .chroma) :is(.c, .c1, .cm, .ch, .cd, .cs, .cpf)
+  ) {
+    color: var(--code-comment);
+    font-style: italic;
+  }
+
+  :where(
+    .token:is(.keyword, .atrule, .important),
+    .hljs-keyword, .hljs-meta .hljs-keyword, .hljs-doctag,
+    :is(.highlight, .chroma) :is(.k, .kd, .kn, .kp, .kr, .kt, .ow, .cp)
+  ) {
+    color: var(--code-keyword);
+  }
+
+  :where(
+    .token:is(.string, .char, .attr-value, .regex, .url),
+    .hljs-string, .hljs-regexp, .hljs-template-variable, .hljs-link,
+    :is(.highlight, .chroma) :is(.s, .s1, .s2, .sa, .sb, .sc, .sd, .se, .sh, .si, .sx, .sr, .ss, .dl)
+  ) {
+    color: var(--code-string);
+  }
+
+  :where(
+    .token:is(.function, .class-name),
+    .hljs-title, .hljs-section,
+    :is(.highlight, .chroma) :is(.nf, .fm, .nc, .nn, .nd)
+  ) {
+    color: var(--code-function);
+  }
+
+  :where(
+    .token:is(.number, .boolean, .constant, .symbol),
+    .hljs-number, .hljs-literal, .hljs-built_in, .hljs-symbol, .hljs-bullet,
+    :is(.highlight, .chroma) :is(.m, .mi, .mf, .mh, .mo, .mb, .il, .kc, .nb, .bp)
+  ) {
+    color: var(--code-constant);
+  }
+
+  :where(
+    .token:is(.tag, .property, .attr-name, .selector, .builtin, .variable),
+    .hljs-name, .hljs-tag, .hljs-attr, .hljs-attribute, .hljs-property, .hljs-variable, .hljs-selector-tag, .hljs-selector-class, .hljs-selector-id, .hljs-type,
+    :is(.highlight, .chroma) :is(.nt, .na, .nv, .vc, .vg, .vi, .py, .no)
+  ) {
+    color: var(--code-tag);
+  }
+
+  /* Diff lines keep normal text on a tinted background, like most code hosts */
+  :where(.token.deleted, .hljs-deletion, :is(.highlight, .chroma) .gd) {
+    color: var(--color-text);
+    background-color: color-mix(in srgb, var(--color-error) 12%, transparent);
+  }
+
+  :where(.token.inserted, .hljs-addition, :is(.highlight, .chroma) .gi) {
+    color: var(--color-text);
+    background-color: color-mix(in srgb, var(--color-success) 12%, transparent);
+  }
+
+  :where(.token.bold, .hljs-strong, :is(.highlight, .chroma) .gs) { font-weight: bold; }
+  :where(.token.italic, .hljs-emphasis, :is(.highlight, .chroma) .ge) { font-style: italic; }
+
+  /* Shiki with two themes and defaultColor: false writes --shiki-light and
+     --shiki-dark on every token. Pick the one for the current scheme. */
+  :where(.shiki, .shiki span) {
+    color: light-dark(var(--shiki-light, currentColor), var(--shiki-dark, currentColor));
+  }
+
+  /* Element-level specificity so it beats the default pre background */
+  pre:where(.shiki) {
+    background-color: light-dark(var(--shiki-light-bg, var(--color-surface)), var(--shiki-dark-bg, var(--color-surface)));
   }
 
   /* ==========================================================================
