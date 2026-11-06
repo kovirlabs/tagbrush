@@ -158,6 +158,15 @@ Add `data-tagbrush="debug"` to `<html>` (or any element) to outline common mista
 
 A small legend appears in the corner. Remove the attribute when you're done; nothing changes without it.
 
+### Checking pages from the command line
+
+```sh
+npx tagbrush check index.html          # files or folders
+npx tagbrush check site/ --json        # for scripts and agents
+```
+
+It reports the same problems as debug mode, plus page-level ones that CSS can't see: a missing `lang` or viewport tag, a `<label for>` with no matching `id`, skipped heading levels, duplicate ids, and layout CSS in `<style>` blocks. Errors exit with code 1 (`--strict` fails on warnings too), so it works in CI and as a final step for coding agents. It has no dependencies.
+
 ## Page layout
 
 Write the usual page landmarks and TagBrush.css lays them out:
@@ -363,6 +372,7 @@ Step-by-step guides with copy-paste snippets:
 | `starter.html`            | A complete page to copy as a starting point          |
 | `starters/`               | Pandoc, Hugo, Eleventy, and Astro starters (built by CI) |
 | `llms.txt`                | Usage cheat sheet for AI assistants                  |
+| `bin/tagbrush.mjs`        | `npx tagbrush check`, a dependency-free page checker |
 | `ai/`                     | Claude Code skill, Cursor rule, and `AGENTS.md` section *(generated from `llms.txt`)* |
 | `scripts/build.mjs`       | Generates the files above                            |
 | `tests/`                  | Cross-browser tests and screenshot baselines         |
