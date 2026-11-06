@@ -53,12 +53,13 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 ## Chunk 5: Finishing touches
 
-- [ ] `textarea { field-sizing: content; }` so text areas grow with their content (browsers without support ignore it).
-- [ ] `caret-color` and `scrollbar-color` from the theme.
-- [ ] Animated `progress` with no value (indeterminate).
-- [ ] Styling for `:read-only` fields.
-- [ ] Set `accent-color` once on `:root` instead of on each element.
-- [ ] Select arrow follows the text color (`mask-image` + `currentColor`) instead of the fixed `#8b929c`.
+- [x] Text areas without a `rows` attribute grow with their content (`field-sizing: content`). A `rows` attribute keeps the fixed size the author chose.
+- [x] `caret-color` from the theme.
+- [x] Indeterminate `progress`: no CSS needed. Native bars already animate in every browser (checked in Chromium and WebKit).
+- [x] Read-only fields (`[readonly]`, not `:read-only`, which also matches checkboxes and buttons).
+- [x] Select arrow drawn with two gradients in `--color-text-muted`, so it follows the theme. (`mask-image` can't be used: it would hide the whole select.)
+- Not doing: setting `accent-color` once on `:root`. An inherited color is computed where it's set, so a nested `--color-primary` override would no longer reach checkboxes and progress bars. Setting it on each element is what keeps nested theming working.
+- Not doing: `scrollbar-color`. `color-scheme` already gives dark scrollbars in dark mode, and custom scrollbar colors replace macOS's overlay scrollbars with always-visible ones.
 
 ## Chunk 6: Safe theming
 

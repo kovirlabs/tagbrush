@@ -767,6 +767,7 @@
     background-clip: padding-box;
     border: var(--border-width) solid var(--color-border);
     border-radius: var(--input-radius);
+    caret-color: var(--color-link, light-dark(var(--color-primary), color-mix(in srgb, var(--color-primary), white 35%)));
     transition: border-color var(--transition-duration) ease-in-out,
                 box-shadow var(--transition-duration) ease-in-out;
   }
@@ -797,14 +798,24 @@
     resize: vertical;
   }
 
+  /* A textarea without a rows attribute grows with its content, starting at
+     three lines. Browsers without field-sizing keep the fixed height. */
+  :where(textarea:not([rows])) {
+    field-sizing: content;
+    min-height: calc(3lh + 2 * var(--spacing-sm) + 2 * var(--border-width));
+  }
+
   /* Consistent dropdown arrow on single-line selects */
   :where(select:not([multiple], [size])) {
     padding-right: calc(var(--spacing-md) * 2.5);
     appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%238b929c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m4 6 4 4 4-4'/%3E%3C/svg%3E");
+    /* A small triangle drawn with two gradients, so it follows the theme colors */
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--color-text-muted) 50%),
+      linear-gradient(135deg, var(--color-text-muted) 50%, transparent 50%);
     background-repeat: no-repeat;
-    background-position: right var(--spacing-md) center;
-    background-size: 1rem;
+    background-position: right calc(var(--spacing-md) + 0.3125rem) center, right var(--spacing-md) center;
+    background-size: 0.3125rem 0.3125rem;
     cursor: pointer;
   }
 
@@ -831,6 +842,12 @@
     background-color: var(--color-surface);
     color: var(--color-text-muted);
     cursor: not-allowed;
+  }
+
+  /* Read-only fields look fixed but keep full-contrast, selectable text */
+  :where(input[readonly], textarea[readonly]) {
+    background-color: var(--color-surface);
+    cursor: default;
   }
 
   /* Validation: aria-invalid, or native validation after the user interacts */

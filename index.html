@@ -328,7 +328,7 @@ function greet(name) {
                     </div>
                     <div>
                         <label for="message">Message</label>
-                        <textarea id="message" name="message" rows="4" placeholder="Your message..."></textarea>
+                        <textarea id="message" name="message" placeholder="Your message grows the box as you type..."></textarea>
                         <small>Help text: put a <code>&lt;small&gt;</code> right after any field.</small>
                     </div>
                 </fieldset>
@@ -368,6 +368,10 @@ function greet(name) {
                         <div>
                             <label for="disabled-input">Disabled</label>
                             <input type="text" id="disabled-input" value="Can't edit me" disabled>
+                        </div>
+                        <div>
+                            <label for="readonly-input">Read-only</label>
+                            <input type="text" id="readonly-input" value="Select me, but no edits" readonly>
                         </div>
                         <div>
                             <label for="volume">Range</label>
