@@ -5,6 +5,7 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ## Unreleased
 
 ### Added
+- Instruction files for AI coding agents in `ai/` (a Claude Code skill, a Cursor rule, and an `AGENTS.md` section), generated from `llms.txt` and included in the npm package.
 - `llms.txt`: a usage cheat sheet for AI assistants, also served at kovirlabs.github.io/tagbrush/llms.txt, and a README section with a prompt to copy.
 - Starters for Pandoc (one-liner and template), Hugo, Eleventy, and Astro in `starters/`, built by CI on every change.
 - Code highlighting: tokens from Prism, highlight.js, Hugo (Chroma), Jekyll (Rouge), Pandoc, and Pygments get theme colors that meet 4.5:1 in light and dark mode, set by `--code-*` variables. Shiki's dual themes (`defaultColor: false`, including Astro's built-in Shiki) follow the color scheme, and its `css-variables` theme uses the same palette.

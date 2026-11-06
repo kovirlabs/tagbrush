@@ -43,7 +43,9 @@
     "tagbrush.scoped.css",
     "tagbrush.scoped.min.css",
     "tagbrush.shadow.css",
-    "tagbrush.shadow.min.css"
+    "tagbrush.shadow.min.css",
+    "llms.txt",
+    "ai/"
   ],
   "sideEffects": [
     "*.css"
