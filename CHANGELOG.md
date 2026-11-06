@@ -10,6 +10,11 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 - Markdown output: task-list checkboxes replace the list bullet, footnotes (GitHub-flavored Markdown, markdown-it, Pandoc) are smaller and muted and highlight when linked to, and the `align` attribute on table cells is respected.
 - Long URLs and words wrap instead of widening the page.
 - `starter.html`, a complete page to copy as a starting point.
+- Toggle switches: `<input type="checkbox" role="switch">`. Uses system colors in forced-colors mode and flips for right-to-left text.
+- Loading state: `aria-busy="true"` on a button or any element shows a spinner (slower with reduced motion).
+- Breadcrumbs: `<nav aria-label="Breadcrumb">` gets `/` separators that screen readers skip.
+- Dialog layout: a `header` with a close button puts it beside the title, and a `footer` lines its buttons up on the right. Works with or without a `<form method="dialog">` around the content.
+- Neighboring `<details>` join into one accordion. Give them the same `name` to let only one open at a time.
 
 ### Changed
 - Tables are as wide as their content and scroll sideways inside themselves when they don't fit, so wide tables no longer widen the page on phones. Tables inside `<figure>` still fill the full width.

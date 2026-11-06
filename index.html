@@ -232,6 +232,14 @@ function greet(name) {
                     <li><a href="#nav-demo">About</a></li>
                 </ul>
             </nav>
+            <p>Label a <code>&lt;nav&gt;</code> "Breadcrumb" and its list gets separators:</p>
+            <nav aria-label="Breadcrumb" class="demo-nav">
+                <ol>
+                    <li><a href="#nav-demo">Home</a></li>
+                    <li><a href="#nav-demo">Docs</a></li>
+                    <li><a href="#nav-demo" aria-current="page">Installation</a></li>
+                </ol>
+            </nav>
             <p>Use <code>&lt;menu&gt;</code> for a toolbar of actions:</p>
             <nav aria-label="Example toolbar" id="nav-demo" class="demo-nav">
                 <menu>
@@ -280,6 +288,12 @@ function greet(name) {
                 <a href="#showcase" class="button">Link styled as button</a>
                 <button type="button" disabled>Disabled</button>
                 <a href="#showcase" class="button outline" aria-disabled="true">Disabled link</a>
+            </div>
+            <p>Set <code>aria-busy="true"</code> while something loads. It shows a spinner and tells screen readers to wait:</p>
+            <div role="group">
+                <button type="button" aria-busy="true">Saving</button>
+                <button type="button" class="secondary" aria-busy="true" aria-label="Loading"></button>
+                <span aria-busy="true">Loading results…</span>
             </div>
             <p>Wrap buttons in <code>&lt;div role="group"&gt;</code> to lay them out in a row. It works for inline forms too:</p>
             <search>
@@ -394,6 +408,8 @@ function greet(name) {
                         </div>
                         <div>
                             <label><input type="checkbox" checked> Subscribe to updates</label>
+                            <label><input type="checkbox" role="switch" checked> Email notifications</label>
+                            <label><input type="checkbox" role="switch"> Weekly digest</label>
                             <label><input type="radio" name="plan" checked> Free plan</label>
                             <label><input type="radio" name="plan"> Pro plan</label>
                         </div>
@@ -429,9 +445,18 @@ function greet(name) {
                 <summary>What is a &lt;details&gt; element?</summary>
                 <p>A native, accessible collapsible section with no JavaScript. Great for FAQs.</p>
             </details>
-            <details>
+            <p>Neighboring <code>&lt;details&gt;</code> join into an accordion. Give them the same <code>name</code> so only one opens at a time:</p>
+            <details name="faq">
                 <summary>Does it need any classes?</summary>
                 <p>Nope. Just write the HTML.</p>
+            </details>
+            <details name="faq">
+                <summary>Does it need JavaScript?</summary>
+                <p>No. The browser handles opening and closing.</p>
+            </details>
+            <details name="faq">
+                <summary>Does it work with a keyboard?</summary>
+                <p>Yes, and with screen readers.</p>
             </details>
             <div role="group">
                 <button type="button" class="outline" id="open-dialog">Open a dialog</button>
@@ -441,10 +466,16 @@ function greet(name) {
                 <p><strong>Native popover.</strong> Opened with the <code>popovertarget</code> attribute, no JavaScript needed. Click outside or press <kbd>Esc</kbd> to close.</p>
             </div>
             <dialog id="demo-dialog">
-                <h3>Native &lt;dialog&gt;</h3>
-                <p>Opened with <code>showModal()</code>. Press <kbd>Esc</kbd> or use the button to close it.</p>
                 <form method="dialog">
-                    <button>Close</button>
+                    <header>
+                        <h3>Native &lt;dialog&gt;</h3>
+                        <button class="secondary" aria-label="Close">✕</button>
+                    </header>
+                    <p>Opened with <code>showModal()</code>. A <code>&lt;header&gt;</code> with a button puts the close button beside the title, and a <code>&lt;footer&gt;</code> lines its buttons up on the right. Press <kbd>Esc</kbd> to close.</p>
+                    <footer>
+                        <button class="secondary" value="cancel">Cancel</button>
+                        <button value="ok">Confirm</button>
+                    </footer>
                 </form>
             </dialog>
 

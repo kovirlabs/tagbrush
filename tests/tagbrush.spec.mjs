@@ -293,6 +293,65 @@ test.describe('page layout', () => {
   });
 });
 
+test.describe('semantic components', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'no-preference' });
+    await page.goto(DEMO);
+  });
+
+  test('role="switch" checkboxes render as a toggle', async ({ page }) => {
+    const on = 'input[role=switch]:checked';
+    const off = 'input[role=switch]:not(:checked)';
+    expect(await style(page, on, 'appearance')).toBe('none');
+    expect(await style(page, on, 'width')).toBe('36px');
+    expect(await style(page, on, 'backgroundColor')).toBe('rgb(37, 99, 235)');
+    expect(await style(page, off, 'backgroundColor')).toBe('rgb(100, 107, 118)');
+    expect(await style(page, on, 'backgroundPositionX')).toBe('100%');
+    expect(await style(page, off, 'backgroundPositionX')).toBe('0px');
+    // Plain checkboxes are unchanged.
+    expect(await style(page, 'input[type=checkbox]:not([role])', 'appearance')).not.toBe('none');
+  });
+
+  test('aria-busy shows a spinner', async ({ page }) => {
+    expect(await style(page, 'button[aria-busy=true]', 'animationName', '::before')).toBe('tagbrush-spin');
+    expect(await style(page, 'button[aria-busy=true]', 'marginInlineEnd', '::before')).toBe('8px');
+    expect(await style(page, 'button[aria-busy=true]:empty', 'marginInlineEnd', '::before')).toBe('0px');
+    expect(await style(page, 'button[aria-busy=true]', 'cursor')).toBe('progress');
+    expect(await style(page, 'button:not([aria-busy])', 'content', '::before')).toBe('none');
+  });
+
+  test('the spinner slows down with reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    expect(await style(page, 'button[aria-busy=true]', 'animationDuration', '::before')).toBe('2s');
+  });
+
+  test('breadcrumbs get separators', async ({ page }) => {
+    const crumbs = 'nav[aria-label=Breadcrumb]';
+    expect(await style(page, `${crumbs} li + li`, 'content', '::before')).toMatch(/^"\/"/);
+    expect(await style(page, `${crumbs} li:first-child`, 'content', '::before')).toBe('none');
+    expect(await style(page, `${crumbs} ol`, 'columnGap')).toBe('8px');
+    expect(await style(page, `${crumbs} [aria-current]`, 'fontWeight')).toBe('400');
+  });
+
+  test('dialog header and footer', async ({ page }) => {
+    await page.click('#open-dialog');
+    expect(await style(page, '#demo-dialog header', 'display')).toBe('flex');
+    expect(await style(page, '#demo-dialog header', 'justifyContent')).toBe('space-between');
+    expect(await style(page, '#demo-dialog h3', 'marginBottom')).toBe('0px');
+    expect(await style(page, '#demo-dialog footer', 'display')).toBe('flex');
+    expect(await style(page, '#demo-dialog footer', 'justifyContent')).toBe('flex-end');
+    expect(await style(page, '#demo-dialog footer', 'fontSize')).toBe('16px');
+  });
+
+  test('neighboring details join into an accordion', async ({ page }) => {
+    const first = 'details[name=faq]:has(+ details)';
+    expect(await style(page, first, 'marginBottom')).toBe('0px');
+    expect(await style(page, first, 'borderBottomLeftRadius')).toBe('0px');
+    expect(await style(page, 'details + details', 'borderTopWidth')).toBe('0px');
+    expect(await style(page, 'details:not(:has(+ details)):not(details + details)', 'marginBottom')).toBe('16px');
+  });
+});
+
 test.describe('markdown output', () => {
   const MARKDOWN = fileUrl('tests/fixtures/markdown.html');
 
