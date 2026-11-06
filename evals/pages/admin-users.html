@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Users · Northwind Admin</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+  <style>
+    :root {
+      --color-primary: #0f766e;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <strong>Northwind Admin</strong>
+      <ul>
+        <li><a href="/admin">Dashboard</a></li>
+        <li><a href="/admin/users" aria-current="page">Users</a></li>
+        <li><a href="/admin/billing">Billing</a></li>
+        <li><a href="/admin/settings">Settings</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <nav aria-label="Breadcrumb">
+      <ol>
+        <li><a href="/admin">Admin</a></li>
+        <li><a aria-current="page">Users</a></li>
+      </ol>
+    </nav>
+
+    <hgroup>
+      <h1>Users</h1>
+      <p>48 members in the Northwind workspace. Invite teammates and manage their roles and access.</p>
+    </hgroup>
+
+    <p><button type="button" id="invite-open">Invite user</button></p>
+
+    <form role="search" action="/admin/users" method="get">
+      <div class="grid">
+        <div role="group">
+          <input type="search" name="q" placeholder="Search by name or email" aria-label="Search users">
+          <button type="submit">Search</button>
+        </div>
+        <select name="role" aria-label="Filter by role">
+          <option value="">All roles</option>
+          <option value="owner">Owner</option>
+          <option value="admin">Admin</option>
+          <option value="editor">Editor</option>
+          <option value="viewer">Viewer</option>
+        </select>
+        <select name="status" aria-label="Filter by status">
+          <option value="">All statuses</option>
+          <option value="active">Active</option>
+          <option value="invited">Invited</option>
+          <option value="suspended">Suspended</option>
+        </select>
+      </div>
+    </form>
+
+    <figure>
+      <table class="striped">
+        <thead>
+          <tr>
+            <th scope="col"><span class="visually-hidden">Avatar</span></th>
+            <th scope="col">Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Role</th>
+            <th scope="col">Status</th>
+            <th scope="col">Last active</th>
+            <th scope="col"><span class="visually-hidden">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><abbr title="Priya Raman">PR</abbr></td>
+            <td>Priya Raman</td>
+            <td><a href="mailto:priya.raman@northwind.io">priya.raman@northwind.io</a></td>
+            <td>Owner</td>
+            <td>Active</td>
+            <td><time datetime="2026-11-05T09:12">Today, 9:12 AM</time></td>
+            <td>
+              <div role="group">
+                <button type="button" class="outline" aria-label="Edit Priya Raman">Edit</button>
+                <button type="button" class="secondary" data-delete="Priya Raman" aria-label="Delete Priya Raman">Delete</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><abbr title="Marcus Oyelaran">MO</abbr></td>
+            <td>Marcus Oyelaran</td>
+            <td><a href="mailto:marcus.o@northwind.io">marcus.o@northwind.io</a></td>
+            <td>Admin</td>
+            <td>Active</td>
+            <td><time datetime="2026-11-04T17:40">Yesterday, 5:40 PM</time></td>
+            <td>
+              <div role="group">
+                <button type="button" class="outline" aria-label="Edit Marcus Oyelaran">Edit</button>
+                <button type="button" class="secondary" data-delete="Marcus Oyelaran" aria-label="Delete Marcus Oyelaran">Delete</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><abbr title="Elena Kowalczyk">EK</abbr></td>
+            <td>Elena Kowalczyk</td>
+            <td><a href="mailto:elena.k@northwind.io">elena.k@northwind.io</a></td>
+            <td>Editor</td>
+            <td>Active</td>
+            <td><time datetime="2026-11-03">Nov 3, 2026</time></td>
+            <td>
+              <div role="group">
+                <button type="button" class="outline" aria-label="Edit Elena Kowalczyk">Edit</button>
+                <button type="button" class="secondary" data-delete="Elena Kowalczyk" aria-label="Delete Elena Kowalczyk">Delete</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><abbr title="James Whitfield">JW</abbr></td>
+            <td>James Whitfield</td>
+            <td><a href="mailto:j.whitfield@northwind.io">j.whitfield@northwind.io</a></td>
+            <td>Viewer</td>
+            <td><mark>Invited</mark></td>
+            <td>Never</td>
+            <td>
+              <div role="group">
+                <button type="button" class="outline" aria-label="Edit James Whitfield">Edit</button>
+                <button type="button" class="secondary" data-delete="James Whitfield" aria-label="Delete James Whitfield">Delete</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><abbr title="Aiko Tanabe">AT</abbr></td>
+            <td>Aiko Tanabe</td>
+            <td><a href="mailto:aiko.tanabe@northwind.io">aiko.tanabe@northwind.io</a></td>
+            <td>Editor</td>
+            <td>Active</td>
+            <td><time datetime="2026-10-30">Oct 30, 2026</time></td>
+            <td>
+              <div role="group">
+                <button type="button" class="outline" aria-label="Edit Aiko Tanabe">Edit</button>
+                <button type="button" class="secondary" data-delete="Aiko Tanabe" aria-label="Delete Aiko Tanabe">Delete</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><abbr title="Diego Fernández">DF</abbr></td>
+            <td>Diego Fernández</td>
+            <td><a href="mailto:diego.f@northwind.io">diego.f@northwind.io</a></td>
+            <td>Viewer</td>
+            <td><del>Suspended</del></td>
+            <td><time datetime="2026-09-14">Sep 14, 2026</time></td>
+            <td>
+              <div role="group">
+                <button type="button" class="outline" aria-label="Edit Diego Fernández">Edit</button>
+                <button type="button" class="secondary" data-delete="Diego Fernández" aria-label="Delete Diego Fernández">Delete</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><abbr title="Hannah Brooks">HB</abbr></td>
+            <td>Hannah Brooks</td>
+            <td><a href="mailto:hannah.brooks@northwind.io">hannah.brooks@northwind.io</a></td>
+            <td>Admin</td>
+            <td>Active</td>
+            <td><time datetime="2026-11-05T08:03">Today, 8:03 AM</time></td>
+            <td>
+              <div role="group">
+                <button type="button" class="outline" aria-label="Edit Hannah Brooks">Edit</button>
+                <button type="button" class="secondary" data-delete="Hannah Brooks" aria-label="Delete Hannah Brooks">Delete</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><abbr title="Samuel Achebe">SA</abbr></td>
+            <td>Samuel Achebe</td>
+            <td><a href="mailto:sam.achebe@northwind.io">sam.achebe@northwind.io</a></td>
+            <td>Editor</td>
+            <td><mark>Invited</mark></td>
+            <td>Never</td>
+            <td>
+              <div role="group">
+                <button type="button" class="outline" aria-label="Edit Samuel Achebe">Edit</button>
+                <button type="button" class="secondary" data-delete="Samuel Achebe" aria-label="Delete Samuel Achebe">Delete</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <figcaption>Showing 1–8 of 48 users</figcaption>
+    </figure>
+
+    <nav aria-label="Pagination">
+      <ul>
+        <li><a href="?page=1" aria-disabled="true">← Previous</a></li>
+        <li><a href="?page=1" aria-current="page">1</a></li>
+        <li><a href="?page=2">2</a></li>
+        <li><a href="?page=3">3</a></li>
+        <li><a href="?page=4">4</a></li>
+        <li><a href="?page=5">5</a></li>
+        <li><a href="?page=6">6</a></li>
+        <li><a href="?page=2">Next →</a></li>
+      </ul>
+    </nav>
+  </main>
+
+  <footer>
+    <p>Northwind Admin · <a href="/admin/audit-log">Audit log</a> · <a href="/help">Help</a></p>
+  </footer>
+
+  <dialog id="invite-dialog">
+    <form method="dialog">
+      <header>
+        <h2>Invite user</h2>
+        <button aria-label="Close" value="cancel" formnovalidate>✕</button>
+      </header>
+      <p>We'll email an invitation link that expires in 7 days.</p>
+      <label for="invite-name">Full name</label>
+      <input type="text" id="invite-name" name="name" autocomplete="name" required>
+      <label for="invite-email">Work email</label>
+      <input type="email" id="invite-email" name="email" autocomplete="email" required>
+      <small>Must be an @northwind.io address.</small>
+      <label for="invite-role">Role</label>
+      <select id="invite-role" name="role">
+        <option value="viewer">Viewer — can view projects</option>
+        <option value="editor" selected>Editor — can create and edit projects</option>
+        <option value="admin">Admin — can manage users and billing</option>
+      </select>
+      <label for="invite-message">Personal message (optional)</label>
+      <textarea id="invite-message" name="message" placeholder="Welcome to the team!"></textarea>
+      <label><input type="checkbox" name="sso" role="switch" checked> Require single sign-on</label>
+      <footer>
+        <button class="secondary" value="cancel" formnovalidate>Cancel</button>
+        <button value="ok">Send invite</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <dialog id="delete-dialog">
+    <form method="dialog">
+      <header>
+        <h2>Delete user?</h2>
+        <button aria-label="Close" value="cancel">✕</button>
+      </header>
+      <p><strong id="delete-name">This user</strong> will lose access to the Northwind workspace immediately. Projects they own will be transferred to you. This can't be undone.</p>
+      <footer>
+        <button class="secondary" value="cancel">Cancel</button>
+        <button value="ok">Delete user</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <script>
+    const inviteDialog = document.getElementById('invite-dialog');
+    const deleteDialog = document.getElementById('delete-dialog');
+    document.getElementById('invite-open').addEventListener('click', () => inviteDialog.showModal());
+    document.querySelectorAll('[data-delete]').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.getElementById('delete-name').textContent = button.dataset.delete;
+        deleteDialog.showModal();
+      });
+    });
+  </script>
+</body>
+</html>

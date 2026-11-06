@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
-
+import { readdirSync, readFileSync } from 'node:fs';
 const fileUrl = (path) => pathToFileURL(resolve(path)).href;
 const DEMO = fileUrl('index.html');
 
@@ -336,6 +336,23 @@ test.describe('page layout', () => {
     await load(page, PAGE.replace('<header>', '<header data-layout="full">'));
     expect(await style(page, 'body > header', 'paddingLeft')).toBe('0px');
     expect(await style(page, 'body > main', 'paddingLeft')).toBe('56px');
+  });
+
+  test('previous/next links sit at opposite ends of their row', async ({ page }) => {
+    await load(page, '<main><nav aria-label="Pagination"><ul><li><a rel="prev" href="#">Previous</a></li><li><a rel="next" href="#">Next</a></li></ul></nav></main>');
+    const nav = await rect(page, 'nav');
+    const next = await page.locator('a[rel=next]').evaluate((el) => el.getBoundingClientRect().right);
+    expect(Math.round(next)).toBe(nav.left + nav.width);
+    expect((await rect(page, 'a[rel=prev]')).left).toBe(nav.left);
+  });
+
+  test('a visually hidden label in a scrolling table does not widen the page', async ({ page }) => {
+    const row = Array.from({ length: 8 }, (_, i) => `<th>Column ${i} heading</th>`).join('');
+    for (const html of [`<main><table><tr>${row}<th><span class="visually-hidden">Actions</span></th></tr></table></main>`,
+      `<main><figure><table><tr>${row}<th><span class="visually-hidden">Actions</span></th></tr></table></figure></main>`]) {
+      await load(page, html, { size: { width: 360, height: 800 } });
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(360);
+    }
   });
 
   test('a class on the wrapper means it is the author\'s own layout', async ({ page }) => {
@@ -754,6 +771,85 @@ test.describe('llms.txt contract', () => {
     const missing = [...variables].filter((name) => !source.includes(`${name}:`));
     expect(missing).toEqual([]);
   });
+});
+
+test.describe('agent-written pages', () => {
+  // Pages written by AI agents that only had llms.txt (see evals/README.md).
+  const PAGES = readdirSync('evals/pages').filter((f) => f.endsWith('.html')).sort();
+  const ALLOWED_CLASSES = new Set(['button', 'secondary', 'outline', 'container', 'grid', 'card', 'striped', 'visually-hidden']);
+
+  // Serve the CDN stylesheet from this checkout, so the pages test the current CSS.
+  const open = async (page, name, { width = 1280, scheme = 'light' } = {}) => {
+    await page.route(/cdn\.jsdelivr\.net\/npm\/tagbrush@1\/tagbrush(\.min)?\.css/, (route) =>
+      route.fulfill({ path: 'tagbrush.css', contentType: 'text/css' }));
+    await page.setViewportSize({ width, height: 900 });
+    await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' });
+    await page.goto(fileUrl(`evals/pages/${name}`));
+  };
+
+  test('there are agent-written pages to check', () => {
+    expect(PAGES.length).toBeGreaterThanOrEqual(6);
+  });
+
+  for (const name of PAGES) {
+    test.describe(name, () => {
+      test('uses only documented classes and no layout CSS', () => {
+        const html = readFileSync(`evals/pages/${name}`, 'utf8');
+        const classes = [...html.matchAll(/\sclass="([^"]*)"/g)].flatMap((m) => m[1].split(/\s+/).filter(Boolean));
+        expect(classes.filter((c) => !ALLOWED_CLASSES.has(c)), 'classes llms.txt does not document').toEqual([]);
+        const declarations = [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)]
+          .flatMap((m) => [...m[1].replace(/\/\*[\s\S]*?\*\//g, '').matchAll(/([a-z-]+)\s*:/g)].map((d) => d[1]));
+        expect(declarations.filter((p) => !p.startsWith('--') && p !== 'color-scheme'), 'CSS in <style> other than variables').toEqual([]);
+      });
+
+      for (const width of [360, 1280]) {
+        test(`no horizontal overflow at ${width}px`, async ({ page }) => {
+          await open(page, name, { width });
+          const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+          expect(overflow).toBe(0);
+        });
+      }
+
+      for (const scheme of ['light', 'dark']) {
+        test(`all text meets WCAG AA contrast, ${scheme}`, async ({ page }) => {
+          await open(page, name, { scheme });
+          const failing = await page.evaluate(() => {
+            const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+            const rgba = (color) => {
+              ctx.clearRect(0, 0, 1, 1); ctx.fillStyle = color; ctx.fillRect(0, 0, 1, 1);
+              const [r, g, b, a] = ctx.getImageData(0, 0, 1, 1).data;
+              return [r, g, b, a / 255];
+            };
+            const over = (top, bottom) => top.slice(0, 3).map((c, i) => c * top[3] + bottom[i] * (1 - top[3])).concat(1);
+            const backdrop = (el) => {
+              const layers = [];
+              for (let node = el; node; node = node.parentElement) {
+                const bg = rgba(getComputedStyle(node).backgroundColor);
+                if (bg[3] > 0) layers.push(bg);
+                if (bg[3] === 1) break;
+              }
+              return layers.reduceRight((below, layer) => over(layer, below), [255, 255, 255, 1]);
+            };
+            const luminance = ([r, g, b]) => {
+              const lin = (c) => ((c /= 255) <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
+              return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b);
+            };
+            // Visible elements with their own text. Disabled controls are exempt under WCAG.
+            const texts = [...document.body.querySelectorAll('*')].filter((el) =>
+              [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim()) &&
+              el.checkVisibility() && !el.closest(':disabled, [aria-disabled="true"], dialog:not([open]), [popover]:not(:popover-open)'));
+            return texts.map((el) => {
+              const bg = backdrop(el);
+              const fg = over(rgba(getComputedStyle(el).color), bg);
+              const [hi, lo] = [luminance(fg), luminance(bg)].sort((a, b) => b - a);
+              return { text: `<${el.localName}> ${el.textContent.trim().slice(0, 40)}`, ratio: Math.round(((hi + 0.05) / (lo + 0.05)) * 100) / 100 };
+            }).filter((r) => r.ratio < 4.5);
+          });
+          expect(failing).toEqual([]);
+        });
+      }
+    });
+  }
 });
 
 test.describe('accessibility', () => {

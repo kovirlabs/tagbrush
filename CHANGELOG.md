@@ -5,6 +5,8 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ## Unreleased
 
 ### Added
+- Agent evaluation in `evals/`: pages written by AI agents that only had `llms.txt`, checked by the tests for overflow, contrast, invented classes, and layout CSS.
+- Previous/next links: in a `<nav>`, a link with `rel="next"` moves to the far end of the row.
 - Instruction files for AI coding agents in `ai/` (a Claude Code skill, a Cursor rule, and an `AGENTS.md` section), generated from `llms.txt` and included in the npm package.
 - `llms.txt`: a usage cheat sheet for AI assistants, also served at kovirlabs.github.io/tagbrush/llms.txt, and a README section with a prompt to copy.
 - Starters for Pandoc (one-liner and template), Hugo, Eleventy, and Astro in `starters/`, built by CI on every change.
@@ -25,6 +27,10 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 - Read-only fields (`readonly`) get the surface background but keep full-contrast text.
 - The text cursor in fields uses the theme's link color.
 - Theme builder: shows the contrast of button text and links as you pick colors, keeps the theme in the page URL so you can share it, and has a live preview.
+
+### Fixed
+- A `.visually-hidden` element inside a scrolling table or figure no longer widens the page.
+- `<ins>` and `<del>` keep 4.5:1 contrast inside muted text on a surface, such as a stat card.
 
 ### Changed
 - Visual identity: background, surface, text, muted, and border colors carry a faint tint of `--color-primary`'s hue, so one color sets a matching palette (the default blue looks almost the same as before). `h1` and `h2` grow with the screen and have slightly tighter letter spacing. Links in running text are softly underlined. The page header and footer get hairline rules, a `<section>` after other content gets more room above it, and blockquotes get a primary-tinted rule.

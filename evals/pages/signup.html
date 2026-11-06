@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign up · Portland Rust Meetup</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <strong>Portland Rust Meetup</strong>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/events">Events</a></li>
+        <li><a href="/talks">Past talks</a></li>
+        <li><a href="/signup" aria-current="page">Sign up</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <article>
+      <hgroup>
+        <h1>Join the meetup</h1>
+        <p>Monthly talks, hack nights and pizza at the Lloyd Center co-working space. Free for everyone.</p>
+      </hgroup>
+
+      <form action="/signup" method="post">
+        <fieldset>
+          <legend>Your account</legend>
+
+          <label for="name">Full name</label>
+          <input type="text" id="name" name="name" autocomplete="name" value="Priya Raman" required>
+
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" autocomplete="email" value="priya.raman@example" aria-invalid="true" aria-describedby="email-error" required>
+          <small id="email-error">Enter a full email address, like priya@example.com.</small>
+
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" autocomplete="new-password" minlength="12" aria-describedby="password-help" required>
+          <small id="password-help">Use at least 12 characters, including one number, one uppercase letter and one symbol.</small>
+        </fieldset>
+
+        <fieldset>
+          <legend>About you</legend>
+
+          <label for="experience">Experience with Rust</label>
+          <select id="experience" name="experience" required>
+            <option value="" selected disabled>Choose one</option>
+            <option value="curious">Curious: haven't written any yet</option>
+            <option value="beginner">Beginner: worked through the Book</option>
+            <option value="intermediate">Intermediate: shipped a side project</option>
+            <option value="advanced">Advanced: use it at work every day</option>
+          </select>
+          <small>This helps us pitch talks at the right level.</small>
+        </fieldset>
+
+        <fieldset>
+          <legend>Topics you're interested in</legend>
+          <label><input type="checkbox" name="interests" value="web"> Web backends and APIs</label>
+          <label><input type="checkbox" name="interests" value="embedded"> Embedded and microcontrollers</label>
+          <label><input type="checkbox" name="interests" value="async"> Async and concurrency</label>
+          <label><input type="checkbox" name="interests" value="gamedev"> Game development</label>
+          <label><input type="checkbox" name="interests" value="wasm"> WebAssembly</label>
+          <label><input type="checkbox" name="interests" value="tooling"> Compilers and developer tooling</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Preferences</legend>
+          <label><input type="checkbox" role="switch" name="newsletter" checked> Send me the monthly newsletter with upcoming events</label>
+          <label><input type="checkbox" name="terms" required> I agree to the <a href="/code-of-conduct">code of conduct</a> and <a href="/privacy">privacy policy</a></label>
+        </fieldset>
+
+        <button type="submit">Create my account</button>
+      </form>
+
+      <p>Already a member? <a href="/login">Log in</a>.</p>
+    </article>
+  </main>
+
+  <footer>
+    <p>Portland Rust Meetup is run by volunteers. Questions? <a href="mailto:hello@pdxrust.example">hello@pdxrust.example</a></p>
+  </footer>
+</body>
+</html>

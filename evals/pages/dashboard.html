@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Analytics · Juniper &amp; Pine</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+</head>
+<body>
+  <header>
+    <nav aria-label="Top bar">
+      <strong>Juniper &amp; Pine</strong>
+      <ul>
+        <li>
+          <div role="group">
+            <input type="search" placeholder="Search orders, products, customers" aria-label="Search">
+            <button>Search</button>
+          </div>
+        </li>
+        <li><button class="outline" popovertarget="user-menu" aria-label="Account menu for Maya Ortiz">Maya Ortiz ▾</button></li>
+      </ul>
+    </nav>
+    <div popover id="user-menu">
+      <p><strong>Maya Ortiz</strong><br><small>maya@juniperandpine.com · Owner</small></p>
+      <nav aria-label="Account">
+        <ul>
+          <li><a href="/account">Profile</a></li>
+          <li><a href="/settings">Store settings</a></li>
+          <li><a href="/logout">Sign out</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <aside>
+      <nav aria-label="Dashboard">
+        <ul>
+          <li><a href="/" aria-current="page">Analytics</a></li>
+          <li><a href="/orders">Orders</a></li>
+          <li><a href="/products">Products</a></li>
+          <li><a href="/customers">Customers</a></li>
+          <li><a href="/marketing">Marketing</a></li>
+          <li><a href="/discounts">Discounts</a></li>
+          <li><a href="/settings">Settings</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <hgroup>
+      <h1>Analytics</h1>
+      <p>Last 30 days · Oct 6 – Nov 4, 2026, compared with the previous 30 days</p>
+    </hgroup>
+
+    <section aria-labelledby="kpi-heading">
+      <h2 id="kpi-heading">Key numbers</h2>
+      <article>
+        <header><small>Revenue</small></header>
+        <p><strong>$84,312</strong></p>
+        <footer><ins>+12.4%</ins> vs. $75,012</footer>
+      </article>
+      <article>
+        <header><small>Orders</small></header>
+        <p><strong>1,148</strong></p>
+        <footer><ins>+8.1%</ins> vs. 1,062</footer>
+      </article>
+      <article>
+        <header><small>Conversion rate</small></header>
+        <p><strong>2.86%</strong></p>
+        <footer><del>−0.21 pts</del> vs. 3.07%</footer>
+      </article>
+      <article>
+        <header><small>Average order value</small></header>
+        <p><strong>$73.44</strong></p>
+        <footer><ins>+4.0%</ins> vs. $70.63</footer>
+      </article>
+    </section>
+
+    <section aria-labelledby="activity-heading">
+      <h2 id="activity-heading">Activity</h2>
+      <article>
+        <header>
+          <h3>Recent orders</h3>
+        </header>
+        <figure>
+          <table class="striped">
+            <thead>
+              <tr>
+                <th scope="col">Order</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Date</th>
+                <th scope="col">Total</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="/orders/10482">#10482</a></td>
+                <td>Priya Raman</td>
+                <td><time datetime="2026-11-04T16:42">Nov 4, 4:42 PM</time></td>
+                <td>$128.00</td>
+                <td><mark>Unfulfilled</mark></td>
+              </tr>
+              <tr>
+                <td><a href="/orders/10481">#10481</a></td>
+                <td>Daniel Okafor</td>
+                <td><time datetime="2026-11-04T14:15">Nov 4, 2:15 PM</time></td>
+                <td>$54.50</td>
+                <td>Shipped</td>
+              </tr>
+              <tr>
+                <td><a href="/orders/10480">#10480</a></td>
+                <td>Sofia Lindqvist</td>
+                <td><time datetime="2026-11-04T11:03">Nov 4, 11:03 AM</time></td>
+                <td>$212.75</td>
+                <td>Delivered</td>
+              </tr>
+              <tr>
+                <td><a href="/orders/10479">#10479</a></td>
+                <td>Marcus Chen</td>
+                <td><time datetime="2026-11-03T19:28">Nov 3, 7:28 PM</time></td>
+                <td>$39.00</td>
+                <td><del>Refunded</del></td>
+              </tr>
+              <tr>
+                <td><a href="/orders/10478">#10478</a></td>
+                <td>Hannah Weiss</td>
+                <td><time datetime="2026-11-03T15:51">Nov 3, 3:51 PM</time></td>
+                <td>$96.20</td>
+                <td>Shipped</td>
+              </tr>
+              <tr>
+                <td><a href="/orders/10477">#10477</a></td>
+                <td>Tomás Herrera</td>
+                <td><time datetime="2026-11-03T09:12">Nov 3, 9:12 AM</time></td>
+                <td>$167.40</td>
+                <td>Delivered</td>
+              </tr>
+            </tbody>
+          </table>
+        </figure>
+        <footer><a class="button" href="/orders">View all orders</a></footer>
+      </article>
+
+      <article>
+        <header>
+          <h3>Top products</h3>
+        </header>
+        <ol>
+          <li>
+            <strong>Cedar &amp; Sage Soy Candle</strong> · 312 sold · $8,736
+            <progress value="100" max="100" aria-label="Relative sales: 100%"></progress>
+          </li>
+          <li>
+            <strong>Hand-thrown Stoneware Mug</strong> · 241 sold · $8,435
+            <progress value="77" max="100" aria-label="Relative sales: 77%"></progress>
+          </li>
+          <li>
+            <strong>Linen Tea Towel Set</strong> · 198 sold · $5,742
+            <progress value="63" max="100" aria-label="Relative sales: 63%"></progress>
+          </li>
+          <li>
+            <strong>Pine Needle Bath Soak</strong> · 164 sold · $3,116
+            <progress value="53" max="100" aria-label="Relative sales: 53%"></progress>
+          </li>
+          <li>
+            <strong>Walnut Serving Board</strong> · 87 sold · $5,655
+            <progress value="28" max="100" aria-label="Relative sales: 28%"></progress>
+          </li>
+        </ol>
+        <footer><a class="button" href="/products">View all products</a></footer>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 Juniper &amp; Pine · Data refreshed Nov 5, 2026, 8:00 AM</p>
+  </footer>
+</body>
+</html>
