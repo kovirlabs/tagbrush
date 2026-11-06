@@ -152,7 +152,7 @@ The benchmark (`evals/benchmark/`) showed TagBrush.css pages cost 3–4× less m
 - [x] Fix `<hgroup>`: mute the paragraphs, never the heading, so a label before the heading works (benchmark 2).
 - [x] Consider a built-in `--tone` pattern for badges and icons, as both benchmark 2 agents invented it. (Done as `data-tone` plus `--tone`.)
 - [x] Footer columns: a footer with several `<nav>`s, which both landing pages built by hand.
-- [ ] Re-run the benchmarks and compare screenshots side by side.
+- [x] Re-run the benchmarks and compare screenshots side by side (benchmark 2, `evals/benchmark-2/rerun/`: dashboard CSS down 45%, landing unchanged).
 
 ## Release
 

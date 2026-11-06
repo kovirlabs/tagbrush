@@ -1006,6 +1006,7 @@ test.describe('polish: badges, icons, hero, sidebar, footer', () => {
     await page.goto(fileUrl('tests/fixtures/polish.html'));
     const [hero, figure] = [await rect(page, '#hero'), await rect(page, '#hero-figure')];
     expect(figure.left).toBeGreaterThan(hero.right);
+    expect((await rect(page, '#hero-note')).right).toBeLessThan(figure.left);
     expect(await style(page, '#hero', 'textAlign')).toBe('start');
     expect(await style(page, 'body > header', 'backgroundImage')).toContain('radial-gradient');
     await page.setViewportSize({ width: 390, height: 900 });

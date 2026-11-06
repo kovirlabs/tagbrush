@@ -847,6 +847,10 @@
   }
 
   :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> figure, > img, > picture, > svg)) > * {
+    grid-column: 1;
+  }
+
+  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> figure, > img, > picture, > svg)) > nav {
     grid-column: 1 / -1;
   }
 
@@ -868,7 +872,7 @@
 
   :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup)) > :where(figure, img, picture, svg) {
     grid-column: 2;
-    grid-row: 2 / span 2;
+    grid-row: 2 / span 6;
     margin-block: var(--spacing-xl);
   }
 
