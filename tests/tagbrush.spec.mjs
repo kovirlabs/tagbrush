@@ -675,6 +675,87 @@ test.describe('code highlighting', () => {
   });
 });
 
+test.describe('llms.txt contract', () => {
+  // llms.txt (and the agent files generated from it) tell AI agents which HTML
+  // TagBrush.css styles. These tests keep those instructions true.
+  const guideText = () => import('node:fs').then(({ readFileSync }) => readFileSync('llms.txt', 'utf8'));
+  const css = () => import('node:fs').then(({ readFileSync }) => readFileSync('tagbrush.css', 'utf8'));
+
+  // Inline code that is a real snippet: has a closing tag or attributes, and
+  // isn't a page-level tag that can't be dropped into <main>.
+  const snippetsIn = (text) => [...text.matchAll(/`(<[a-z][^`]*>)`/g)]
+    .map((m) => m[1])
+    .filter((html) => html.includes('</') || /^<[a-z]+ /.test(html))
+    .filter((html) => !/^<(html|head|body|link|meta)\b/.test(html));
+
+  test('every HTML snippet in llms.txt is styled by TagBrush.css', async ({ browser }) => {
+    test.skip(test.info().project.name !== 'chromium', 'Checked once, in Chromium');
+    const snippets = snippetsIn(await guideText());
+    expect(snippets.length).toBeGreaterThan(15);
+
+    const PROPS = ['display', 'marginBottom', 'paddingLeft', 'paddingTop', 'color', 'backgroundColor', 'borderTopWidth',
+      'borderLeftWidth', 'borderTopLeftRadius', 'fontWeight', 'fontSize', 'width', 'listStyleType', 'gap', 'gridTemplateColumns', 'appearance',
+      'textDecorationStyle', 'cursor'];
+    const signatures = async (url) => {
+      const page = await browser.newPage({ viewport: { width: 1000, height: 800 }, colorScheme: 'light' });
+      await page.goto(url);
+      const result = await page.evaluate(([snippets, props]) => snippets.map((html) => {
+        const main = document.querySelector('main') ?? document.body.appendChild(document.createElement('main'));
+        main.innerHTML = html;
+        const all = [...main.querySelectorAll('*')];
+        // Inherited properties only count when the element's own value differs
+        // from its parent's, so inheriting the page text color isn't "styled".
+        const inherited = new Set(['color', 'fontWeight', 'fontSize', 'listStyleType', 'cursor']);
+        return all.map((el) => {
+          const cs = getComputedStyle(el);
+          const parent = getComputedStyle(el.parentElement);
+          return props.map((p) => (inherited.has(p) && cs[p] === parent[p] ? 'inherit' : cs[p])).join('|');
+        }).join('\n');
+      }), [snippets, PROPS]);
+      await page.close();
+      return result;
+    };
+    const styled = await signatures(fileUrl('tests/fixtures/layout.html'));
+    const plain = await signatures(fileUrl('tests/fixtures/blank.html'));
+    const unstyled = snippets.filter((_, i) => styled[i] === plain[i]);
+    expect(unstyled, 'snippets in llms.txt that TagBrush.css does not style').toEqual([]);
+  });
+
+  test('every class llms.txt mentions exists in tagbrush.css', async () => {
+    const text = await guideText();
+    const source = await css();
+    const classes = new Set([
+      ...[...text.matchAll(/class="([^"]+)"/g)].flatMap((m) => m[1].split(/\s+/)),
+      ...[...text.matchAll(/`\.([a-z][a-z-]*)`/g)].map((m) => m[1]),
+    ]);
+    expect(classes.size).toBeGreaterThan(5);
+    const missing = [...classes].filter((name) => !new RegExp(`\\.${name}(?![\\w-])`).test(source));
+    expect(missing).toEqual([]);
+  });
+
+  test('every role, aria-* and data-* attribute llms.txt mentions is used by tagbrush.css', async () => {
+    const text = await guideText();
+    const source = await css();
+    const attributes = new Set([...text.matchAll(/\b(role="[a-z]+"|aria-[a-z]+|data-[a-z]+)/g)].map((m) => m[1]));
+    const missing = [...attributes].filter((attribute) => {
+      const name = attribute.split('=')[0];
+      const value = attribute.split('=')[1];
+      return !source.includes(value ? `${name}=${value}` : name);
+    });
+    // aria-label and aria-current="page" on links are for assistive tech; label is not styled by itself.
+    expect(missing.filter((a) => a !== 'aria-label')).toEqual([]);
+  });
+
+  test('every CSS variable llms.txt mentions is defined in tagbrush.css', async () => {
+    const text = await guideText();
+    const source = await css();
+    const variables = new Set([...text.matchAll(/(--[a-z][a-z-]*)\s*:/g)].map((m) => m[1]));
+    expect(variables.size).toBeGreaterThan(3);
+    const missing = [...variables].filter((name) => !source.includes(`${name}:`));
+    expect(missing).toEqual([]);
+  });
+});
+
 test.describe('accessibility', () => {
   // WCAG AA asks for 4.5:1 between normal-size text and its background.
   const AA = 4.5;
