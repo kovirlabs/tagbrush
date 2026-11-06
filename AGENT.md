@@ -10,6 +10,8 @@ The library is a single hand-written CSS file (`tagbrush.css`), plus `index.html
 
 The scoped build is a text transform: it wraps the layer in `@scope (.tagbrush)` and rewrites `:root`, `html`, `body` and `body >` selectors to `:scope`. The Shadow DOM build is the same kind of transform, rewriting those selectors to `:host` (and `[data-theme]` to also match `:host([data-theme])`). The build throws if the patterns it expects are missing, so update `scripts/build.mjs` when changing those selectors.
 
+`llms.txt` is the hand-written guide for AI assistants. The build also generates `ai/claude/tagbrush/SKILL.md`, `ai/cursor/tagbrush.mdc`, and `ai/AGENTS.md` from it, so edit `llms.txt` and rebuild; never edit those files directly.
+
 There is deliberately one stylesheet for all frameworks: nothing in it is framework-specific, so per-framework copies would only drift. Framework differences (where to import, Tailwind layer order, Shadow DOM) are documented in `frameworks/<name>/README.md`.
 
 `tests/tagbrush.spec.mjs` (Playwright) checks computed styles in Chromium, Firefox and WebKit, compares the min and scoped builds, and takes screenshot baselines (Chromium on macOS only; CI runs with `--ignore-snapshots`). When adding a feature, add a computed-style assertion for it.

@@ -138,7 +138,15 @@ with no classes and no custom CSS, styled by TagBrush.css. Follow
 https://kovirlabs.github.io/tagbrush/llms.txt
 ```
 
-[`llms.txt`](llms.txt) is a short cheat sheet written for AI assistants: which elements to use, the few patterns that turn plain HTML into components (`role="switch"`, `aria-busy`, a `<section>` of `<article>`s), forms, and theming. Assistants that can read links will follow it, and you can also paste it into the conversation or your project instructions (for example `CLAUDE.md` or `AGENTS.md`).
+[`llms.txt`](llms.txt) is a short cheat sheet written for AI assistants: which elements to use, the few patterns that turn plain HTML into components (`role="switch"`, `aria-busy`, a `<section>` of `<article>`s), forms, and theming. Assistants that can read links will follow it.
+
+For coding agents, install it once and the agent follows it automatically. One command adds a [Claude Code skill, a Cursor rule, or an `AGENTS.md` section](ai/):
+
+```sh
+npx degit kovirlabs/tagbrush/ai/claude/tagbrush .claude/skills/tagbrush
+```
+
+The tests render every snippet in `llms.txt`, so the instructions agents follow always match what TagBrush.css actually styles.
 
 ## Page layout
 
@@ -345,6 +353,7 @@ Step-by-step guides with copy-paste snippets:
 | `starter.html`            | A complete page to copy as a starting point          |
 | `starters/`               | Pandoc, Hugo, Eleventy, and Astro starters (built by CI) |
 | `llms.txt`                | Usage cheat sheet for AI assistants                  |
+| `ai/`                     | Claude Code skill, Cursor rule, and `AGENTS.md` section *(generated from `llms.txt`)* |
 | `scripts/build.mjs`       | Generates the files above                            |
 | `tests/`                  | Cross-browser tests and screenshot baselines         |
 | `CHANGELOG.md`            | Release history                                      |

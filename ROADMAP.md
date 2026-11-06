@@ -93,6 +93,30 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 - [x] A design pass so a TagBrush page is recognizable: type scale, spacing rhythm, neutral palette, and a few signature details, without adding anything users must learn.
 
+## Chunk 13: Instruction files for AI coding agents
+
+- [x] A Claude Code skill, Cursor rules, and an `AGENTS.md` section, generated from `llms.txt` by the build so they never drift apart.
+
+## Chunk 14: `llms.txt` contract test
+
+- [ ] Every HTML snippet in `llms.txt` is rendered in the tests and must be styled by TagBrush.css, and every class, attribute, and variable it mentions must exist in the stylesheet.
+
+## Chunk 15: Agent evaluation
+
+- [ ] A fixed set of prompts (landing page, form, dashboard, blog post, docs page, admin table). Pages written by agents that only see `llms.txt` are kept in `evals/`, checked by the tests (no overflow, contrast, no invented classes), and reviewed to find gaps.
+
+## Chunk 16: App and dashboard patterns
+
+- [ ] `<aside>` next to `<main>` becomes a sidebar layout; a `<dl>` of `<div>` groups becomes stat tiles; `role="toolbar"` becomes a toolbar row. No classes.
+
+## Chunk 17: Debug mode
+
+- [ ] `<html data-tagbrush="debug">` outlines common mistakes (images without `alt`, unlabeled fields, classes TagBrush doesn't use, empty buttons) in pure CSS, for people and for agents that take screenshots.
+
+## Chunk 18: `npx tagbrush check`
+
+- [ ] A zero-dependency command that reports the same problems as text, plus page-level checks (missing `lang`, viewport, stylesheet link, label `for`/`id` pairs), for agents without screenshots.
+
 ## Release
 
 - [ ] Publish 1.1.0 with chunks 2–12 (version bump, date the CHANGELOG, tag, `npm publish`, GitHub release). `starter.html` and the README rely on the new page layout, so this should happen before announcing them.

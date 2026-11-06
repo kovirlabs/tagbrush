@@ -8,7 +8,7 @@
 // tagbrush.css remains the hand-written source of truth and works without this
 // step; the build only exists for maintainers. Run with `npm run build`.
 
-import { readFileSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { transform } from 'lightningcss';
 
 const root = new URL('../', import.meta.url);
@@ -103,6 +103,42 @@ for (const leftover of ['\n  html', '\n  body', 'body >']) {
   if (shadow.includes(leftover)) {
     throw new Error(`Shadow build still contains "${leftover.trim()}". Update scripts/build.mjs.`);
   }
+}
+
+// ---------------------------------------------------------------------------
+// Instruction files for AI coding agents, generated from llms.txt so every
+// agent gets the same, tested guidance (see tests: llms.txt contract).
+// ---------------------------------------------------------------------------
+const guide = read('llms.txt').trim();
+const generated = '<!-- Generated from llms.txt by scripts/build.mjs. Do not edit directly. -->';
+const agentFiles = {
+  'ai/claude/tagbrush/SKILL.md': [
+    '---',
+    'name: tagbrush',
+    'description: Write pages styled by TagBrush.css, a classless stylesheet. Use when building or editing HTML pages, prototypes, landing pages, docs, blogs, forms, or dashboards that use TagBrush.css, or when asked for a good-looking page with plain HTML and no CSS framework.',
+    '---',
+    '',
+    generated,
+    '',
+    guide,
+  ].join('\n'),
+  'ai/cursor/tagbrush.mdc': [
+    '---',
+    'description: How to write HTML for TagBrush.css, a classless stylesheet (semantic elements, no classes, no layout CSS)',
+    'globs: ["**/*.html", "**/*.htm", "**/*.njk", "**/*.liquid", "**/*.astro", "**/*.vue", "**/*.svelte", "**/*.jsx", "**/*.tsx"]',
+    'alwaysApply: false',
+    '---',
+    '',
+    generated,
+    '',
+    guide,
+  ].join('\n'),
+  // A section to paste into a project's AGENTS.md or CLAUDE.md: headings move down one level.
+  'ai/AGENTS.md': [generated, '', guide.replace(/^(#+) /gm, '#$1 ')].join('\n'),
+};
+for (const [file, contents] of Object.entries(agentFiles)) {
+  mkdirSync(new URL(file.slice(0, file.lastIndexOf('/')), root), { recursive: true });
+  write(file, contents + '\n');
 }
 
 write('tagbrush.min.css', minify(source, 'tagbrush.css'));
