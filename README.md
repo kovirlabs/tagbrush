@@ -134,7 +134,9 @@ All design tokens live on `:root`. Override any of them in your own CSS:
 }
 ```
 
-Hover colors and focus rings are derived from `--color-primary` automatically. Set `--color-primary-hover` or `--focus-ring-color` only if you want something different.
+Hover colors, focus rings, button text, and link colors are derived from `--color-primary` automatically, and they stay readable whatever color you pick: buttons switch between white and black text, and links are darkened or lightened as needed. Set `--color-on-primary`, `--color-link`, `--color-primary-hover`, or `--focus-ring-color` only if you want something different.
+
+> **Shortcut:** the [theme builder](https://kovirlabs.github.io/tagbrush/#theming) shows the contrast of your colors as you pick them, and its address bar always holds a link you can share.
 
 > **Shortcut:** the theme builder on the [demo page](index.html) lets you pick colors, fonts, radius, and spacing visually, then copy the CSS.
 
@@ -202,9 +204,9 @@ Button variants only change a few private variables, so you can add your own in 
 | Variable                | Default      | Used for                                  |
 |-------------------------|--------------|-------------------------------------------|
 | `--color-primary`       | `#2563eb`    | Links, buttons, focus rings, checkboxes, progress bars |
-| `--color-on-primary`    | `#ffffff`    | Text on primary buttons                   |
-| `--color-primary-hover` | *derived*    | Button hover (primary + 15% black)        |
-| `--color-link`          | *derived*    | Link and outline-button text (primary, lightened 35% in dark mode so it stays readable) |
+| `--color-on-primary`    | *derived*    | Text on primary buttons: white or black, whichever is more readable on `--color-primary` |
+| `--color-primary-hover` | *derived*    | Button hover (primary, darker under white text and lighter under black text) |
+| `--color-link`          | *derived*    | Link and outline-button text (primary, darkened in light mode and lightened in dark mode as far as needed to stay readable) |
 | `--color-link-hover`    | *derived*    | Link hover (link color, darkened in light mode, lightened in dark mode) |
 | `--color-background`    | white / `#111827` | Page, input, and dialog backgrounds  |
 | `--color-surface`       | `#f3f4f6` / `#1f2937` | Code, blockquotes, secondary buttons |

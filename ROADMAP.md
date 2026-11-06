@@ -63,9 +63,9 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 ## Chunk 6: Safe theming
 
-- [ ] Theme builder presets fail contrast with white button text: emerald 2.5:1, amber 2.2:1, rose 3.7:1, violet 4.2:1. Pick button text automatically (`contrast-color()` where supported, with a fallback), or have the builder output a matching `--color-on-primary`.
-- [ ] Theme builder shows a contrast warning for custom colors.
-- [ ] "Share this theme" link (theme stored in the URL hash).
+- [x] Button text is picked automatically: white or black, whichever contrasts more, using relative color syntax (`oklch(from …)`), which every evergreen browser supports. `contrast-color()` isn't needed. Links and outline text clamp the primary's lightness so they pass on the background and surface in both schemes. The contrast test runs with 10 primaries, from black to white and including the presets.
+- [x] Theme builder shows the measured contrast of button text and links.
+- [x] Share link: the theme is kept in the page URL's query string (the hash is used by the page's section links).
 
 ## Chunk 7: Docs and positioning
 

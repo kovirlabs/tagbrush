@@ -380,13 +380,81 @@ test.describe('form finishing touches', () => {
   });
 
   test('the caret uses the theme color', async ({ page }) => {
-    expect(await style(page, '#name', 'caretColor')).toBe('rgb(37, 99, 235)');
+    // The link color: the primary blue, darkened to OKLCH lightness 0.5 in light mode.
+    expect(await style(page, '#name', 'caretColor')).toMatch(/^oklch\(0\.5 [\d.]+ 262\.\d+\)$/);
   });
 
   test('the select arrow is drawn in the muted text color', async ({ page }) => {
     const image = await style(page, '#topic', 'backgroundImage');
     expect(image).toContain('linear-gradient');
     expect(image).toContain('rgb(100, 107, 118)');
+  });
+});
+
+test.describe('automatic contrast', () => {
+  test('button text is white on dark primaries and black on light ones', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+    await page.goto(DEMO);
+    const text = async (primary) => {
+      await page.evaluate((value) => document.documentElement.style.setProperty('--color-primary', value), primary);
+      return style(page, 'button[value=ok]', 'color');
+    };
+    expect(await text('#1e3a8a')).toMatch(/^(oklch\(1 0 0\)|rgb\(255, 255, 255\))$/);
+    expect(await text('#facc15')).toMatch(/^(oklch\(0 0 0\)|rgb\(0, 0, 0\))$/);
+  });
+
+  test('a primary written with light-dark() still works', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
+    await page.goto(DEMO);
+    await page.evaluate(() => document.documentElement.style.setProperty('--color-primary', 'light-dark(#047857, #34d399)'));
+    const button = 'button[value=ok]';
+    expect(await style(page, button, 'backgroundColor')).toBe('rgb(52, 211, 153)');
+    // #34d399 is light, so the text is black rather than inheriting the page text color.
+    expect(await style(page, button, 'color')).toMatch(/^(oklch\(0 0 0\)|rgb\(0, 0, 0\))$/);
+  });
+
+  test('--color-on-primary still overrides the automatic text color', async ({ page }) => {
+    await page.goto(DEMO);
+    await page.addStyleTag({ content: ':root { --color-on-primary: rgb(1, 2, 3); }' });
+    expect(await style(page, 'button[value=ok]', 'color')).toBe('rgb(1, 2, 3)');
+  });
+});
+
+test.describe('theme builder', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+  });
+
+  test('a shared link restores the theme', async ({ page }) => {
+    await page.goto(`${DEMO}?primary=f59e0b&font=serif&radius=0.75&pill=1`);
+    expect(await page.evaluate(() => document.documentElement.style.getPropertyValue('--color-primary'))).toBe('#f59e0b');
+    expect(await page.inputValue('#b-radius')).toBe('0.75');
+    expect(await page.isChecked('#b-pill')).toBe(true);
+    await expect(page.locator('#b-font option:checked')).toHaveText('Serif');
+    await expect(page.locator('#theme-code')).toContainText('--color-primary: #f59e0b;');
+  });
+
+  test('changing the theme updates the link, and the defaults clear it', async ({ page }) => {
+    await page.goto(DEMO);
+    await page.click('[data-primary="#10b981"]');
+    expect(new URL(page.url()).search).toBe('?primary=10b981');
+    await page.click('#b-reset');
+    expect(new URL(page.url()).search).toBe('');
+  });
+
+  test('bad values in the link are ignored', async ({ page }) => {
+    await page.goto(`${DEMO}?primary=javascript:alert(1)&font=nope`);
+    expect(await page.inputValue('#b-primary')).toBe('#2563eb');
+    await expect(page.locator('#theme-code')).toHaveText('/* Using the defaults */');
+  });
+
+  test('the contrast readout passes for every preset', async ({ page }) => {
+    await page.goto(DEMO);
+    for (const swatch of await page.locator('[data-primary]').all()) {
+      await swatch.click();
+      await expect(page.locator('#b-contrast')).toContainText('Button text');
+      await expect(page.locator('#b-contrast')).not.toContainText('below');
+    }
   });
 });
 
@@ -452,10 +520,16 @@ test.describe('accessibility', () => {
   // WCAG AA asks for 4.5:1 between normal-size text and its background.
   const AA = 4.5;
 
+  // The default, the theme builder presets, and some extremes. Button text,
+  // links and outline buttons derive from --color-primary, so all must pass.
+  const PRIMARIES = [null, '#10b981', '#8b5cf6', '#f43f5e', '#f59e0b', '#1e3a8a', '#facc15', '#ff0000', '#000000', '#ffffff'];
+
   for (const scheme of ['light', 'dark']) {
-    test(`default text colors meet WCAG AA contrast, ${scheme}`, async ({ page }) => {
+    for (const primary of PRIMARIES) {
+    test(`text colors meet WCAG AA contrast, ${scheme}, primary ${primary ?? 'default'}`, async ({ page }) => {
       await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' });
       await page.goto(fileUrl('tests/fixtures/contrast.html'));
+      if (primary) await page.evaluate((value) => document.documentElement.style.setProperty('--color-primary', value), primary);
       const results = await page.evaluate(() => {
         // Let the browser convert any computed color (rgb, color(srgb …), …) to RGBA bytes.
         const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
@@ -491,8 +565,9 @@ test.describe('accessibility', () => {
       });
       expect(results.length).toBeGreaterThan(30);
       const failing = results.filter((r) => r.ratio < AA);
-      expect(failing, `below ${AA}:1 in ${scheme} mode`).toEqual([]);
+      expect(failing, `below ${AA}:1 in ${scheme} mode with primary ${primary ?? 'default'}`).toEqual([]);
     });
+    }
   }
 });
 
