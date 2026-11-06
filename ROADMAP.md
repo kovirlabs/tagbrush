@@ -45,11 +45,11 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 ## Chunk 4: Semantic components, no classes
 
-- [ ] Toggle switch: `<input type="checkbox" role="switch">`.
-- [ ] Loading state: `[aria-busy="true"]` shows a spinner on buttons and containers.
-- [ ] Breadcrumbs: `nav[aria-label="breadcrumb"]` with separators.
-- [ ] Dialog layout: `dialog > header` and `dialog > footer`, with footer buttons aligned right.
-- [ ] Accordion: neighboring `<details>` (especially `details[name]`) join into one bordered group.
+- [x] Toggle switch: `<input type="checkbox" role="switch">`.
+- [x] Loading state: `[aria-busy="true"]` shows a spinner on buttons and containers.
+- [x] Breadcrumbs: `nav[aria-label="breadcrumb"]` with separators.
+- [x] Dialog layout: `dialog > header` and `dialog > footer`, with footer buttons aligned right.
+- [x] Accordion: neighboring `<details>` (especially `details[name]`) join into one bordered group.
 
 ## Chunk 5: Finishing touches
 

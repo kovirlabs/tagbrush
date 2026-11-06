@@ -76,12 +76,13 @@ Or just [download `tagbrush.css`](tagbrush.css) and host it yourself.
 | Lists      | `ul`, `ol`, `menu` (including nested lists, muted `::marker`), Markdown task lists (checkbox replaces the bullet), `dl`, `dt`, `dd` |
 | Media      | `img`, `picture`, `video`, `audio`, `canvas`, `svg`, `iframe`, `object`, `embed` (scale to fit), `figure`, `figcaption` |
 | Markdown   | Footnotes from GitHub-flavored Markdown, markdown-it, and Pandoc (smaller, muted, highlighted when linked to); long URLs and words wrap instead of widening the page |
-| Structure  | `nav` (with `ul`/`menu` rendered as a horizontal menu, `aria-current` highlighted), `header`, `main`, `footer`, `search`, `article aside` (callout) |
+| Structure  | `nav` (with `ul`/`menu` rendered as a horizontal menu, `aria-current` highlighted), `header`, `main`, `footer`, `search`, `article aside` (callout), breadcrumbs (`<nav aria-label="Breadcrumb">` gets `/` separators) |
 | Buttons    | `button`, `input[type=submit/button/reset]`, `.button`, `:disabled`, `aria-disabled` |
-| Forms      | `fieldset`, `legend`, `label` (including inputs wrapped in their label), `textarea`, `select` (consistent arrow), `select[multiple]`, `optgroup`, every text-like `input` type (including `date`, `time`, `search`, …), `checkbox`, `radio`, `range`, `color`, `file`, `image` |
+| Loading    | `aria-busy="true"` on a button or any element shows a spinner |
+| Forms      | `fieldset`, `legend`, `label` (including inputs wrapped in their label), `textarea`, `select` (consistent arrow), `select[multiple]`, `optgroup`, every text-like `input` type (including `date`, `time`, `search`, …), `checkbox`, `radio`, toggle switches (`<input type="checkbox" role="switch">`), `range`, `color`, `file`, `image` |
 | Form states | `:focus`, `:disabled`, `::placeholder`, `aria-invalid="true"` / `"false"`, `:user-invalid`, help text via `<small>` after a field. Fields are spaced automatically. |
 | Tables     | `table`, `caption`, `thead`, `tbody`, `tfoot`, `th`, `td`, and the `align` attribute. A table is as wide as its content and scrolls sideways inside itself when it doesn't fit. Wrap it in `<figure>` to make it fill the full width instead |
-| Interactive | `details`, `summary`, `dialog` (with `::backdrop`), `[popover]`, `progress`, `meter` (green / amber / red from its `low`, `high`, and `optimum` attributes) |
+| Interactive | `details`, `summary` (neighboring `details` join into an accordion), `dialog` (with `::backdrop`; a `header` with a close button and a `footer` of right-aligned buttons), `[popover]`, `progress`, `meter` (green / amber / red from its `low`, `high`, and `optimum` attributes) |
 
 ### Utility classes
 

@@ -442,6 +442,22 @@
     font-weight: 600;
   }
 
+  /* Breadcrumbs: <nav aria-label="Breadcrumb"><ol><li><a>…</a></li>…</ol></nav> */
+  nav:where([aria-label="breadcrumb" i], [aria-label="breadcrumbs" i]) :is(ol, ul) {
+    gap: var(--spacing-sm);
+  }
+
+  :where(nav:is([aria-label="breadcrumb" i], [aria-label="breadcrumbs" i])) li + li::before {
+    content: "/";
+    content: "/" / "";
+    margin-inline-end: var(--spacing-sm);
+    color: var(--color-marker, var(--color-text-muted));
+  }
+
+  :where(nav:is([aria-label="breadcrumb" i], [aria-label="breadcrumbs" i]) [aria-current]:not([aria-current="false"])) {
+    font-weight: inherit;
+  }
+
   :where(:scope > header, :scope > main, :scope > footer) {
     padding-top: var(--spacing-lg);
     padding-bottom: var(--spacing-lg);
@@ -497,6 +513,19 @@
     margin-bottom: 0;
   }
 
+  /* Neighboring <details> join into one accordion (exclusive with name="…") */
+  details:has(+ details) {
+    margin-bottom: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  details + details {
+    border-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
   dialog {
     width: min(100% - 2 * var(--spacing-md), 36rem);
     padding: var(--spacing-lg);
@@ -513,6 +542,42 @@
 
   dialog > :last-child {
     margin-bottom: 0;
+  }
+
+  /* <dialog><header>…</header> … <footer><button>…</button></footer></dialog>,
+     also inside a <form method="dialog"> that wraps the whole dialog */
+  :where(dialog, dialog > form) > header {
+    margin-bottom: var(--spacing-md);
+  }
+
+  :where(dialog, dialog > form) > header > :last-child {
+    margin-bottom: 0;
+  }
+
+  /* A header with a close button puts the title and the button on one row */
+  :where(dialog, dialog > form) > header:where(:has(> button, > form > button)) {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+  }
+
+  :where(dialog, dialog > form) > header:where(:has(> button, > form > button)) > * {
+    margin: 0;
+  }
+
+  :where(dialog, dialog > form) > footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-lg);
+    color: inherit;
+    font-size: inherit;
+  }
+
+  :where(dialog, dialog > form) > footer > * {
+    margin: 0;
   }
 
   progress, meter {
@@ -557,6 +622,28 @@
 
   :where([popover]) > :last-child {
     margin-bottom: 0;
+  }
+
+  /* Loading: aria-busy="true" on a button or any container shows a spinner
+     and tells screen readers the content is updating */
+  :where([aria-busy="true"]:not(html, body, input, select, textarea, img, video, iframe, progress, meter))::before {
+    content: "";
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border: 0.15em solid currentColor;
+    border-inline-end-color: transparent;
+    border-radius: 50%;
+    vertical-align: -0.15em;
+    animation: tagbrush-spin 0.75s linear infinite;
+  }
+
+  :where([aria-busy="true"]:not(:empty))::before {
+    margin-inline-end: var(--spacing-sm);
+  }
+
+  @keyframes tagbrush-spin {
+    to { transform: rotate(1turn); }
   }
 
   /* ==========================================================================
@@ -609,6 +696,11 @@
 
   :where(.button[aria-disabled="true"]) {
     pointer-events: none;
+  }
+
+  /* After the button rules so a busy button shows the progress cursor */
+  :where([aria-busy="true"]) {
+    cursor: progress;
   }
 
   :where(.secondary, [type="reset"]) {
@@ -786,6 +878,36 @@
 
   :where(li > input[type="checkbox"]:first-child) {
     margin-inline: -1.5em 0.5em;
+  }
+
+  /* Toggle switch: <input type="checkbox" role="switch"> */
+  :where(input[type="checkbox"][role="switch"]) {
+    flex-shrink: 0;
+    width: 2.25em;
+    font-size: inherit; /* form controls default to a smaller font, which em sizes follow */
+    height: 1.25em;
+    border-radius: 999px;
+    appearance: none;
+    background: radial-gradient(circle closest-side, var(--color-background) calc(100% - 3px), transparent calc(100% - 2px)) 0 0 / 1.25em 1.25em no-repeat var(--color-text-muted);
+    transition: background-color var(--transition-duration) ease-in-out,
+                background-position var(--transition-duration) ease-in-out;
+  }
+
+  :where(input[type="checkbox"][role="switch"]:checked) {
+    background-color: var(--color-primary);
+    background-position: 100% 0;
+  }
+
+  :where(input[type="checkbox"][role="switch"]:dir(rtl)) {
+    background-position: 100% 0;
+  }
+
+  :where(input[type="checkbox"][role="switch"]:checked:dir(rtl)) {
+    background-position: 0 0;
+  }
+
+  :where(input[type="checkbox"][role="switch"]:disabled) {
+    opacity: 0.6;
   }
 
   label:has(> input:is([type="checkbox"], [type="radio"])) {
@@ -1000,6 +1122,27 @@
   @media (prefers-reduced-motion: reduce) {
     :scope {
       --transition-duration: 0s;
+    }
+
+    /* Keep the spinner, since it shows that something is happening, but slow it down */
+    :where([aria-busy="true"])::before {
+      animation-duration: 2s;
+    }
+  }
+
+  /* Windows High Contrast and other forced-color modes drop background
+     colors, so draw the switch with system colors instead */
+  @media (forced-colors: active) {
+    :where(input[type="checkbox"][role="switch"]) {
+      forced-color-adjust: none;
+      border: 1px solid CanvasText;
+      background-image: radial-gradient(circle closest-side, CanvasText calc(100% - 4px), transparent calc(100% - 3px));
+      background-color: Canvas;
+    }
+
+    :where(input[type="checkbox"][role="switch"]:checked) {
+      background-image: radial-gradient(circle closest-side, HighlightText calc(100% - 4px), transparent calc(100% - 3px));
+      background-color: Highlight;
     }
   }
 
