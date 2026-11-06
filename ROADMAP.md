@@ -33,7 +33,7 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 - [x] Framework wrappers: a class-free wrapper around the landmarks (`<div id="root">`, `<app-root>`) counts as the page.
 - [x] Scoped and Shadow DOM builds leave page layout out: they style part of a page that something else lays out.
 - [x] Quick start no longer needs `class="container"`.
-- [ ] To discuss: a narrower reading width (about 70 characters) for text-heavy pages such as Markdown output, for example a separate `--content-max-width`.
+- Reading width for text-heavy pages: moved to [Open questions](#open-questions).
 
 **Not planned: flexbox on general elements** (`div`, `section`, `article`). Turning normal block flow into flex changes how all content lays out, and users would have to undo it more often than they'd want it. Rows and columns are already covered by `nav` (flex), `[role="group"]` (flex row) and `.grid`. To discuss: should a `<section>` that contains only `<article>`s lay them out as a responsive grid automatically?
 
@@ -69,8 +69,17 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 ## Chunk 7: Docs and positioning
 
-- [ ] README leads with the "drop in a link" user: plain HTML, Markdown output and static site generators first, framework guides second.
-- [ ] "TagBrush.css compared to Pico, Simple.css and Water.css" section: your CSS always wins thanks to `@layer`, the scoped and Shadow DOM builds, and the framework guides.
+- [x] README leads with the "drop in a link" user: plain HTML, Markdown output, and static site generators first, framework guides second.
+- [x] "How it compares" section with Pico, Simple.css, and Water.css, measured from each package's current npm release (size, `@layer`, dark mode, theming, layout, scoped and Shadow DOM support). Re-measure when those libraries release new versions.
+
+## Release
+
+- [ ] Publish 1.1.0 with chunks 2–7 (version bump, date the CHANGELOG, tag, `npm publish`, GitHub release). `starter.html` and the README rely on the new page layout, so this should happen before announcing them.
+
+## Open questions
+
+- A narrower reading width (about 70 characters) for text-heavy pages such as Markdown output, for example a separate `--content-max-width`.
+- Should a `<section>` that contains only `<article>`s lay them out as a responsive grid automatically?
 
 ## Out of scope
 
