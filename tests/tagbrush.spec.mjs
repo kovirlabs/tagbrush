@@ -293,6 +293,64 @@ test.describe('page layout', () => {
   });
 });
 
+test.describe('markdown output', () => {
+  const MARKDOWN = fileUrl('tests/fixtures/markdown.html');
+
+  for (const width of [360, 1280]) {
+    test(`no horizontal overflow at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(MARKDOWN);
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(overflow).toBe(0);
+    });
+  }
+
+  test('wide tables scroll inside themselves and stay tables for assistive tech', async ({ page }) => {
+    await page.setViewportSize({ width: 360, height: 900 });
+    await page.goto(MARKDOWN);
+    const box = await page.locator('#wide-table').evaluate((el) => ({ scroll: el.scrollWidth, client: el.clientWidth }));
+    expect(box.client).toBe(328);
+    expect(box.scroll).toBeGreaterThan(box.client);
+    await expect(page.getByRole('table')).toHaveCount(2);
+    await expect(page.getByRole('columnheader', { name: 'Environment variable' })).toHaveCount(1);
+  });
+
+  test('narrow tables are as wide as their content; tables in a figure fill it', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(MARKDOWN);
+    const width = (sel) => page.locator(sel).first().evaluate((el) => el.getBoundingClientRect().width);
+    expect(await width('table')).toBeLessThan(400);
+    await page.goto(DEMO);
+    expect(await width('figure > table')).toBe(await width('figure:has(> table)'));
+  });
+
+  test('column alignment from Markdown is kept', async ({ page }) => {
+    await page.goto(MARKDOWN);
+    // Browsers report the align attribute as -webkit-center / -moz-center.
+    expect(await style(page, 'th[align=center]', 'textAlign')).toMatch(/center$/);
+    expect(await style(page, 'td[align=right]', 'textAlign')).toMatch(/right$/);
+    expect(await style(page, 'td:not([align])', 'textAlign')).toBe('start');
+  });
+
+  test('task list checkboxes replace the bullet', async ({ page }) => {
+    await page.goto(MARKDOWN);
+    expect(await style(page, '.task-list-item', 'listStyleType')).toBe('none');
+    expect(await style(page, 'li:has(> input:not([class]))', 'listStyleType')).toBe('none');
+    expect(await style(page, 'li:not(:has(input))', 'listStyleType')).toBe('disc');
+  });
+
+  test('footnotes are set apart in smaller text', async ({ page }) => {
+    await page.goto(MARKDOWN);
+    expect(await style(page, '[data-footnotes]', 'fontSize')).toBe('14px');
+    expect(await style(page, '[data-footnotes]', 'marginTop')).toBe('32px');
+  });
+
+  test('long words wrap', async ({ page }) => {
+    await page.goto(MARKDOWN);
+    expect(await style(page, 'p', 'overflowWrap')).toBe('break-word');
+  });
+});
+
 test.describe('accessibility', () => {
   // WCAG AA asks for 4.5:1 between normal-size text and its background.
   const AA = 4.5;
@@ -366,4 +424,11 @@ test.describe('visual', () => {
       await expect(page).toHaveScreenshot(`demo-${scheme}.png`, { fullPage: true });
     });
   }
+
+  test('markdown output on a phone', async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 360, height: 800 });
+    await page.goto(fileUrl('tests/fixtures/markdown.html'));
+    await expect(page).toHaveScreenshot('markdown-phone.png', { fullPage: true });
+  });
 });

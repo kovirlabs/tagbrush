@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Markdown output fixture</title>
+    <link rel="stylesheet" href="../../tagbrush.css">
+</head>
+<body>
+<!-- Typical Markdown→HTML output, as produced by GitHub-flavored Markdown
+     (cmark-gfm, markdown-it, marked), Pandoc and Hugo. Content sits directly
+     in <body> with no <main>, the way a converted README usually does. -->
+<h1 id="project-title">Project title</h1>
+<p>A short introduction with <em>emphasis</em>, <strong>bold text</strong>, <code>inline code</code>, a <a href="https://example.com">link</a>, and a footnote reference.<sup><a href="#fn-1" id="fnref-1" data-footnote-ref>1</a></sup></p>
+<p>A long unbroken URL should wrap instead of widening the page: <a href="https://example.com/a/really/long/path/that/goes/on/and/on/without/any/spaces/at/all/index.html">https://example.com/a/really/long/path/that/goes/on/and/on/without/any/spaces/at/all/index.html</a></p>
+
+<h2 id="installation">Installation</h2>
+<p>Install it with npm:</p>
+<pre><code class="language-sh">npm install example-package
+</code></pre>
+<p>Or with a highlighted block, the way Hugo renders it:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="kr">import</span> <span class="nx">thing</span> <span class="kr">from</span> <span class="s1">'example-package'</span><span class="p">;</span>
+</span></span></code></pre></div>
+
+<h2 id="features">Features</h2>
+<ul>
+<li>Tight list item</li>
+<li>Item with a nested list
+<ul>
+<li>Nested item</li>
+<li>Another nested item</li>
+</ul>
+</li>
+<li>Last item</li>
+</ul>
+<ol>
+<li>
+<p>Loose list item with a paragraph.</p>
+</li>
+<li>
+<p>Second loose item.</p>
+<pre><code>code inside a list item
+</code></pre>
+</li>
+</ol>
+
+<h3 id="tasks">Tasks</h3>
+<ul class="contains-task-list">
+<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled checked> Write the docs</li>
+<li class="task-list-item"><input type="checkbox" class="task-list-item-checkbox" disabled> Ship it</li>
+</ul>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Task list without classes (marked, goldmark)</li>
+<li><input disabled="" type="checkbox"> Second task</li>
+</ul>
+
+<h2 id="comparison">Comparison</h2>
+<table>
+<thead>
+<tr><th>Feature</th><th align="center">Basic</th><th align="right">Pro</th></tr>
+</thead>
+<tbody>
+<tr><td>Users</td><td align="center">1</td><td align="right">Unlimited</td></tr>
+<tr><td>Storage</td><td align="center">1 GB</td><td align="right">1 TB</td></tr>
+</tbody>
+</table>
+
+<p>A wide table that can't fit on a phone:</p>
+<table id="wide-table">
+<thead>
+<tr><th>Option</th><th>Type</th><th>Default</th><th>Environment variable</th><th>Description</th><th>Since</th></tr>
+</thead>
+<tbody>
+<tr><td><code>outputDirectory</code></td><td><code>string</code></td><td><code>"./dist/output"</code></td><td><code>EXAMPLE_OUTPUT_DIRECTORY</code></td><td>Where generated files are written</td><td>1.0.0</td></tr>
+<tr><td><code>concurrency</code></td><td><code>number</code></td><td><code>4</code></td><td><code>EXAMPLE_CONCURRENCY</code></td><td>How many jobs run at once</td><td>1.2.0</td></tr>
+</tbody>
+</table>
+
+<h2 id="images">Images</h2>
+<p><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1600' height='400' viewBox='0 0 1600 400'%3E%3Crect width='1600' height='400' fill='%2394a3b8'/%3E%3C/svg%3E" alt="A wide placeholder image"></p>
+<p>Text with an inline <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16'%3E%3Ccircle cx='8' cy='8' r='8' fill='%2394a3b8'/%3E%3C/svg%3E" alt="icon"> icon.</p>
+
+<h2 id="quotes">Quotes</h2>
+<blockquote>
+<p>A quote.</p>
+<blockquote>
+<p>A nested quote.</p>
+</blockquote>
+</blockquote>
+
+<hr>
+
+<h2 id="definitions">Definitions</h2>
+<dl>
+<dt>Term</dt>
+<dd>Definition from Pandoc or a Markdown extension.</dd>
+</dl>
+
+<section class="footnotes" data-footnotes>
+<h2 id="footnote-label" class="visually-hidden">Footnotes</h2>
+<ol>
+<li id="fn-1">
+<p>The footnote text. <a href="#fnref-1" data-footnote-backref aria-label="Back to reference 1">↩</a></p>
+</li>
+</ol>
+</section>
+</body>
+</html>

@@ -39,9 +39,9 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 ## Chunk 3: Markdown and starter template
 
-- [ ] Test page of typical Markdown→HTML output (headings with ids, nested and task lists, tables without `<figure>`, code blocks with language classes, footnotes, images in paragraphs), with assertions and a screenshot.
-- [ ] Fix whatever that page shows up, for example wide Markdown tables that can't be wrapped in `<figure>`, and task-list checkboxes.
-- [ ] A starter `starter.html` (nav, main, form, footer) that people can copy, linked from the README.
+- [x] Test page of typical Markdown→HTML output (headings with ids, nested and task lists, tables without `<figure>`, code blocks with language classes, footnotes, images in paragraphs), with assertions and a screenshot.
+- [x] Fix whatever that page shows up: long URLs widened the page, wide tables overflowed (now they scroll inside themselves, like GitHub), `align` on cells was ignored, task lists showed a bullet and a checkbox, and footnotes weren't set apart.
+- [x] A starter `starter.html` (nav, main, form, footer) that people can copy, linked from the README.
 
 ## Chunk 4: Semantic components, no classes
 
