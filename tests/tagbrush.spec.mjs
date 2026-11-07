@@ -7,6 +7,13 @@ import { check } from '../bin/tagbrush.mjs';
 const fileUrl = (path) => pathToFileURL(resolve(path)).href;
 const DEMO = fileUrl('index.html');
 
+// The demo links the Tag family brand (kovirlabs.github.io/tagstack/brand.css
+// and mark.svg) for its family bar and footer. Leave it out, so these tests
+// see TagBrush.css alone and don't change when the brand does.
+test.beforeEach(async ({ page }) => {
+  await page.route(/kovirlabs\.github\.io\/tagstack\//, (route) => route.abort());
+});
+
 // Resolves a color expression such as 'var(--color-surface)' the way the
 // browser computes it inside `within` (also inside its shadow root, if any).
 const token = (page, value, within = 'body') =>
@@ -57,8 +64,8 @@ test.describe('cascade and defaults', () => {
 
   test('nav lists, current page, and menu toolbars', async ({ page }) => {
     expect(await style(page, 'nav[aria-label="Example site"] ul', 'display')).toBe('flex');
-    expect(await style(page, 'nav [aria-current="page"]', 'fontWeight')).toBe('600');
-    expect(await style(page, 'nav [aria-current="page"]', 'color')).toBe(await token(page, 'var(--color-text)'));
+    expect(await style(page, 'nav[aria-label="Example site"] [aria-current="page"]', 'fontWeight')).toBe('600');
+    expect(await style(page, 'nav[aria-label="Example site"] [aria-current="page"]', 'color')).toBe(await token(page, 'var(--color-text)'));
     expect(await style(page, '#nav-demo menu', 'display')).toBe('flex');
     expect(await style(page, '#nav-demo menu', 'listStyleType')).toBe('none');
   });

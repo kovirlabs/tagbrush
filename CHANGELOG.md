@@ -2,6 +2,12 @@
 
 All notable changes to TagBrush.css are listed here. This project follows [Semantic Versioning](https://semver.org/): variable names and the selectors you can rely on only change in a major release.
 
+## Unreleased
+
+### Docs
+
+- The demo page has the Tag family bar and footer, in the family brand (kovirlabs.github.io/tagstack/brand.css). The demo itself keeps TagBrush.css's default look. Tests leave the brand out, so they check TagBrush.css alone.
+
 ## 1.2.0 (2026-11-07)
 
 Model output in chat apps gets its own styles, and the "plain" gap the benchmarks found is closed: status badges, icons, heroes with a picture, full-height sidebars, and footer columns that agents used to build with custom CSS now come from plain HTML.
