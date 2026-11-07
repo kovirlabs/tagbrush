@@ -78,7 +78,7 @@ Only when needed: `.container` (center content inside a full-width element), `.g
 
 ## Chat and AI output
 
-For Markdown a model writes, shown in a chat window: wrap each rendered message in an element with the scoped build's class, `<div class="tagbrush" data-density="compact">…</div>`, and load `https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.scoped.min.css` instead of the full stylesheet, so only messages are styled.
+For Markdown a model writes, shown in a chat window: wrap each rendered message in an element with the scoped build's class, `<div class="tagbrush" data-density="compact">…</div>`, and load `https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.scoped.min.css` instead of the full stylesheet, so only messages are styled. A page that is only a conversation (a shared transcript or an export) is an ordinary page instead: load the full stylesheet as usual and put `data-density="compact"` on `<html>`.
 
 - `data-density="compact"` on any element (a message, or `<html>`) tightens spacing and makes headings smaller for a chat column. The last element of a compact message has no space below it.
 - A model's reasoning, collapsed and muted: `<details data-reasoning><summary>Thought for 4 seconds</summary><p>…</p></details>`.

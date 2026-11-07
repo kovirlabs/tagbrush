@@ -2,6 +2,11 @@
 
 All notable changes to TagBrush.css are listed here. This project follows [Semantic Versioning](https://semver.org/): variable names and the selectors you can rely on only change in a major release.
 
+## Unreleased
+
+### Docs
+- `llms.txt`: a page that is only a conversation (a shared transcript) uses the full stylesheet with `data-density="compact"` on `<html>`; the scoped build is for messages inside a chat app. Found by the Tag family agent evaluation.
+
 ## 1.2.0 (2026-11-07)
 
 Model output in chat apps gets its own styles, and the "plain" gap the benchmarks found is closed: status badges, icons, heroes with a picture, full-height sidebars, and footer columns that agents used to build with custom CSS now come from plain HTML.
