@@ -740,9 +740,10 @@ test.describe('llms.txt contract', () => {
     expect(unstyled, 'snippets in llms.txt that TagBrush.css does not style').toEqual([]);
   });
 
-  test('every class llms.txt mentions exists in tagbrush.css', async () => {
+  test('every class llms.txt mentions exists in tagbrush.css (or, for class="tagbrush", the scoped build)', async () => {
     const text = await guideText();
-    const source = await css();
+    const { readFileSync } = await import('node:fs');
+    const source = (await css()) + readFileSync('tagbrush.scoped.css', 'utf8');
     const classes = new Set([
       ...[...text.matchAll(/class="([^"]+)"/g)].flatMap((m) => m[1].split(/\s+/)),
       ...[...text.matchAll(/`\.([a-z][a-z-]*)`/g)].map((m) => m[1]),
@@ -1058,6 +1059,84 @@ test.describe('polish: badges, icons, hero, sidebar, footer', () => {
     const copyright = await rect(page, '#copyright');
     expect(copyright.top).toBeGreaterThan(tops[0]);
   });
+});
+
+test.describe('chat and AI output', () => {
+  // A chat message styled by the scoped build, with data-density="compact".
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 900 });
+    await page.goto(fileUrl('tests/fixtures/chat.html'));
+  });
+
+  test('compact density tightens spacing and headings, only where it is set', async ({ page }) => {
+    const px = async (selector, prop) => parseFloat(await style(page, selector, prop));
+    expect(await px('#h1', 'fontSize')).toBe(24);
+    expect(await px('#normal-h1', 'fontSize')).toBeGreaterThan(24);
+    expect(await px('#message > p', 'marginBottom')).toBe(12);
+    expect(await px('#normal p', 'marginBottom')).toBe(16); // a normal message keeps the usual spacing, even on its last element
+    expect(await px('#table th', 'paddingTop')).toBe(6);
+  });
+
+  test('the last element of a compact message adds no space below it', async ({ page }) => {
+    expect(await style(page, '#sources', 'marginBottom')).toBe('0px');
+  });
+
+  test('a reasoning block is muted, smaller, and marked by a left rule', async ({ page }) => {
+    for (const selector of ['#reasoning', '#owui']) {
+      expect(await style(page, selector, 'borderLeftWidth')).toBe('2px');
+      expect(await style(page, selector, 'borderTopWidth')).toBe('0px');
+      expect(await style(page, selector, 'color')).toBe(await token(page, 'var(--color-text-muted)', '#message'));
+    }
+  });
+
+  test('a citation is a chip, and Pandoc task lists lose their bullets', async ({ page }) => {
+    expect(await style(page, '#cite', 'borderTopLeftRadius')).not.toBe('0px');
+    expect(await style(page, '#cite', 'backgroundColor')).toBe(await token(page, 'var(--color-surface)', '#message'));
+    expect(await style(page, '#cite', 'textDecorationLine')).toBe('none');
+    expect(await style(page, '.task-list li', 'listStyleType')).toBe('none');
+  });
+
+  test('GitHub alerts and admonitions are callouts colored by kind', async ({ page }) => {
+    expect(await style(page, '#alert', 'borderLeftColor')).toBe(await token(page, 'var(--color-warning)', '#message'));
+    expect(await style(page, '#admonition', 'borderLeftColor')).toBe(await token(page, 'var(--color-success)', '#message'));
+    expect(await style(page, '#alert > p:first-child', 'fontWeight')).toBe('600');
+    expect(await style(page, '#alert > p:first-child', 'marginBottom')).toBe('3px');
+  });
+
+  test('nothing widens a phone-width column: long code wraps, tables and math scroll', async ({ page }) => {
+    expect(await page.locator('#long-code').evaluate((el) => el.getClientRects().length)).toBeGreaterThan(1); // wrapped onto more lines
+    expect(await style(page, '#table', 'overflowX')).toBe('auto');
+    expect(await style(page, '#math', 'overflowX')).toBe('auto');
+    // KaTeX and MathJax wrap block math in an element that scrolls in every browser.
+    // (Firefox and Safari don't scroll a bare <math> element, so the fixture's MathML is short.)
+    expect(await style(page, '#katex', 'overflowX')).toBe('auto');
+    expect(await page.locator('#katex').evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(true);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBe(0);
+  });
+
+  test('a code block that has only just opened already has a line of height', async ({ page }) => {
+    const height = await page.locator('#empty-pre').evaluate((el) => el.getBoundingClientRect().height);
+    expect(height).toBeGreaterThan(30);
+  });
+
+  for (const scheme of ['light', 'dark']) {
+    test(`chat text meets WCAG AA contrast, ${scheme}`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme: scheme });
+      await page.locator('#reasoning summary').click();
+      const failing = await page.evaluate(() => {
+        const ctx = document.createElement('canvas').getContext('2d', { willReadFrequently: true });
+        const rgba = (color) => { ctx.clearRect(0, 0, 1, 1); ctx.fillStyle = color; ctx.fillRect(0, 0, 1, 1); const [r, g, b, a] = ctx.getImageData(0, 0, 1, 1).data; return [r, g, b, a / 255]; };
+        const over = (top, bottom) => top.slice(0, 3).map((c, i) => c * top[3] + bottom[i] * (1 - top[3])).concat(1);
+        const backdrop = (el) => { const layers = []; for (let n = el; n; n = n.parentElement) { const bg = rgba(getComputedStyle(n).backgroundColor); if (bg[3] > 0) layers.push(bg); if (bg[3] === 1) break; } return layers.reduceRight((below, layer) => over(layer, below), [255, 255, 255, 1]); };
+        const lum = ([r, g, b]) => { const f = (c) => ((c /= 255) <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4); return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
+        return [...document.querySelectorAll('#message *')]
+          .filter((el) => [...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim()) && el.checkVisibility() && !el.closest('math, :disabled'))
+          .map((el) => { const bg = backdrop(el); const fg = over(rgba(getComputedStyle(el).color), bg); const [hi, lo] = [lum(fg), lum(bg)].sort((a, b) => b - a); return { el: el.localName + (el.id ? `#${el.id}` : ''), ratio: Math.round(((hi + 0.05) / (lo + 0.05)) * 100) / 100 }; })
+          .filter((r) => r.ratio < 4.5);
+      });
+      expect(failing).toEqual([]);
+    });
+  }
 });
 
 test.describe('debug mode', () => {

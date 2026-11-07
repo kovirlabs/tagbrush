@@ -123,13 +123,13 @@ Goal: `<body><header>…</header><main>…</main><footer>…</footer></body>` lo
 
 Chat interfaces render a model's Markdown as HTML and need CSS for it. TagBrush.css already styles most of it; these make it a natural fit inside a chat window:
 
-- [ ] Compact density for a chat column (tighter spacing and type, set with one attribute or variable), usable with the scoped build inside each message.
-- [ ] Stable layout while text streams in: no jumps when a half-finished table, list, or code block arrives.
-- [ ] A collapsible reasoning block: `<details>` holding a model's thinking.
-- [ ] Citations and sources: footnote-style references and a sources list at the end of an answer.
-- [ ] Math: KaTeX and MathML output.
-- [ ] Wide tables and long code lines that stay readable in a narrow column.
-- [ ] Integration snippets for common chat stacks (a Markdown renderer plus the scoped build).
+- [x] Compact density for a chat column (tighter spacing and type, set with one attribute or variable), usable with the scoped build inside each message.
+- [x] Stable layout while text streams in: no jumps when a half-finished table, list, or code block arrives.
+- [x] A collapsible reasoning block: `<details>` holding a model's thinking.
+- [x] Citations and sources: footnote-style references and a sources list at the end of an answer.
+- [x] Math: KaTeX and MathML output.
+- [x] Wide tables and long code lines that stay readable in a narrow column.
+- [x] Integration snippets for common chat stacks (a Markdown renderer plus the scoped build).
 
 ## Chunk 20: Discovery by AI tools
 

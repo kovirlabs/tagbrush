@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chat output</title>
+<link rel="stylesheet" href="../../tagbrush.scoped.css">
+</head>
+<body>
+<p id="outside">Outside the message: page text keeps the browser's defaults.</p>
+<div class="tagbrush" data-density="compact" id="message">
+  <details data-reasoning id="reasoning">
+    <summary>Thought for 4 seconds</summary>
+    <p>The user wants the population of Paris and a source. The 2023 census is the latest official figure.</p>
+  </details>
+  <details type="reasoning" id="owui"><summary>Thought for 2 seconds</summary><p>Open WebUI's markup.</p></details>
+  <h1 id="h1">Paris at a glance</h1>
+  <p>Paris has about 2.1 million residents in the city proper.<sup><a href="#source-1" id="cite">1</a></sup> Install the client with <code id="long-code">npm install --save-dev @example/an-extremely-long-package-name-that-keeps-going-and-going</code>.</p>
+  <h2>Steps</h2>
+  <ul class="task-list">
+    <li><label><input type="checkbox" checked disabled>Book a hotel</label></li>
+    <li><label><input type="checkbox" disabled>Buy a museum pass</label></li>
+  </ul>
+  <div class="markdown-alert markdown-alert-warning" id="alert"><p class="markdown-alert-title">Warning</p><p>Museums close on Tuesdays.</p></div>
+  <div class="admonition tip" id="admonition"><p class="admonition-title">Tip</p><p>Buy tickets online.</p></div>
+  <table id="table"><thead><tr><th>Arrondissement</th><th>Population</th><th>Note</th></tr></thead><tbody><tr><td>1st</td><td>15,919</td><td>https://example.com/a/very/long/url/that/does/not/stop/anywhere/soon</td></tr></tbody></table>
+  <math display="block" id="math"><mrow><mi>x</mi><mo>=</mo><mfrac><mrow><mo>−</mo><mi>b</mi><mo>±</mo><msqrt><mrow><msup><mi>b</mi><mn>2</mn></msup><mo>−</mo><mn>4</mn><mi>a</mi><mi>c</mi></mrow></msqrt></mrow><mrow><mn>2</mn><mi>a</mi></mrow></mfrac></mrow></math>
+  <span class="katex-display" id="katex"><span class="katex" style="white-space: nowrap">x = a + b + c + d + e + f + g + h + i + j + k + l + m + n + o + p + q + r + s + t + u + v + w + x + y + z + a + b + c + d + e</span></span>
+  <pre id="empty-pre"><code></code></pre>
+  <footer id="sources">
+    <h2>Sources</h2>
+    <ol><li id="source-1"><a href="https://www.insee.fr/">INSEE, 2023 census</a></li></ol>
+  </footer>
+</div>
+<div class="tagbrush" id="normal"><h1 id="normal-h1">A normal message</h1><p>Without data-density.</p></div>
+</body>
+</html>

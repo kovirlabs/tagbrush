@@ -386,6 +386,7 @@
     margin-bottom: var(--spacing-md);
     padding: var(--spacing-md);
     overflow-x: auto;
+    min-block-size: calc(1lh + 2 * var(--spacing-md)); /* no jump when a streamed code block starts empty */
   }
 
   pre code {
@@ -1113,6 +1114,15 @@
     margin-inline: -1.5em 0.5em;
   }
 
+  /* Pandoc wraps the checkbox and its text in a <label> */
+  :where(li:has(> label:first-child > input[type="checkbox"]:first-child)) {
+    list-style-type: none;
+  }
+
+  :where(li > label:first-child > input[type="checkbox"]:first-child) {
+    margin-inline: -1.5em 0.5em;
+  }
+
   /* Toggle switch: <input type="checkbox" role="switch"> */
   :where(input[type="checkbox"][role="switch"]) {
     flex-shrink: 0;
@@ -1562,6 +1572,108 @@
   }
 
   /* ==========================================================================
+     Chat and AI Output
+     --------------------------------------------------------------------------
+     Markdown a model writes, rendered as HTML in a chat window. Works on a
+     whole page, or with the scoped build inside each message:
+     <div class="tagbrush" data-density="compact">…rendered Markdown…</div>
+     ========================================================================== */
+
+  /* Compact density: tighter spacing and smaller headings for a chat column.
+     The spacing scale is restated so it follows the smaller --spacing here.
+     Not in :where(), so it beats :host (or the scoped build's :scope) when
+     both are on the same element, as [data-theme] does. */
+  :host([data-density="compact"]), [data-density="compact"] {
+    --spacing: 0.75rem;
+    --spacing-xs: calc(var(--spacing) * 0.25);
+    --spacing-sm: calc(var(--spacing) * 0.5);
+    --spacing-md: var(--spacing);
+    --spacing-lg: calc(var(--spacing) * 1.5);
+    --spacing-xl: calc(var(--spacing) * 2);
+    --container-padding: var(--spacing-md);
+    --grid-gap: var(--spacing-lg);
+    --button-padding: var(--spacing-sm) var(--spacing-md);
+    --input-padding: var(--spacing-sm) var(--spacing-md);
+    --card-padding: var(--spacing-lg);
+    --font-size-h1: 1.5rem;
+    --font-size-h2: 1.3rem;
+    --font-size-h3: 1.15rem;
+    --font-size-h4: 1rem;
+    --font-size-h5: 1rem;
+    --font-size-h6: 1rem;
+    --line-height: 1.55;
+    line-height: var(--line-height);
+  }
+
+  /* While a reply streams in, the last element adds no space below it, so
+     the message doesn't grow and shrink as new blocks arrive */
+  :host([data-density="compact"]) > :last-child, :where([data-density="compact"]) > :last-child {
+    margin-bottom: 0;
+  }
+
+  /* A model's reasoning, collapsed: <details data-reasoning><summary>Thought
+     for 4 seconds</summary>…</details>. Open WebUI's type="reasoning" too. */
+  details:where([data-reasoning], [type="reasoning"]) {
+    padding: 0 0 0 var(--spacing-md);
+    border-width: 0 0 0 2px;
+    border-radius: 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+  }
+
+  details:where([data-reasoning], [type="reasoning"]) > summary {
+    font-weight: 400;
+  }
+
+  /* Citations: a reference to a source, <sup><a href="#source-1">1</a></sup>,
+     is a small chip. (Markdown footnote references look the same.) */
+  :where(sup > a) {
+    padding: 0.1em 0.45em; /* inline padding, so the line doesn't get taller */
+    border-radius: 1em;
+    background-color: var(--color-surface);
+    text-decoration: none;
+  }
+
+  /* Math: KaTeX and MathJax block math scroll sideways in a narrow column
+     instead of widening it. Block MathML does too in Chromium; Firefox and
+     Safari don't scroll a <math> element yet. */
+  :where(.katex-display, mjx-container[display="true"], math[display="block"]) {
+    max-width: 100%;
+    margin-block: 0 var(--spacing-md);
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+
+  :where(.katex-display, mjx-container[display="true"]) {
+    display: block;
+  }
+
+  /* Admonitions (Python-Markdown, MkDocs: !!! note) and GitHub alerts
+     (> [!NOTE]) read as callouts, colored by their kind */
+  :where(.admonition, .markdown-alert) {
+    --tone: var(--color-primary);
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-md);
+    border-left: 4px solid var(--tone);
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    background-color: color-mix(in oklab, var(--tone) 12%, var(--color-background));
+  }
+
+  :where(.admonition:is(.tip, .hint, .success, .check, .done), .markdown-alert-tip) { --tone: var(--color-success); }
+  :where(.admonition:is(.warning, .caution, .attention), .markdown-alert-warning) { --tone: var(--color-warning); }
+  :where(.admonition:is(.danger, .error, .failure, .bug), .markdown-alert-caution) { --tone: var(--color-error); }
+
+  /* Element-level specificity so the title's margin beats the p rule */
+  p:where(.admonition-title, .markdown-alert-title), :where(.admonition-title, .markdown-alert-title) {
+    margin-bottom: var(--spacing-xs);
+    font-weight: 600;
+  }
+
+  :where(.admonition, .markdown-alert) > :last-child {
+    margin-bottom: 0;
+  }
+
+  /* ==========================================================================
      Debug Mode
      --------------------------------------------------------------------------
      <html data-tagbrush="debug"> (or the attribute on any element) outlines
@@ -1585,7 +1697,7 @@
   }
 
   :where([data-tagbrush~="debug"]) :where(
-    [class]:not([class=""], .button, .secondary, .outline, .container, .grid, .card, .striped, .visually-hidden, pre *, pre, .highlight, .highlight *, [data-footnotes] *, .footnotes *),
+    [class]:not([class=""], .button, .secondary, .outline, .container, .grid, .card, .striped, .visually-hidden, pre *, pre, .highlight, .highlight *, [data-footnotes] *, .footnotes *, .admonition, .admonition *, .markdown-alert, .markdown-alert *, .katex-display, .katex-display *),
     [style]:not([style^="--"], [style*="; --"], [style*=";--"])
   ) {
     outline: 2px dotted var(--color-warning) !important;

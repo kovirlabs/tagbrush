@@ -77,6 +77,16 @@ Add this to `<head>`:
 
 Only when needed: `.container` (center content inside a full-width element), `.grid` (equal columns for any children), `.card` (a boxed panel), `.striped`, `.visually-hidden`, and the button classes above.
 
+## Chat and AI output
+
+For Markdown a model writes, shown in a chat window: wrap each rendered message in an element with the scoped build's class, `<div class="tagbrush" data-density="compact">…</div>`, and load `https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.scoped.min.css` instead of the full stylesheet, so only messages are styled.
+
+- `data-density="compact"` on any element (a message, or `<html>`) tightens spacing and makes headings smaller for a chat column. The last element of a compact message has no space below it.
+- A model's reasoning, collapsed and muted: `<details data-reasoning><summary>Thought for 4 seconds</summary><p>…</p></details>`.
+- Citations: `<p>Paris has 2.1 million residents.<sup><a href="#source-1">1</a></sup></p>`, with the sources at the end of the answer: `<footer><h2>Sources</h2><ol><li id="source-1"><a href="https://www.insee.fr/">INSEE, 2023 census</a></li></ol></footer>`.
+- Callouts that Markdown tools write (GitHub alerts such as `> [!WARNING]`, MkDocs admonitions such as `!!! tip`) are styled as callouts colored by their kind; nothing to add.
+- Wide tables, code blocks, and KaTeX or MathJax block math scroll sideways instead of widening a narrow column.
+
 ## Theming
 
 Override variables in a `<style>` block. Colors take a light and a dark value with `light-dark()`:

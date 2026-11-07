@@ -152,6 +152,26 @@ npx degit kovirlabs/tagbrush/ai/claude/tagbrush .claude/skills/tagbrush
 
 The tests render every snippet in `llms.txt`, so the instructions agents follow always match what TagBrush.css actually styles.
 
+### Chat apps and AI output
+
+Chat interfaces render a model's Markdown as HTML. Load the scoped build and wrap each message, so only messages are styled and the rest of the app is untouched:
+
+```html
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.scoped.min.css">
+
+<div class="tagbrush" data-density="compact">
+  <!-- the rendered Markdown of one message -->
+</div>
+```
+
+With [marked](https://marked.js.org/) or [markdown-it](https://github.com/markdown-it/markdown-it), that's `message.innerHTML = marked.parse(text)` on that element (sanitize model output first, for example with DOMPurify, as with any HTML you didn't write). In React, render the same element with the HTML inside it. Inside a Web Component, use `tagbrush.shadow.css` and put `data-density="compact"` on the host element.
+
+- **`data-density="compact"`** tightens spacing and shrinks headings for a chat column. While a reply streams in, the message's last element adds no space below it and a code block that has just opened already has a line's height, so the message doesn't jump.
+- **Reasoning:** `<details data-reasoning><summary>Thought for 4 seconds</summary>…</details>` is a muted, collapsible block. Open WebUI's `<details type="reasoning">` works too.
+- **Citations:** `<sup><a href="#source-1">1</a></sup>` is a small chip; put the sources in a `<footer>` with an `<ol>` at the end of the answer.
+- **Callouts** from GitHub alerts (`> [!NOTE]`, `[!TIP]`, `[!WARNING]`, `[!CAUTION]`) and Python-Markdown/MkDocs admonitions are styled and colored by kind.
+- **Math:** KaTeX and MathJax block math scroll sideways in a narrow column (they still need their own stylesheets for the formulas themselves). Block MathML scrolls in Chromium; Firefox and Safari don't scroll a `<math>` element yet, so prefer KaTeX or MathJax output for long formulas.
+
 ### Debug mode
 
 Add `data-tagbrush="debug"` to `<html>` (or any element) to outline common mistakes, for you or for an agent that takes screenshots:
