@@ -2,9 +2,11 @@
 
 All notable changes to TagBrush.css are listed here. This project follows [Semantic Versioning](https://semver.org/): variable names and the selectors you can rely on only change in a major release.
 
-## Unreleased
+## 1.2.0 (2026-11-07)
 
-Closes the "plain" gap the benchmarks found: designs that agents used to build with custom CSS now come from plain HTML.
+Model output in chat apps gets its own styles, and the "plain" gap the benchmarks found is closed: status badges, icons, heroes with a picture, full-height sidebars, and footer columns that agents used to build with custom CSS now come from plain HTML.
+
+**Upgrading from 1.1:** no classes, variables, or selectors were removed, but a few existing pages change how they look: page heroes (an `<hgroup>` in the page header) get a soft tint of the primary color (set `--hero-background: none` to turn it off), an inline `<svg>` without `width` or `height` inside buttons, links, headings, and similar text is now sized to the text, and a page footer with two or more `<nav>`s becomes columns.
 
 ### Added
 - Chat and AI output (roadmap chunk 19): `data-density="compact"` for a chat column (also on the `class="tagbrush"` element of the scoped build and on a Shadow DOM host); a reasoning block, `<details data-reasoning>` (and Open WebUI's `type="reasoning"`); citation chips for `<sup><a>`; GitHub alerts and Python-Markdown/MkDocs admonitions as colored callouts; KaTeX and MathJax block math scroll in a narrow column (block MathML too, in Chromium); a code block that has just opened keeps a line's height while a reply streams in.

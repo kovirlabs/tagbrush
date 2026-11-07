@@ -4,7 +4,7 @@
 
 **Make plain HTML look finished. One `<link>`, no classes.**
 
-You know HTML and want a page that looks good now: a landing page, docs, a blog, a Markdown export, an internal tool. Add one stylesheet and write ordinary HTML. The page is laid out, the forms and tables are styled, dark mode follows the system, and any brand color you pick stays readable. No classes to learn, no build step, no JavaScript, about 8 KB gzipped.
+You know HTML and want a page that looks good now: a landing page, docs, a blog, a Markdown export, an internal tool. Add one stylesheet and write ordinary HTML. The page is laid out, the forms and tables are styled, dark mode follows the system, and any brand color you pick stays readable. No classes to learn, no build step, no JavaScript, about 8.5 KB gzipped.
 
 When you do want to customize, a few CSS variables re-theme everything, and any CSS you write wins without `!important`. The same file works in plain HTML, static site generators, and every major framework.
 
@@ -72,7 +72,7 @@ Or just [download `tagbrush.css`](tagbrush.css) and host it yourself.
 - **Themeable** – colors, fonts, type scale, spacing, and radius are semantic CSS variables, and one variable re-themes everything. The [theme builder](https://kovirlabs.github.io/tagbrush/#theming) writes the CSS for you.
 - **Accessible** – WCAG AA contrast, visible keyboard focus rings, `prefers-reduced-motion`, forced-colors support, and print styles.
 - **Small helpers when you want them** – `.grid`, `.card`, `.container`, and `role="group"` cover the layouts most sites need.
-- **No build step, no dependencies** – plain CSS you can link, copy, or import. About 8 KB minified and gzipped.
+- **No build step, no dependencies** – plain CSS you can link, copy, or import. About 8.5 KB minified and gzipped.
 - **Works with any framework** – import it once in your root layout. [Setup guides](frameworks/README.md) cover Astro, Next.js, React, Vue, Nuxt, Angular, SvelteKit, Solid, Web Components, and Tailwind.
 
 ## How it compares
@@ -81,7 +81,7 @@ TagBrush.css sits in a family of drop-in stylesheets for semantic HTML. [Pico CS
 
 | | TagBrush.css | Blades CSS (Pico fork) | Oat | Simple.css | Water.css |
 |---|---|---|---|---|---|
-| Size (minified, gzipped) | 8.1 KB | 12.1 KB | 7.1 KB CSS + 4.0 KB JS | 2.7 KB | 3.5 KB |
+| Size (minified, gzipped) | 8.5 KB | 12.1 KB | 7.1 KB CSS + 4.0 KB JS | 2.7 KB | 3.5 KB |
 | Actively maintained | Yes | Yes | Yes | Yes | No commits since early 2024 |
 | JavaScript needed | No | No | For tabs, dropdowns, and toasts | No | No |
 | Your CSS wins without `!important` (`@layer`) | Yes | No | Yes | No | No |
