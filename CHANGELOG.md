@@ -7,6 +7,8 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 Closes the "plain" gap the benchmarks found: designs that agents used to build with custom CSS now come from plain HTML.
 
 ### Added
+- Chat and AI output (roadmap chunk 19): `data-density="compact"` for a chat column (also on the `class="tagbrush"` element of the scoped build and on a Shadow DOM host); a reasoning block, `<details data-reasoning>` (and Open WebUI's `type="reasoning"`); citation chips for `<sup><a>`; GitHub alerts and Python-Markdown/MkDocs admonitions as colored callouts; block MathML, KaTeX, and MathJax scroll in a narrow column; a code block that has just opened keeps a line's height while a reply streams in.
+- Pandoc task lists (the checkbox inside a `<label>`) lose their bullet, like other Markdown task lists.
 - `llms.txt` links to the Tag family guide (https://kovirlabs.github.io/tagstack/llms.txt), which explains how TagBrush.css, TagAction, and TagCheck fit together.
 - Status badges: `<mark data-tone="success">` (also `warning`, `error`, `info`, `neutral`) is a tinted pill whose text meets 4.5:1 in both schemes. Any color works with `style="--tone: #db2777"`. `data-tone` also colors an `<aside>` callout in an article.
 - Icons: an inline `<svg>` without `width` or `height` in a button, link, heading, label, list item, table cell, or badge is sized to the text and lined up with it; buttons put a gap between icon and label. An icon first in a card of an article grid sits on a tinted tile.

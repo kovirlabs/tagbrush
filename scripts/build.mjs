@@ -63,6 +63,11 @@ scoped = replaceExactly(scoped, '\n  html {', '\n  :scope {', 1);
 scoped = replaceExactly(scoped, '\n    html {', '\n    :scope {', 1);
 scoped = replaceExactly(scoped, '\n  body {', '\n  :scope {', 1);
 scoped = replaceExactly(scoped, 'body > header, body > main, body > footer', ':scope > header, :scope > main, :scope > footer', 1);
+// Inside @scope, a plain selector only matches below the scope root, so
+// data-density set on the class="tagbrush" element itself needs :scope too.
+scoped = replaceExactly(scoped, '\n  [data-density="compact"] {', '\n  :scope[data-density="compact"], [data-density="compact"] {', 1);
+scoped = replaceExactly(scoped, '\n  :where([data-density="compact"]) > :last-child {',
+  '\n  :scope:where([data-density="compact"]) > :last-child, :where([data-density="compact"]) > :last-child {', 1);
 scoped = scoped.replace(
   /^\/\*\n \* TagBrush\.css/,
   '/*\n * SCOPED BUILD: styles apply only inside an element with class="tagbrush".\n' +
@@ -92,6 +97,10 @@ shadow = replaceExactly(shadow,
   '  [data-theme="light"], :host([data-theme="light"]) { color-scheme: light; }\n' +
   '  [data-theme="dark"], :host([data-theme="dark"]) { color-scheme: dark; }\n\n  [data-theme], :host([data-theme]) {',
   1);
+// data-density on the host element (<my-chat data-density="compact">)
+shadow = replaceExactly(shadow, '\n  [data-density="compact"] {', '\n  :host([data-density="compact"]), [data-density="compact"] {', 1);
+shadow = replaceExactly(shadow, '\n  :where([data-density="compact"]) > :last-child {',
+  '\n  :host([data-density="compact"]) > :last-child, :where([data-density="compact"]) > :last-child {', 1);
 shadow = shadow.replace(
   /^\/\*\n \* TagBrush\.css/,
   '/*\n * SHADOW DOM BUILD: for use inside a shadow root (Web Components, Lit, Stencil,\n' +
