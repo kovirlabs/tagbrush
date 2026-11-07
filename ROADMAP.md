@@ -158,6 +158,8 @@ The benchmark (`evals/benchmark/`) showed TagBrush.css pages cost 3–4× less m
 
 - [x] Prepare 1.1.0 with chunks 2–18 (version bump, dated CHANGELOG, comparison and size claims updated).
 - [x] Publish: merge the release PR, `npm publish` (maintainer, two-factor), tag `v1.1.0`, GitHub release. Published 2026-11-05.
+- [x] Prepare 1.2.0 with chunks 19 and 21 (version bump, dated CHANGELOG, size claims updated).
+- [ ] Publish: merge the release PR, `npm publish` (maintainer, two-factor), tag `v1.2.0`, GitHub release. Until then `tagbrush@1` on the CDN serves 1.1.0, so the chat-output styles and badges in `llms.txt` don't work for agents yet.
 
 ## Open questions
 
