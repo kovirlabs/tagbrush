@@ -5,8 +5,7 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ## Unreleased
 
 ### Docs
-
-- The demo page has the Tag family bar and footer, in the family brand (kovirlabs.github.io/tagstack/brand.css). The demo itself keeps TagBrush.css's default look. Tests leave the brand out, so they check TagBrush.css alone.
+- `llms.txt`: a page that is only a conversation (a shared transcript) uses the full stylesheet with `data-density="compact"` on `<html>`; the scoped build is for messages inside a chat app. Found by the Tag family agent evaluation.
 
 ## 1.2.0 (2026-11-07)
 
