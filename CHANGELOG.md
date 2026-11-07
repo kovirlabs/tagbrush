@@ -5,6 +5,7 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ## Unreleased
 
 ### Docs
+- The demo page wears the Tag family's violet like the other family sites, instead of showing TagBrush.css's default blue. The theme builder starts from the violet and has a "Blue (default)" preset for the look you get with no theme; TagBrush.css's own default is unchanged.
 - `llms.txt`: a page that is only a conversation (a shared transcript) uses the full stylesheet with `data-density="compact"` on `<html>`; the scoped build is for messages inside a chat app. Found by the Tag family agent evaluation.
 
 ## 1.2.0 (2026-11-07)
