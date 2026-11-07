@@ -1,17 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-brand="chrome">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TagBrush.css — a tiny, no-build CSS library</title>
     <meta name="description" content="TagBrush.css is a ~8.5 KB gzipped, no-build CSS library that makes plain semantic HTML look clean and modern. Theme it with CSS variables, with dark mode built in. Works with static sites and any framework.">
+    <link rel="icon" href="https://kovirlabs.github.io/tagstack/mark.svg" type="image/svg+xml">
     <link rel="stylesheet" href="tagbrush.css">
+    <!-- The Tag family brand. data-brand="chrome" on <html> limits it to the
+         family bar and the footer, so the demo shows TagBrush.css's defaults. -->
+    <link rel="stylesheet" href="https://kovirlabs.github.io/tagstack/brand.css">
     <style>
         /*
          * Page-specific layout only. Every color, font, radius and spacing
          * value below comes from a TagBrush.css variable — this page is styled
          * by TagBrush.css itself.
          */
+        [data-brand="bar"] { padding-top: var(--spacing-md); }
         .site-nav { padding: var(--spacing-md) 0; border-bottom: var(--border-width) solid var(--color-border); }
         .demo-nav { margin-bottom: var(--spacing-lg); }
         .site-nav .brand { font-family: var(--font-family-mono); font-weight: 600; color: var(--color-text); }
@@ -33,6 +38,17 @@
 </head>
 <body>
     <div class="container">
+
+        <nav aria-label="Tag family" data-brand="bar">
+            <a href="https://kovirlabs.github.io/tagstack/"><img src="https://kovirlabs.github.io/tagstack/mark.svg" alt="" width="24" height="24">Tag family</a>
+            <ul>
+                <li><a href="https://kovirlabs.github.io/tagbrush/" aria-current="page">TagBrush.css</a></li>
+                <li><a href="https://kovirlabs.github.io/tagaction/">TagAction</a></li>
+                <li><a href="https://kovirlabs.github.io/tagcheck/">TagCheck</a></li>
+                <li><a href="https://kovirlabs.github.io/tagkit/">TagKit</a></li>
+                <li><a href="https://github.com/kovirlabs/tagbrush">GitHub</a></li>
+            </ul>
+        </nav>
 
         <nav class="site-nav" aria-label="Main">
             <a class="brand" href="#">&lt;tagbrush&gt;</a>
@@ -587,8 +603,9 @@
             <p>Because TagBrush.css lives in its own cascade layer, any rule you write wins, even a plain <code>button { … }</code> selector. No <code>!important</code> needed.</p>
         </section>
 
-        <footer class="site-footer">
+        <footer class="site-footer" data-brand="footer">
             <p class="muted">TagBrush.css is open source under the Apache 2.0 license. <a href="https://github.com/kovirlabs/tagbrush">Source on GitHub</a>.</p>
+            <p class="muted">Part of the <a href="https://kovirlabs.github.io/tagstack/">Tag family</a> from Kovir Labs.</p>
         </footer>
 
     </div>
