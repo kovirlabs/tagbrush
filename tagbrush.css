@@ -1874,13 +1874,18 @@
     text-decoration: none;
   }
 
-  /* Math: block MathML, KaTeX, and MathJax scroll sideways in a narrow
-     column instead of widening it */
-  :where(math[display="block"], .katex-display, mjx-container[display="true"]) {
+  /* Math: KaTeX and MathJax block math scroll sideways in a narrow column
+     instead of widening it. Block MathML does too in Chromium; Firefox and
+     Safari don't scroll a <math> element yet. */
+  :where(.katex-display, mjx-container[display="true"], math[display="block"]) {
     max-width: 100%;
     margin-block: 0 var(--spacing-md);
     overflow-x: auto;
     overflow-y: hidden;
+  }
+
+  :where(.katex-display, mjx-container[display="true"]) {
+    display: block;
   }
 
   /* Admonitions (Python-Markdown, MkDocs: !!! note) and GitHub alerts

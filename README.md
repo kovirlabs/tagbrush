@@ -170,7 +170,7 @@ With [marked](https://marked.js.org/) or [markdown-it](https://github.com/markdo
 - **Reasoning:** `<details data-reasoning><summary>Thought for 4 seconds</summary>…</details>` is a muted, collapsible block. Open WebUI's `<details type="reasoning">` works too.
 - **Citations:** `<sup><a href="#source-1">1</a></sup>` is a small chip; put the sources in a `<footer>` with an `<ol>` at the end of the answer.
 - **Callouts** from GitHub alerts (`> [!NOTE]`, `[!TIP]`, `[!WARNING]`, `[!CAUTION]`) and Python-Markdown/MkDocs admonitions are styled and colored by kind.
-- **Math:** block MathML, KaTeX, and MathJax scroll sideways in a narrow column. (KaTeX and MathJax still need their own stylesheets for the formulas themselves.)
+- **Math:** KaTeX and MathJax block math scroll sideways in a narrow column (they still need their own stylesheets for the formulas themselves). Block MathML scrolls in Chromium; Firefox and Safari don't scroll a `<math>` element yet, so prefer KaTeX or MathJax output for long formulas.
 
 ### Debug mode
 

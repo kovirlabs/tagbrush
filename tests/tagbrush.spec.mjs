@@ -1107,6 +1107,10 @@ test.describe('chat and AI output', () => {
     expect(await page.locator('#long-code').evaluate((el) => el.getClientRects().length)).toBeGreaterThan(1); // wrapped onto more lines
     expect(await style(page, '#table', 'overflowX')).toBe('auto');
     expect(await style(page, '#math', 'overflowX')).toBe('auto');
+    // KaTeX and MathJax wrap block math in an element that scrolls in every browser.
+    // (Firefox and Safari don't scroll a bare <math> element, so the fixture's MathML is short.)
+    expect(await style(page, '#katex', 'overflowX')).toBe('auto');
+    expect(await page.locator('#katex').evaluate((el) => el.scrollWidth > el.clientWidth)).toBe(true);
     expect(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)).toBe(0);
   });
 
