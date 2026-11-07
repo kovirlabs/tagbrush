@@ -522,8 +522,20 @@ test.describe('theme builder', () => {
 
   test('bad values in the link are ignored', async ({ page }) => {
     await page.goto(`${DEMO}?primary=javascript:alert(1)&font=nope`);
-    expect(await page.inputValue('#b-primary')).toBe('#2563eb');
+    expect(await page.inputValue('#b-primary')).toBe('#7c3aed');
+    await expect(page.locator('#theme-code')).toHaveText(':root {\n  --color-primary: #7c3aed;\n  --border-radius: 0.5rem;\n}');
+  });
+
+  test('the page starts in the family violet, and the Blue preset shows TagBrush.css\'s defaults', async ({ page }) => {
+    await page.goto(DEMO);
+    // brand.css (blocked in tests) themes the page until something changes.
+    expect(await page.evaluate(() => document.documentElement.style.getPropertyValue('--color-primary'))).toBe('');
+    expect(new URL(page.url()).search).toBe('');
+    await page.click('[data-primary="#2563eb"]');
+    await page.locator('#b-radius').fill('0.375');
     await expect(page.locator('#theme-code')).toHaveText('/* Using the defaults */');
+    expect(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--color-primary').trim())).toBe('#2563eb');
+    expect(await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--border-radius').trim())).toBe('0.375rem');
   });
 
   test('the contrast readout passes for every preset', async ({ page }) => {

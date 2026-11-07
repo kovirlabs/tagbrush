@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-brand="chrome">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +7,8 @@
     <meta name="description" content="TagBrush.css is a ~8.5 KB gzipped, no-build CSS library that makes plain semantic HTML look clean and modern. Theme it with CSS variables, with dark mode built in. Works with static sites and any framework.">
     <link rel="icon" href="https://kovirlabs.github.io/tagstack/mark.svg" type="image/svg+xml">
     <link rel="stylesheet" href="tagbrush.css">
-    <!-- The Tag family brand. data-brand="chrome" on <html> limits it to the
-         family bar and the footer, so the demo shows TagBrush.css's defaults. -->
+    <!-- The Tag family brand: the violet theme every family site wears. TagBrush.css's
+         own default is blue; the theme builder's "Blue (default)" preset shows it. -->
     <link rel="stylesheet" href="https://kovirlabs.github.io/tagstack/brand.css">
     <style>
         /*
@@ -118,15 +118,15 @@
 
         <section aria-labelledby="theming">
             <h2 id="theming">Build your theme</h2>
-            <p>Every component on this page reads from a handful of CSS variables. Change them here and the whole page updates live, then copy the CSS into your site or share a link to your theme. Hover colors, focus rings, and button text are derived from <code>--color-primary</code> automatically: buttons switch between white and black text, and links are adjusted to stay readable.</p>
+            <p>Every component on this page reads from a handful of CSS variables. Change them here and the whole page updates live, then copy the CSS into your site or share a link to your theme. Hover colors, focus rings, and button text are derived from <code>--color-primary</code> automatically: buttons switch between white and black text, and links are adjusted to stay readable. This page wears the Tag family's violet; TagBrush.css's own default is blue, so pick <em>Blue (default)</em> to see a page with no theme at all.</p>
             <div class="grid">
                 <form id="builder" onsubmit="event.preventDefault();">
                     <label for="b-primary">Primary color</label>
                     <div role="group" class="swatches" aria-label="Primary color presets">
-                        <input type="color" id="b-primary" value="#2563eb">
-                        <button type="button" data-primary="#2563eb" aria-pressed="true">Blue</button>
+                        <input type="color" id="b-primary" value="#7c3aed">
+                        <button type="button" data-primary="#7c3aed" aria-pressed="true">Violet</button>
+                        <button type="button" data-primary="#2563eb" aria-pressed="false">Blue (default)</button>
                         <button type="button" data-primary="#10b981" aria-pressed="false">Emerald</button>
-                        <button type="button" data-primary="#8b5cf6" aria-pressed="false">Violet</button>
                         <button type="button" data-primary="#f43f5e" aria-pressed="false">Rose</button>
                         <button type="button" data-primary="#f59e0b" aria-pressed="false">Amber</button>
                     </div>
@@ -149,8 +149,8 @@
                                 <option value='ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace'>Monospace</option>
                             </select>
                         </label>
-                        <label>Corner radius: <output id="b-radius-out">0.375rem</output>
-                            <input type="range" id="b-radius" min="0" max="1.5" step="0.125" value="0.375">
+                        <label>Corner radius: <output id="b-radius-out">0.5rem</output>
+                            <input type="range" id="b-radius" min="0" max="1.5" step="0.125" value="0.5">
                         </label>
                         <label>Spacing: <output id="b-spacing-out">1rem</output>
                             <input type="range" id="b-spacing" min="0.75" max="1.5" step="0.125" value="1">
@@ -159,7 +159,7 @@
                     <label><input type="checkbox" id="b-pill"> Pill-shaped buttons</label>
                     <p><small id="b-contrast" aria-live="polite"></small></p>
                     <div role="group">
-                        <button type="button" class="secondary" id="b-reset">Reset to defaults</button>
+                        <button type="button" class="secondary" id="b-reset">Reset</button>
                     </div>
                 </form>
                 <div class="builder-output">
@@ -408,7 +408,7 @@
                         </div>
                         <div>
                             <label for="color">Color</label>
-                            <input type="color" id="color" value="#2563eb">
+                            <input type="color" id="color" value="#7c3aed">
                         </div>
                         <label>Wrapped label
                             <input type="text" placeholder="Input inside its label">
@@ -612,10 +612,13 @@
 
     <script>
         // Theme builder: sets variables on :root and prints the CSS to copy.
+        // The form starts at this page's own theme (the Tag family violet), so the
+        // link is empty until something changes. The CSS printed is what to add to
+        // plain TagBrush.css, so it is compared with TagBrush.css's own defaults.
         const root = document.documentElement;
         const code = document.getElementById('theme-code');
         const el = (id) => document.getElementById(id);
-        const defaults = { primary: '#2563eb', radius: '0.375', spacing: '1' };
+        const defaults = { primary: '#2563eb', radius: '0.375', spacing: '1' }; // TagBrush.css's own
         const swatches = document.querySelectorAll('[data-primary]');
 
         const updateTheme = () => {
@@ -630,7 +633,15 @@
 
             ['--color-primary', '--font-family-base', '--font-family-heading', '--border-radius', '--spacing', '--button-radius']
                 .forEach((name) => root.style.removeProperty(name));
-            Object.entries(vars).forEach(([name, value]) => root.style.setProperty(name, value));
+            // Until something changes, brand.css themes the page. A changed color, radius,
+            // or spacing applies even when it equals TagBrush.css's default, so choosing
+            // "Blue (default)" shows blue rather than falling back to the family violet.
+            const shown = { ...vars };
+            delete shown['--color-primary']; delete shown['--border-radius']; delete shown['--spacing'];
+            if (primary !== el('b-primary').defaultValue) shown['--color-primary'] = primary;
+            if (el('b-radius').value !== el('b-radius').defaultValue) shown['--border-radius'] = el('b-radius').value + 'rem';
+            if (el('b-spacing').value !== el('b-spacing').defaultValue) shown['--spacing'] = el('b-spacing').value + 'rem';
+            Object.entries(shown).forEach(([name, value]) => root.style.setProperty(name, value));
 
             el('b-radius-out').textContent = el('b-radius').value + 'rem';
             el('b-spacing-out').textContent = el('b-spacing').value + 'rem';
@@ -652,11 +663,11 @@
         const saveToUrl = () => {
             const params = new URLSearchParams();
             const primary = el('b-primary').value;
-            if (primary !== defaults.primary) params.set('primary', primary.slice(1));
+            if (primary !== el('b-primary').defaultValue) params.set('primary', primary.slice(1));
             if (fontKey(el('b-font'))) params.set('font', fontKey(el('b-font')));
             if (fontKey(el('b-heading-font'))) params.set('heading', fontKey(el('b-heading-font')));
-            if (el('b-radius').value !== defaults.radius) params.set('radius', el('b-radius').value);
-            if (el('b-spacing').value !== defaults.spacing) params.set('spacing', el('b-spacing').value);
+            if (el('b-radius').value !== el('b-radius').defaultValue) params.set('radius', el('b-radius').value);
+            if (el('b-spacing').value !== el('b-spacing').defaultValue) params.set('spacing', el('b-spacing').value);
             if (el('b-pill').checked) params.set('pill', '1');
             const query = params.toString();
             history.replaceState(null, '', location.pathname + (query ? '?' + query : '') + location.hash);
