@@ -942,6 +942,18 @@ test.describe('app patterns', () => {
     expect(aside.top).toBe(article.top);
   });
 
+  test('an aside whose content is hidden takes no column, so the article has the width', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/docs-sidebar.html'));
+    await page.evaluate(() => { document.querySelector('main > aside > nav').hidden = true; });
+    expect(await style(page, 'main', 'display')).not.toBe('grid');
+    // The article is centered at reading width, as on a page with no aside
+    const main = await box(page, 'main');
+    const article = await box(page, 'main > article');
+    expect(Math.abs((article.left + article.right) / 2 - (main.left + main.right) / 2)).toBeLessThanOrEqual(1);
+    await page.evaluate(() => { document.querySelector('main > aside > nav').hidden = false; });
+    expect(await style(page, 'main', 'display')).toBe('grid');
+  });
+
   test('an hgroup in the page header is a centered hero', async ({ page }) => {
     await page.goto(fileUrl('tests/fixtures/hero.html'));
     expect(await style(page, 'header > hgroup', 'textAlign')).toBe('center');
