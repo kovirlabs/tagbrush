@@ -1401,19 +1401,20 @@
 
   /* A sidebar inside <main>: <main><aside>…</aside><article>…</article></main>
      (a docs page with a table of contents). The aside stays in view while
-     the article scrolls. */
-  :where(main:has(> aside):has(> article)) {
+     the article scrolls. An aside whose content is all hidden (a table of
+     contents waiting for a script to fill it) takes no column. */
+  :where(main:has(> aside > :not([hidden])):has(> article)) {
     display: grid;
     grid-template-columns: minmax(10rem, 14rem) minmax(0, 1fr);
     gap: var(--spacing-xl);
     align-items: start;
   }
 
-  :where(main:has(> article ~ aside):has(> article)) {
+  :where(main:has(> article ~ aside > :not([hidden])):has(> article)) {
     grid-template-columns: minmax(0, 1fr) minmax(10rem, 14rem);
   }
 
-  :where(main:has(> aside):has(> article)) > :where(aside) {
+  :where(main:has(> aside > :not([hidden])):has(> article)) > :where(aside) {
     position: sticky;
     top: var(--spacing-md);
     max-height: calc(100dvh - 2 * var(--spacing-md));
@@ -1422,21 +1423,21 @@
   }
 
   /* The article keeps its reading width but sits next to the sidebar */
-  :where(main:has(> aside):has(> article)) > :where(article) {
+  :where(main:has(> aside > :not([hidden])):has(> article)) > :where(article) {
     margin-right: 0;
     margin-left: 0;
   }
 
-  :where(main:has(> aside):has(> article)) > :where(:not(aside, article)) {
+  :where(main:has(> aside > :not([hidden])):has(> article)) > :where(:not(aside, article)) {
     grid-column: 1 / -1;
   }
 
   @media (max-width: 48rem) {
-    :where(main:has(> aside):has(> article)) {
+    :where(main:has(> aside > :not([hidden])):has(> article)) {
       grid-template-columns: minmax(0, 1fr);
     }
 
-    :where(main:has(> aside):has(> article)) > :where(aside) {
+    :where(main:has(> aside > :not([hidden])):has(> article)) > :where(aside) {
       position: static;
       max-height: none;
     }

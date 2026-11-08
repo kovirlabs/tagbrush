@@ -4,6 +4,9 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 
 ## Unreleased
 
+### Fixed
+- A docs page whose `<aside>` holds only hidden content (`<aside><nav data-tag-toc hidden></nav></aside>`, a table of contents TagAction fills and shows) no longer gets an empty sidebar column: the article takes the width, as on a page without the aside. Readers without JavaScript saw a blank column. The sidebar column needs an element in the aside that isn't `hidden`. Found by the Tag family agent evaluation.
+
 ### Docs
 - The demo page wears the Tag family's violet like the other family sites, instead of showing TagBrush.css's default blue. The theme builder starts from the violet and has a "Blue (default)" preset for the look you get with no theme; TagBrush.css's own default is unchanged.
 - `llms.txt`: a page that is only a conversation (a shared transcript) uses the full stylesheet with `data-density="compact"` on `<html>`; the scoped build is for messages inside a chat app. Found by the Tag family agent evaluation.
