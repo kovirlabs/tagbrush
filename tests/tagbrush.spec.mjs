@@ -1708,6 +1708,7 @@ test.describe('the 2.0 look', () => {
   test('a price in a card is a large figure and a muted period; other strong/small pairs are not', async ({ page }) => {
     expect(parseFloat(await style(page, '#price strong', 'fontSize'))).toBeGreaterThan(24);
     expect(await style(page, '#price small', 'color')).toBe(await token(page, 'var(--color-text-muted)'));
+    expect(parseFloat(await style(page, '#header-price strong', 'fontSize'))).toBeGreaterThan(24); // in the card's header too
     for (const sel of ['#not-price strong', '#strong-small b', '#prose-price strong']) expect(await style(page, sel, 'fontSize'), sel).toBe('16px');
   });
 

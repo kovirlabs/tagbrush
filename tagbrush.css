@@ -2452,8 +2452,9 @@
   }
 
   /* A price in a card: a paragraph that starts with <strong> or <data> and
-     then a <small>: <p><strong>$12</strong> <small>per month</small></p> */
-  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article, .card) > p:has(> :is(strong, data):first-child + small) > :is(strong, data):first-child {
+     then a <small>, also in the card's header: <p><strong>$12</strong> <small>per month</small></p> */
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article, .card) > p:has(> :is(strong, data):first-child + small) > :is(strong, data):first-child,
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article, .card) > header > p:has(> :is(strong, data):first-child + small) > :is(strong, data):first-child {
     font-size: var(--font-size-h2);
     font-weight: 700;
     line-height: 1.1;
@@ -2461,7 +2462,8 @@
     font-variant-numeric: tabular-nums;
   }
 
-  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article, .card) > p:has(> :is(strong, data):first-child + small) > small {
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article, .card) > p:has(> :is(strong, data):first-child + small) > small,
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article, .card) > header > p:has(> :is(strong, data):first-child + small) > small {
     color: var(--color-text-muted);
   }
 
