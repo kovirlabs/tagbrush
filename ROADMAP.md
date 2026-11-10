@@ -179,13 +179,13 @@ Next round:
 - [x] Links to documents (`.pdf`, `.docx`, `.xlsx`, `.csv`, `.zip`) and `download` links say what they are.
 
 Later:
-- [ ] Choice cards: a `<fieldset>` of radio labels, the selected one highlighted (`label:has(:checked)`).
-- [ ] Pull quote (`figure > blockquote + figcaption`) and avatars (a small `<img>` in a testimonial footer or `<address>`). Both were on the round 1 "not yet" list.
-- [ ] Data tables: `<data>` values right-aligned in tabular figures, row hover, sticky header inside a scrolling `<figure>`.
-- [ ] `<iframe>` without a `height` is 16:9 at full width (video embeds).
-- [ ] A sale price: `<s>` before a price is muted.
-- [ ] Themed `<select>` picker behind `@supports (appearance: base-select)`; `:autofill` and `:user-valid` states.
-- [ ] `scrollbar-color` from the theme; stronger borders under `prefers-contrast: more`.
+- [x] Choice cards: a `<fieldset>` of radio labels, the selected one highlighted (`label:has(:checked)`).
+- [x] Pull quote (`figure > blockquote + figcaption`) and avatars (a small `<img>` in a testimonial footer or `<address>`). Both were on the round 1 "not yet" list.
+- [x] Data tables: `<data>` values right-aligned in tabular figures, row hover. Not the sticky header: a `<figure>` scrolls sideways only, so `position: sticky` in it has nothing to stick to.
+- [x] `<iframe>` without a `height` is 16:9 at full width (video embeds).
+- [x] A sale price: `<s>` before a price is muted. Already true: `<s>` was muted since 1.1, so only the guide changed.
+- [x] Themed `<select>` picker behind `@supports (appearance: base-select)`, for mouse users; `:user-valid` on fields with a rule. Not `:autofill`: browsers already tint autofilled fields, and that tint overrides TagBrush.css's field background anyway.
+- [x] `scrollbar-color` from the theme; stronger borders under `prefers-contrast: more`.
 
 Not planned: scroll-triggered reveal animations, parallax, and scroll progress bars (motion like this is a large part of what makes pages look generated), a sticky header by default (it changes every site's layout; maybe an opt-in pattern later), and a scrollspy table of contents (needs JavaScript, so TagAction).
 

@@ -25,6 +25,13 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
   - Wide tables and code blocks show a shadow at an edge that has more to scroll to (scroll-driven animations: Chromium and Safari 26; none elsewhere).
   - Header nav links are at least 44px tall on touch screens.
   - Links to `.pdf`, `.doc(x)`, `.xls(x)`, `.csv` and `.zip` files get a small muted label ("PDF"); `download` links get an arrow. Buttons, nav links and image links are left alone.
+  - Choice cards: a radio or checkbox label with a `<small>` description is a card, outlined when chosen; a fieldset of them lays them in a row. Labels without a description are unchanged.
+  - Pull quote: a `<blockquote>` followed by a `<figcaption>` in a `<figure>`. Avatars: an `<img>` in a `figcaption`, an article's `footer`, or an `<address>` is a 2.5rem circle.
+  - Data tables: a cell holding only a `<data>` value is right-aligned in tabular figures; rows highlight under the pointer on devices that hover.
+  - An `<iframe>` without a `height` attribute (a video embed) fills the width at 16:9.
+  - With a mouse, single-line selects open a picker in the theme's colors where `appearance: base-select` is supported (Chromium now). Touch screens keep the system picker. The arrow is positioned outside the flow, so a site's own `display` on selects can't wrap it.
+  - A field with a rule (`required`, `pattern`, `minlength`, `min`, `max`, `type="email"` or `"url"`) turns green once the user has met it (`:user-valid`). Fields without a rule stay neutral.
+  - Scrollbars use the theme's colors, the thumb at least 3:1 against the page. Under `prefers-contrast: more`, borders take the muted text color and muted text becomes full contrast.
 
 ### Changed
 - Coverage over size: the size ceiling is now 15 KB gzipped (it was 10 KB), and `llms.txt` is capped at 4,000 tokens, since agents read it on every page. See the guiding principle in `ROADMAP.md`.
