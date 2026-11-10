@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lumen: Time tracking for freelancers</title>
+  <meta name="description" content="Lumen tracks your billable hours, turns them into invoices, and shows which clients are worth your time.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+  <style>
+    :root {
+      --color-primary: #d97706;
+      --border-radius: 0.75rem;
+    }
+  </style>
+</head>
+<body>
+  <a href="#main">Skip to content</a>
+
+  <header>
+    <nav>
+      <strong>Lumen</strong>
+      <button popovertarget="menu" aria-label="Menu">☰</button>
+      <div popover id="menu">
+        <ul>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#testimonials">Customers</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="/login">Log in</a></li>
+        </ul>
+      </div>
+    </nav>
+    <hgroup>
+      <h1>Know where every billable hour went</h1>
+      <p>Lumen tracks your time in the background, turns it into clean invoices, and shows you which clients actually pay off. Built for freelancers who would rather do the work than log it.</p>
+    </hgroup>
+    <div role="group">
+      <a class="button" href="/signup">Start free for 14 days</a>
+      <a class="button outline" href="/tour">Take the 2-minute tour</a>
+    </div>
+    <figure>
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="13" r="8"/>
+        <path d="M12 9v4l2.5 2.5"/>
+        <path d="M10 2h4"/>
+        <path d="M12 2v3"/>
+      </svg>
+      <figcaption>No credit card required. Cancel anytime.</figcaption>
+    </figure>
+  </header>
+
+  <main id="main" data-layout="full">
+    <section>
+      <dl>
+        <div><dt>Freelancers on Lumen</dt><dd>38,000+</dd></div>
+        <div><dt>Hours tracked last month</dt><dd>4.2 million</dd></div>
+        <div><dt>Average billable time recovered</dt><dd>5.5 hrs/week</dd></div>
+      </dl>
+    </section>
+
+    <section id="features">
+      <hgroup>
+        <p>Features</p>
+        <h2>Everything between "start timer" and "paid"</h2>
+      </hgroup>
+      <article>
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <h3>One-click timers</h3>
+        <p>Start a timer from the menu bar, your browser, or your phone. Forgot to start one? Lumen notices when you open a client's files and asks if you want to log it.</p>
+      </article>
+      <article>
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h9l5 5v15H6z"/><path d="M14 2v6h6"/><path d="M9 13h8M9 17h5"/></svg>
+        <h3>Invoices in seconds</h3>
+        <p>Pick a client and a date range. Lumen builds the invoice from your logged hours, applies your rates, and sends it with Stripe or PayPal payment links attached.</p>
+      </article>
+      <article>
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        <h3>Client profitability</h3>
+        <p>See your effective hourly rate per client and per project, including the unbilled calls and revisions. Find out which retainer is quietly costing you money.</p>
+      </article>
+      <article>
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg>
+        <h3>Calendar sync</h3>
+        <p>Connect Google Calendar or Outlook and your client meetings become draft time entries. Approve them in one swipe at the end of the day.</p>
+      </article>
+      <article>
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 6H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        <h3>Budgets and alerts</h3>
+        <p>Set an hour or fee cap on a fixed-price project. Lumen warns you at 75% and 90%, so scope creep becomes a conversation instead of a surprise.</p>
+      </article>
+      <article>
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <h3>Private by default</h3>
+        <p>Lumen never takes screenshots or logs keystrokes. Your data is encrypted, exportable as CSV any time, and deleted for good when you close your account.</p>
+      </article>
+    </section>
+
+    <section>
+      <h2>From first timer to first invoice</h2>
+      <ol>
+        <li><h3>Add your clients</h3><p>Import them from a CSV or your invoicing tool, and set an hourly or project rate for each.</p></li>
+        <li><h3>Track as you work</h3><p>Use the desktop app, browser extension, or mobile app. Entries sync instantly across all three.</p></li>
+        <li><h3>Bill and get paid</h3><p>Turn a week of hours into an invoice with one click. Lumen follows up on late payments for you.</p></li>
+      </ol>
+    </section>
+
+    <section id="pricing">
+      <hgroup>
+        <p>Pricing</p>
+        <h2>Simple plans that pay for themselves</h2>
+      </hgroup>
+      <p>Every plan includes unlimited timers, the desktop and mobile apps, and CSV export. Prices in USD, billed monthly.</p>
+      <article>
+        <h3>Solo</h3>
+        <p><strong>$0</strong> / month</p>
+        <ul>
+          <li>Up to 3 active clients</li>
+          <li>Time tracking on all devices</li>
+          <li>Weekly summary email</li>
+        </ul>
+        <p><a class="button outline" href="/signup?plan=solo">Start for free</a></p>
+      </article>
+      <article>
+        <h3>Pro <mark data-tone="info">Most popular</mark></h3>
+        <p><strong>$12</strong> / month</p>
+        <ul>
+          <li>Unlimited clients and projects</li>
+          <li>Invoicing with Stripe and PayPal</li>
+          <li>Client profitability reports</li>
+          <li>Calendar sync and budget alerts</li>
+        </ul>
+        <p><a class="button" href="/signup?plan=pro">Start 14-day trial</a></p>
+      </article>
+      <article>
+        <h3>Studio</h3>
+        <p><strong>$29</strong> / month</p>
+        <ul>
+          <li>Everything in Pro</li>
+          <li>Up to 5 collaborators</li>
+          <li>Subcontractor time and cost tracking</li>
+          <li>Priority support</li>
+        </ul>
+        <p><a class="button outline" href="/signup?plan=studio">Start 14-day trial</a></p>
+      </article>
+    </section>
+
+    <section id="testimonials">
+      <h2>Freelancers who stopped guessing</h2>
+      <article>
+        <blockquote>
+          <p>I found out one of my retainers was paying me $31 an hour once you counted the Slack messages. I renegotiated it the next week. Lumen paid for itself for the next decade.</p>
+        </blockquote>
+        <footer>Priya Nair, brand designer, Toronto</footer>
+      </article>
+      <article>
+        <blockquote>
+          <p>Invoicing used to eat my Friday afternoons. Now I review the draft Lumen builds, hit send, and I'm done before my coffee goes cold.</p>
+        </blockquote>
+        <footer>Marcus Feld, freelance developer, Berlin</footer>
+      </article>
+      <article>
+        <blockquote>
+          <p>The calendar sync is the feature I didn't know I needed. Every client call ends up logged without me thinking about it.</p>
+        </blockquote>
+        <footer>Ana Ruiz, copywriter and content strategist, Austin</footer>
+      </article>
+    </section>
+
+    <section id="faq">
+      <h2>Frequently asked questions</h2>
+      <details name="faq">
+        <summary>Is there really a free plan?</summary>
+        <p>Yes. Solo is free forever for up to three active clients. You only pay when you need more clients, invoicing, or reports.</p>
+      </details>
+      <details name="faq">
+        <summary>Does Lumen monitor my screen or keystrokes?</summary>
+        <p>No. Lumen only records the timers you start and the calendar events you approve. It never captures screenshots, keystrokes, or browsing history.</p>
+      </details>
+      <details name="faq">
+        <summary>Can I import my history from another time tracker?</summary>
+        <p>You can import CSV exports from Toggl, Harvest, Clockify, and most other trackers. Lumen maps the clients, projects, and rates for you.</p>
+      </details>
+      <details name="faq">
+        <summary>What happens to my data if I cancel?</summary>
+        <p>You can export everything as CSV or PDF at any time. After you close your account, we keep your data for 30 days in case you change your mind, then delete it permanently.</p>
+      </details>
+      <details name="faq">
+        <summary>Do you offer discounts for students or nonprofits?</summary>
+        <p>Yes. Students and registered nonprofits get 50% off Pro and Studio. Write to us from your school or organization email to apply.</p>
+      </details>
+    </section>
+
+    <section data-theme="dark">
+      <h2>Your next invoice could take thirty seconds</h2>
+      <p>Join 38,000 freelancers who know exactly what their time is worth.</p>
+      <div role="group">
+        <a class="button" href="/signup">Start free for 14 days</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><strong>Lumen</strong> is time tracking and invoicing for independent professionals.</p>
+    <nav aria-label="Product">
+      <h2>Product</h2>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="/download">Download the apps</a></li>
+        <li><a href="/changelog">Changelog</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Resources">
+      <h2>Resources</h2>
+      <ul>
+        <li><a href="/help">Help center</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="/rate-calculator">Freelance rate calculator</a></li>
+      </ul>
+    </nav>
+    <nav aria-label="Company">
+      <h2>Company</h2>
+      <ul>
+        <li><a href="/about">About</a></li>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="mailto:hello@lumen.app">Contact</a></li>
+      </ul>
+    </nav>
+    <p>© 2026 Lumen Software Inc.</p>
+  </footer>
+</body>

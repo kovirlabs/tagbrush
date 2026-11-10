@@ -115,35 +115,50 @@ for (const leftover of ['\n  html', '\n  body', 'body >']) {
 }
 
 // ---------------------------------------------------------------------------
-// Instruction files for AI coding agents, generated from llms.txt so every
-// agent gets the same, tested guidance (see tests: llms.txt contract).
+// The guide for AI agents. llms.txt is the index every agent reads: the rules
+// and every pattern in one line, grouped by topic, each group linking to a
+// detail file in llms/. The build joins them into llms-full.txt for tools that
+// take one file, and writes each agent's instruction files from them (see
+// tests: llms.txt contract).
 // ---------------------------------------------------------------------------
-const guide = read('llms.txt').trim();
-const generated = '<!-- Generated from llms.txt by scripts/build.mjs. Do not edit directly. -->';
+const SITE = 'https://kovirlabs.github.io/tagbrush/';
+const topics = ['pages', 'apps', 'forms', 'content', 'chat'];
+const index = read('llms.txt').trim();
+const details = Object.fromEntries(topics.map((topic) => [topic, read(`llms/${topic}.md`).trim()]));
+const generated = '<!-- Generated from llms.txt and llms/ by scripts/build.mjs. Do not edit directly. -->';
+const demote = (text) => text.replace(/^(#+) /gm, '#$1 ');
+
+for (const topic of topics) {
+  if (!index.includes(`(${SITE}llms/${topic}.md)`)) {
+    throw new Error(`llms.txt doesn't link to llms/${topic}.md. Update llms.txt or scripts/build.mjs.`);
+  }
+}
+
+// llms-full.txt: the index, then every detail file with its headings moved down a level.
+const full = [index, ...topics.map((topic) => demote(details[topic]))].join('\n\n');
+write('llms-full.txt', full + '\n');
+
+// Links from the index to a detail file, rewritten to a path relative to the agent's copy.
+const localLinks = (text, toPath) => text.replace(
+  new RegExp(`\\[llms/([a-z]+)\\.md\\]\\(${SITE.replace(/[.]/g, '\\.')}llms/\\1\\.md\\)`, 'g'),
+  (_, topic) => `[${toPath(topic)}](${toPath(topic)})`,
+);
+
+const description = 'Write pages styled by TagBrush.css, a classless stylesheet. Use when building or editing HTML pages, prototypes, landing pages, docs, blogs, forms, or dashboards that use TagBrush.css, or when asked for a good-looking page with plain HTML and no CSS framework.';
+const globs = 'globs: ["**/*.html", "**/*.htm", "**/*.njk", "**/*.liquid", "**/*.astro", "**/*.vue", "**/*.svelte", "**/*.jsx", "**/*.tsx"]';
+const titles = Object.fromEntries(topics.map((topic) => [topic, details[topic].match(/^# (.+)$/m)[1]]));
+
 const agentFiles = {
-  'ai/claude/tagbrush/SKILL.md': [
-    '---',
-    'name: tagbrush',
-    'description: Write pages styled by TagBrush.css, a classless stylesheet. Use when building or editing HTML pages, prototypes, landing pages, docs, blogs, forms, or dashboards that use TagBrush.css, or when asked for a good-looking page with plain HTML and no CSS framework.',
-    '---',
-    '',
-    generated,
-    '',
-    guide,
-  ].join('\n'),
-  'ai/cursor/tagbrush.mdc': [
-    '---',
-    'description: How to write HTML for TagBrush.css, a classless stylesheet (semantic elements, no classes, no layout CSS)',
-    'globs: ["**/*.html", "**/*.htm", "**/*.njk", "**/*.liquid", "**/*.astro", "**/*.vue", "**/*.svelte", "**/*.jsx", "**/*.tsx"]',
-    'alwaysApply: false',
-    '---',
-    '',
-    generated,
-    '',
-    guide,
-  ].join('\n'),
-  // A section to paste into a project's AGENTS.md or CLAUDE.md: headings move down one level.
-  'ai/AGENTS.md': [generated, '', guide.replace(/^(#+) /gm, '#$1 ')].join('\n'),
+  // Claude Code: the index is the skill; the detail files are references it reads when a task needs them.
+  'ai/claude/tagbrush/SKILL.md': ['---', 'name: tagbrush', `description: ${description}`, '---', '', generated, '',
+    localLinks(index, (topic) => `references/${topic}.md`)].join('\n'),
+  ...Object.fromEntries(topics.map((topic) => [`ai/claude/tagbrush/references/${topic}.md`, [generated, '', details[topic]].join('\n')])),
+  // Cursor: the index applies to HTML-like files; each topic is a rule the agent pulls in by its description.
+  'ai/cursor/tagbrush.mdc': ['---', 'description: How to write HTML for TagBrush.css, a classless stylesheet (semantic elements, no classes, no layout CSS)', globs, 'alwaysApply: false', '---', '', generated, '',
+    localLinks(index, (topic) => `tagbrush-${topic}.mdc`)].join('\n'),
+  ...Object.fromEntries(topics.map((topic) => [`ai/cursor/tagbrush-${topic}.mdc`, ['---', `description: TagBrush.css patterns for ${titles[topic].toLowerCase()}: the HTML to write and what each pattern leaves alone`, 'alwaysApply: false', '---', '', generated, '', details[topic]].join('\n')])),
+  // AGENTS.md and CLAUDE.md are one file, so they get everything, as a section (headings move down a level).
+  'ai/AGENTS.md': [generated, '', demote(full)].join('\n'),
 };
 for (const [file, contents] of Object.entries(agentFiles)) {
   mkdirSync(new URL(file.slice(0, file.lastIndexOf('/')), root), { recursive: true });

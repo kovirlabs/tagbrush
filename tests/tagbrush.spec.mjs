@@ -1028,9 +1028,34 @@ test.describe('code highlighting', () => {
 });
 
 test.describe('llms.txt contract', () => {
-  // llms.txt (and the agent files generated from it) tell AI agents which HTML
+  // llms.txt, llms/, and the agent files generated from them tell AI agents which HTML
   // TagBrush.css styles. These tests keep those instructions true.
-  const guideText = () => import('node:fs').then(({ readFileSync }) => readFileSync('llms.txt', 'utf8'));
+  // The whole guide: the index (llms.txt) and every detail file in llms/.
+  const guideText = () => import('node:fs').then(({ readFileSync, readdirSync }) =>
+    [readFileSync('llms.txt', 'utf8'), ...readdirSync('llms').filter((f) => f.endsWith('.md')).sort().map((f) => readFileSync(`llms/${f}`, 'utf8'))].join('\n'));
+
+  // Each pattern is a bullet starting with its name in bold: "- **Steps**: …".
+  const patternNames = (text) => [...text.matchAll(/^- \*\*([^*]+)\*\*:/gm)].map((m) => m[1]);
+
+  test('every pattern in a detail file has its line in the index, and every index line has details', async () => {
+    const { readFileSync, readdirSync } = await import('node:fs');
+    const index = patternNames(readFileSync('llms.txt', 'utf8'));
+    const detailed = readdirSync('llms').filter((f) => f.endsWith('.md')).flatMap((f) => patternNames(readFileSync(`llms/${f}`, 'utf8')));
+    expect(detailed.length).toBeGreaterThan(50);
+    expect(detailed.filter((name) => !index.includes(name)), 'patterns an agent reading only llms.txt would never hear of').toEqual([]);
+    expect(index.filter((name) => !detailed.includes(name)), 'index lines with no details').toEqual([]);
+    expect(new Set(detailed).size, 'pattern names must be unique').toBe(detailed.length);
+  });
+
+  test('llms.txt links to every detail file, and llms-full.txt holds them all', async () => {
+    const { readFileSync, readdirSync } = await import('node:fs');
+    const index = readFileSync('llms.txt', 'utf8');
+    const full = readFileSync('llms-full.txt', 'utf8');
+    for (const file of readdirSync('llms').filter((f) => f.endsWith('.md'))) {
+      expect(index).toContain(`https://kovirlabs.github.io/tagbrush/llms/${file}`);
+      for (const name of patternNames(readFileSync(`llms/${file}`, 'utf8'))) expect(full).toContain(`**${name}**:`);
+    }
+  });
   const css = () => import('node:fs').then(({ readFileSync }) => readFileSync('tagbrush.css', 'utf8'));
 
   // Inline code that is a real snippet: has a closing tag or attributes, and
@@ -1629,10 +1654,12 @@ test.describe('accessibility', () => {
 
 test.describe('size budget', () => {
   // Coverage matters more than bytes (see ROADMAP.md); this ceiling only
-  // catches accidental bloat. The guide's length is the tighter constraint:
-  // agents read llms.txt on every page they build.
+  // catches accidental bloat. The index (llms.txt) is read on every page an
+  // agent builds, so it stays small; the detail files are read when a task
+  // needs them and only have a bloat check.
   const BUDGET = 15 * 1024;
   const GUIDE_TOKENS = 4000;
+  const FULL_GUIDE_TOKENS = 20000;
 
   test.skip(({ browserName }) => browserName !== 'chromium', 'File size is the same in every browser');
 
@@ -1647,6 +1674,12 @@ test.describe('size budget', () => {
     const { encode } = await import('gpt-tokenizer');
     const { readFileSync } = await import('node:fs');
     expect(encode(readFileSync('llms.txt', 'utf8')).length).toBeLessThanOrEqual(GUIDE_TOKENS);
+  });
+
+  test(`llms-full.txt is at most ${FULL_GUIDE_TOKENS} tokens`, async () => {
+    const { encode } = await import('gpt-tokenizer');
+    const { readFileSync } = await import('node:fs');
+    expect(encode(readFileSync('llms-full.txt', 'utf8')).length).toBeLessThanOrEqual(FULL_GUIDE_TOKENS);
   });
 });
 

@@ -49,3 +49,25 @@ After the app patterns (chunk 16), the dashboard and docs requests went to two f
 The review found one bug in the new patterns: a `<header>` with an `<hgroup>` inside `<main>` (a page title with a subtitle and a button) was styled as a giant hero, because a class-less `<main>` matched the rule meant for framework wrappers. The hero now only applies to the page header. The dashboard agent also wanted a dropdown user menu: a `<nav>` inside a popover is now a vertical list, and `llms.txt` shows the pattern.
 
 Still open: status colors (every `<mark>` looks the same), a wide panel beside a narrow one, and where breadcrumbs and keyboard-shortcut lists belong in docs.
+
+### Round 3: the split guide (November 2026)
+
+Roadmap chunk 24 split the guide into an index (`llms.txt`) and detail files (`llms/`). To see whether more guide text buys better pages, the landing and sign-up requests each went to three fresh agents with different guides: **A** the guide before the split (3,910 tokens), **B** the new index alone (3,038), **C** the index plus every detail file, `llms-full.txt` (8,311). Each agent got a folder holding only `guide.txt`, so it couldn't tell which version it had. Pages: `landing-round3-{a,b,c}.html`, `signup-round3-{a,b,c}.html`.
+
+| | Landing A / B / C | Sign-up A / B / C |
+|---|---|---|
+| Invented classes | 0 / 0 / 0 | 0 / 0 / 0 |
+| Layout CSS or non-variable inline styles | 0 / 0 / 0 | 0 / 0 / 0 |
+| `npx tagbrush check` findings, overflow, contrast (both schemes) | none | none |
+| TagBrush patterns used (of 28 detected) | 16 / 15 / 13 | 8 / 7 / 7 |
+| Page length (tokens) | 3,138 / 2,820 / 2,737 | 866 / 881 / 843 |
+
+What it shows:
+
+- These two requests no longer separate the guides: every page is clean with any of them, and the index alone did as well as the full guide. The one-line index carries the load; the detail files are the safety net for edge cases these requests don't reach. With one page per cell, the differences in pattern counts and length are within noise.
+- One hint in favor of the details: the index-only sign-up agent couldn't tell whether an error's `<small>` turns red, which the forms detail file says.
+- To separate the guides, the next round needs harder requests: ones that hit what patterns leave alone (a section with a heading and a figure, plain radios beside choice cards, a footer with one nav), and pages the guide covers thinly.
+- The agents ran inside another project whose own instructions mention a `data-band="muted"` attribute, and one landing page (B) used it. That attribute isn't TagBrush's; the next round should run outside any project.
+
+Reported by all three landing agents, whatever the guide: no way to make a price large, no word on a feature list inside a pricing card, no muted alternate band (only `data-theme="dark"`), and no word on whether a closing call-to-action band is centered. Reported by all three sign-up agents: where an error message goes when the field also has help text, a list of password rules (help text is one `<small>`), and `aria-describedby`, which the guide never mentions.
+
