@@ -1580,6 +1580,22 @@
     --_btn-border: var(--color-primary);
   }
 
+  /* A button with a tone: <button data-tone="error">Delete</button> is red,
+     solid or .outline. The fill is darkened as far as white text needs. */
+  :where(button, input:is([type="submit"], [type="button"], [type="reset"]), .button):where([data-tone], [style*="--tone"]) {
+    --_btn-bg: oklch(from var(--tone) min(l, 0.5) c h);
+    --_btn-bg-hover: oklch(from var(--tone) calc(min(l, 0.5) - 0.07) c h);
+    --_btn-color: #fff;
+    --_btn-border: transparent;
+  }
+
+  :where(.outline):where([data-tone], [style*="--tone"]) {
+    --_btn-bg: transparent;
+    --_btn-bg-hover: color-mix(in srgb, var(--tone) 8%, transparent);
+    --_btn-color: light-dark(oklch(from var(--tone) min(l, 0.5) c h), oklch(from var(--tone) max(l, 0.77) min(c, 0.15) h));
+    --_btn-border: var(--tone);
+  }
+
   /* A toggle that is on (aria-pressed="true") looks held down: a solid button
      takes its hover color and an inset shadow, an outline or secondary one a
      tint of the primary color. <button aria-pressed="false">Bold</button> */

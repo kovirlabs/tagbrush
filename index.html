@@ -307,7 +307,7 @@
 
             <h3>Buttons</h3>
             <div role="group">
-                <button type="button">Button</button>
+                <button type="button" id="demo-button">Button</button>
                 <button type="button" class="secondary">Secondary</button>
                 <button type="button" class="outline">Outline</button>
                 <a href="#showcase" class="button">Link styled as button</a>
@@ -324,6 +324,12 @@
                 <button type="button" class="outline" aria-pressed="true">Bold</button>
                 <button type="button" class="outline" aria-pressed="false">Italic</button>
                 <button type="button" aria-pressed="true">Pinned</button>
+            </div>
+            <p><code>data-tone</code> colors a button; <code>"error"</code> marks a destructive action:</p>
+            <div role="group">
+                <button type="button" data-tone="error">Delete</button>
+                <button type="button" class="outline" data-tone="error">Remove</button>
+                <button type="button" data-tone="success">Approve</button>
             </div>
             <p>Set <code>aria-busy="true"</code> while something loads. It shows a spinner and tells screen readers to wait:</p>
             <div role="group">
@@ -514,7 +520,7 @@
                     <p>Opened with <code>showModal()</code>. A <code>&lt;header&gt;</code> with a button puts the close button beside the title, and a <code>&lt;footer&gt;</code> lines its buttons up on the right. Press <kbd>Esc</kbd> to close.</p>
                     <footer>
                         <button class="secondary" value="cancel">Cancel</button>
-                        <button value="ok">Confirm</button>
+                        <button value="delete" data-tone="error">Delete</button>
                     </footer>
                 </form>
             </dialog>

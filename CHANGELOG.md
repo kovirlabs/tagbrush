@@ -5,6 +5,7 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ## Unreleased
 
 ### Added
+- Destructive buttons: `data-tone` now colors buttons too. `<button data-tone="error">Delete</button>` is solid red and `class="outline" data-tone="error"` red-bordered; the other tones and `style="--tone: …"` work the same way. The fill is darkened as far as white text needs (4.5:1 in both schemes, tested).
 - Toggle buttons: a `<button aria-pressed="true">` looks held down, with the hover color and an inset shadow, or a tint of the primary color on an `outline` or `secondary` button. TagAction's Show/Hide and theme buttons now show their state. `aria-pressed="false"` looks like any button.
 - Expand buttons: a `<button aria-expanded>` shows a chevron after its label that points up while `aria-expanded="true"`, so a dropdown button (TagAction's, or your own) says it opens something. Buttons without the attribute are unchanged.
 - Landing-page patterns that sites were writing by hand, found by moving the Kovir LLC site onto TagBrush.css (about 0.8 KB gzipped together):

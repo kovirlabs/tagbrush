@@ -481,7 +481,7 @@ test.describe('automatic contrast', () => {
     await page.goto(DEMO);
     const text = async (primary) => {
       await page.evaluate((value) => document.documentElement.style.setProperty('--color-primary', value), primary);
-      return style(page, 'button[value=ok]', 'color');
+      return style(page, '#demo-button', 'color');
     };
     expect(await text('#1e3a8a')).toMatch(/^(oklch\(1 0 0\)|rgb\(255, 255, 255\))$/);
     expect(await text('#facc15')).toMatch(/^(oklch\(0 0 0\)|rgb\(0, 0, 0\))$/);
@@ -491,16 +491,17 @@ test.describe('automatic contrast', () => {
     await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
     await page.goto(DEMO);
     await page.evaluate(() => document.documentElement.style.setProperty('--color-primary', 'light-dark(#047857, #34d399)'));
-    const button = 'button[value=ok]';
+    const button = '#demo-button';
     expect(await style(page, button, 'backgroundColor')).toBe('rgb(52, 211, 153)');
     // #34d399 is light, so the text is black rather than inheriting the page text color.
     expect(await style(page, button, 'color')).toMatch(/^(oklch\(0 0 0\)|rgb\(0, 0, 0\))$/);
   });
 
   test('--color-on-primary still overrides the automatic text color', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' }); // no color transition on a visible button
     await page.goto(DEMO);
     await page.addStyleTag({ content: ':root { --color-on-primary: rgb(1, 2, 3); }' });
-    expect(await style(page, 'button[value=ok]', 'color')).toBe('rgb(1, 2, 3)');
+    expect(await style(page, '#demo-button', 'color')).toBe('rgb(1, 2, 3)');
   });
 });
 
@@ -1476,6 +1477,18 @@ test.describe('states people expect', () => {
     await page.locator('#expand-closed').evaluate((el) => el.setAttribute('aria-expanded', 'true'));
     expect(await rotate('#expand-closed')).toBe('-135deg');
     for (const sel of ['#plain-button', '#link-button']) expect(await style(page, sel, 'content', '::after')).toBe('none');
+  });
+
+  test('a button with data-tone is filled with the tone; an outline one is bordered in it', async ({ page }) => {
+    const red = await token(page, 'oklch(from var(--color-error) min(l, 0.5) c h)');
+    expect(await style(page, '#danger', 'backgroundColor')).toBe(red);
+    expect(await style(page, '#danger', 'color')).toBe('rgb(255, 255, 255)');
+    expect(await style(page, '#danger-outline', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#danger-outline', 'borderTopColor')).toBe(await token(page, 'var(--color-error)'));
+    expect(await style(page, '#tone-link', 'backgroundColor')).not.toBe(await style(page, '#plain-button', 'backgroundColor'));
+    expect(await style(page, '#custom-tone', 'backgroundColor')).not.toBe(await style(page, '#plain-button', 'backgroundColor'));
+    // A badge with a tone is still a badge, not a button.
+    expect(await style(page, '#plain-button', 'backgroundColor')).toBe(await token(page, 'var(--color-primary)'));
   });
 
   test('a toggle with aria-pressed="true" looks held down; "false" looks like any button', async ({ page }) => {

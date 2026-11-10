@@ -68,6 +68,7 @@ Details: [llms/apps.md](https://kovirlabs.github.io/tagbrush/llms/apps.md)
 - **Tabs**: `<div role="tablist">` of `<button role="tab" aria-controls="…">` and `role="tabpanel"` sections; TagAction switches them.
 - **Popover**: `<button popovertarget="tip">?</button><div popover id="tip">…</div>`.
 - **Buttons**: `<button>`, `class="secondary"`, `class="outline"`, and `<a class="button" href="…">`.
+- **Destructive button**: `<button data-tone="error">Delete</button>` is red, solid or `class="outline"`; other tones work too.
 - **Expand buttons**: `<button aria-expanded="false" aria-controls="menu">` shows a chevron that flips when `"true"`.
 - **Toggle buttons**: `<button aria-pressed="true">` looks held down.
 - **Button row**: `<div role="group">` around buttons, or an input and a button.
@@ -230,6 +231,7 @@ Layouts and components for pages people operate rather than read top to bottom.
 ### Buttons and icons
 
 - **Buttons**: `<button>`. Secondary: `class="secondary"`. Outline: `class="outline"`. A link styled as a button: `<a class="button" href="…">`. These are the only classes buttons need.
+- **Destructive button**: `data-tone` colors a button: `<button data-tone="error">Delete</button>` is solid red, `<button class="outline" data-tone="error">Remove</button>` red-bordered. Use it for the action that destroys something, above all in a confirm dialog: `<footer><button value="cancel" class="secondary">Cancel</button><button value="delete" data-tone="error">Delete</button></footer>`. `success`, `warning`, `info`, `neutral` and `style="--tone: …"` work too; the fill darkens as far as white text needs.
 - **Expand buttons**: a `<button aria-expanded="false" aria-controls="menu">Account</button>` shows a chevron after its label, pointing up while `aria-expanded="true"`. TagAction's dropdown buttons get it. Buttons without `aria-expanded` (and links styled as buttons) are left alone; the browser's own popover state doesn't count, so a phone-menu `popovertarget` button stays plain.
 - **Toggle buttons**: `<button aria-pressed="false">Bold</button>` is a toggle; with `aria-pressed="true"` it looks held down (a solid button darkens with an inset shadow; an `outline` or `secondary` one fills with a tint). TagAction's Show/Hide and theme buttons use it. Update the attribute yourself (or with TagAction) when it changes.
 - **Button row**: wrap buttons, or an input with a button (a search bar), in `<div role="group">`. Inputs and `<select>`s in the group share the row.
