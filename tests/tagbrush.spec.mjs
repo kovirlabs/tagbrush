@@ -692,8 +692,8 @@ test.describe('landing patterns', () => {
     await page.click('#menu-button');
     await expect(page.locator('#menu a').first()).toBeVisible();
     expect(await style(page, '#menu ul', 'flexDirection')).toBe('column');
-    const box = await page.locator('#menu').boundingBox();
-    expect(Math.round(box.width)).toBe(390);
+    // The panel grows in from 97%, so wait for it to settle
+    await expect.poll(async () => Math.round((await page.locator('#menu').boundingBox()).width)).toBe(390);
   });
 
   test('an ordered list of headed items is a numbered timeline', async ({ page }) => {
@@ -790,6 +790,94 @@ test.describe('photo hero', () => {
       }
     });
   }
+});
+
+test.describe('interaction and intent', () => {
+  const INTERACTION = fileUrl('tests/fixtures/interaction.html');
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1100, height: 800 });
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'no-preference' });
+    await page.goto(INTERACTION);
+  });
+
+  test('a dialog fades in, and appears at once with reduced motion', async ({ page }) => {
+    expect(await style(page, '#dialog', 'transitionProperty')).toContain('display');
+    await page.click('#open-dialog');
+    await expect.poll(() => style(page, '#dialog', 'opacity')).toBe('1');
+    expect(await style(page, '#dialog', 'transitionDuration')).not.toMatch(/^0s/);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    expect(await style(page, '#dialog', 'transitionDuration')).toMatch(/^0s/);
+  });
+
+  test('pages opt in to cross-document view transitions', async ({ page, browserName }) => {
+    test.skip(browserName === 'firefox', 'Firefox has no cross-document view transitions');
+    // A file:// stylesheet's rules can't be read, so parse the same text inline
+    const { readFileSync } = await import('node:fs');
+    await page.addStyleTag({ content: readFileSync('tagbrush.css', 'utf8') });
+    const found = await page.evaluate(() => {
+      const walk = (rules) => [...rules].some((r) => r.constructor.name === 'CSSViewTransitionRule' || (r.cssRules && walk(r.cssRules)));
+      return walk([...document.styleSheets].at(-1).cssRules);
+    });
+    expect(found).toBe(true);
+  });
+
+  test('a card whose heading is its only link is clickable all over', async ({ page }) => {
+    const box = await page.locator('#linked-card').boundingBox();
+    const hit = (x, y) => page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.id, [x, y]);
+    expect(await hit(box.x + box.width - 10, box.y + box.height - 10)).toBe('card-link');
+    await page.mouse.click(box.x + box.width - 10, box.y + box.height - 10);
+    await expect(page).toHaveURL(/#post-1$/);
+    // A card with its own button, or without a link, is not one big link
+    const other = await page.locator('#action-card').boundingBox();
+    expect(await hit(other.x + other.width - 10, other.y + other.height / 2)).not.toBe('card-link');
+    expect(await style(page, '#plain-card', 'position')).toBe('static');
+  });
+
+  test('a details in the header nav is a dropdown, and a details elsewhere is not', async ({ page }) => {
+    await page.click('#services > summary');
+    await expect(page.locator('#dropdown-link')).toBeVisible();
+    expect(await style(page, '#services > ul', 'position')).toBe('absolute');
+    expect(await style(page, '#services > ul', 'flexDirection')).toBe('column');
+    expect(await style(page, '#services', 'borderTopWidth')).toBe('0px');
+    expect(await style(page, '#plain-details', 'borderTopWidth')).not.toBe('0px');
+    // Inside the phone menu panel the dropdown opens in place
+    await page.setViewportSize({ width: 390, height: 800 });
+    await page.click('#menu-button');
+    expect(await style(page, '#services > ul', 'position')).toBe('static');
+  });
+
+  test('a wide table shows a shadow on the side with more to scroll to', async ({ page, browserName }) => {
+    test.skip(browserName === 'firefox', 'No scroll-driven animations in Firefox');
+    expect(await style(page, '#wide-figure', 'animationName')).toBe('tagbrush-scroll-shadow');
+    const shadow = () => style(page, '#wide-figure', 'boxShadow');
+    const atStart = await shadow();
+    await page.locator('#wide-figure').evaluate((el) => { el.scrollLeft = el.scrollWidth; });
+    await expect.poll(shadow).not.toBe(atStart);
+    // Something that doesn't scroll has no shadow
+    expect(await style(page, '#short-code', 'boxShadow')).toBe('none');
+  });
+
+  test('links to documents say what they are; buttons, nav links and plain links do not', async ({ page }) => {
+    const after = (sel) => style(page, sel, 'content', '::after');
+    expect(await after('#pdf')).toBe('"PDF"');
+    expect(await after('#csv')).toBe('"CSV"');
+    expect(await after('#download')).toContain('↓');
+    expect(await after('#pdf-button')).toBe('none');
+    expect(await after('#nav-pdf')).toBe('none');
+    expect(await after('#plain-link')).toBe('none');
+  });
+});
+
+test.describe('touch screens', () => {
+  test.skip(({ browserName }) => browserName !== 'chromium', 'Touch emulation is checked in Chromium');
+  test('header links are at least 44px tall', async ({ browser }) => {
+    const context = await browser.newContext({ hasTouch: true, isMobile: true, viewport: { width: 1100, height: 800 } });
+    const page = await context.newPage();
+    await page.goto(fileUrl('tests/fixtures/interaction.html'));
+    const height = await page.locator('#nav-link').evaluate((el) => el.getBoundingClientRect().height);
+    expect(height).toBeGreaterThanOrEqual(44);
+    await context.close();
+  });
 });
 
 test.describe('code highlighting', () => {

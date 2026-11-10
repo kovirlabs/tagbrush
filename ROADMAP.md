@@ -165,6 +165,32 @@ Found by moving the Kovir LLC site onto TagBrush.css: patterns every marketing s
 - [x] Steps (`<ol>` of headed items), a phone menu (`[popover]` in the header nav), a skip link, full-width bands (`<main data-layout="full">`), card improvements (edge-to-edge picture, buttons at the bottom, testimonials), a list of articles as cards, and a row of logos.
 - [x] Guiding principle: coverage over size. The size ceiling goes from 10 KB to 15 KB gzipped, and `llms.txt` gets a 4,000-token cap.
 
+## Chunk 23: Interaction, and styling from what the HTML means
+
+An evaluation against modern-web practice found two gaps. TagBrush.css barely responds to the user: dialogs, popovers and pages snap instead of easing, and nothing shows that a table scrolls sideways. And several elements say what the author means but are styled like plain elements: a card whose heading is a link, a `<details>` in a nav, a link to a PDF. Everything here falls back to today's behavior in browsers without support, and motion stops under `prefers-reduced-motion`.
+
+Next round:
+- [x] Dialogs and popovers fade and scale in and out (`@starting-style`, `transition-behavior: allow-discrete`, `overlay`), backdrop included.
+- [x] Cross-page fades with `@view-transition { navigation: auto }` (Chromium and Safari; Firefox navigates instantly).
+- [x] A card whose heading is its only link is clickable all over, with a hover and focus state on the card.
+- [x] A `<details>` in a header nav list is a dropdown menu, no JavaScript; inline in the phone menu panel.
+- [x] Wide tables and code blocks show a shadow at an edge that has more content (scroll-driven, Chromium and Safari 26).
+- [x] Header nav links are at least 44px tall on touch screens; hover effects only on devices that hover.
+- [x] Links to documents (`.pdf`, `.docx`, `.xlsx`, `.csv`, `.zip`) and `download` links say what they are.
+
+Later:
+- [ ] Choice cards: a `<fieldset>` of radio labels, the selected one highlighted (`label:has(:checked)`).
+- [ ] Pull quote (`figure > blockquote + figcaption`) and avatars (a small `<img>` in a testimonial footer or `<address>`). Both were on the round 1 "not yet" list.
+- [ ] Data tables: `<data>` values right-aligned in tabular figures, row hover, sticky header inside a scrolling `<figure>`.
+- [ ] `<iframe>` without a `height` is 16:9 at full width (video embeds).
+- [ ] A sale price: `<s>` before a price is muted.
+- [ ] Themed `<select>` picker behind `@supports (appearance: base-select)`; `:autofill` and `:user-valid` states.
+- [ ] `scrollbar-color` from the theme; stronger borders under `prefers-contrast: more`.
+
+Not planned: scroll-triggered reveal animations, parallax, and scroll progress bars (motion like this is a large part of what makes pages look generated), a sticky header by default (it changes every site's layout; maybe an opt-in pattern later), and a scrollspy table of contents (needs JavaScript, so TagAction).
+
+**Open question: a less generic default look.** AI-built sites cluster around a few looks: a gradient hero on white, everything centered, the same radius and shadow on every block, icons on tinted tiles. Several TagBrush.css defaults touch these: the centered hero on a primary tint, an identical frame on every card, and the feature icon tile. Options for a 2.0, or behind theme variables: a start-aligned hero on a near-neutral tint, cards framed by role (a fill, no border once filled, a shadow only for the featured card), plain icons at heading size, and theme-builder presets with deliberate font pairings. Decide before starting.
+
 ## Release
 
 - [x] Prepare 1.1.0 with chunks 2–18 (version bump, dated CHANGELOG, comparison and size claims updated).
