@@ -5,6 +5,7 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ## Unreleased
 
 ### Added
+- New-tab links: a link in running text with `target="_blank"` ends in " ↗", read as "(opens in a new tab)". Buttons, nav links, heading links, image links, and document links are left alone.
 - Sticky top bar, opt-in: `<header data-layout="sticky">` stays at the top on the page background, the root gets `scroll-padding-top: 5rem` so a heading you jump to or a focused field doesn't land under it, and once it's stuck a soft shadow appears where `container-type: scroll-state` is supported (Chromium; elsewhere the hairline alone), following the modern-web-guidance `state-aware-sticky-headers` guide.
 - Modal dialogs lock the page: while a `dialog:modal` is open the page behind doesn't scroll (`overflow: hidden` on the root via `:has()`), and the root keeps the scrollbar's space (`scrollbar-gutter: stable`), so nothing shifts sideways. Non-modal dialogs leave the page alone. Not in the scoped and Shadow DOM builds.
 - Disclosure: a `<details>` marker is a chevron instead of the browser's triangle, at the start of the summary and turning down when open, or at the end in an accordion (neighboring `<details>`, or a `name`) and turning up. Opening eases the height where `interpolate-size` and `::details-content` are supported (Chromium); elsewhere, and with reduced motion, it opens at once. The header-nav dropdown keeps its own chevron.

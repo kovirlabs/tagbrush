@@ -918,6 +918,12 @@ test.describe('interaction and intent', () => {
     expect(await style(page, '#short-code', 'boxShadow')).toBe('none');
   });
 
+  test('a link in text that opens a new tab gets an arrow; buttons, nav links and document links do not', async ({ page }) => {
+    expect(await style(page, '#new-tab', 'content', '::after')).toMatch(/^" ↗"/);
+    for (const sel of ['#new-tab-button', '#nav-new-tab', '#plain-link']) expect(await style(page, sel, 'content', '::after'), sel).toBe('none');
+    expect(await style(page, '#new-tab-pdf', 'content', '::after')).toMatch(/PDF/);
+  });
+
   test('links to documents say what they are; buttons, nav links and plain links do not', async ({ page }) => {
     const after = (sel) => style(page, sel, 'content', '::after');
     expect(await after('#pdf')).toBe('"PDF"');

@@ -111,6 +111,7 @@ Details: [references/content.md](references/content.md)
 - **Pull quote**: `<figure><blockquote>…</blockquote><figcaption>Name</figcaption></figure>`.
 - **Avatars**: an `<img>` in a figcaption, an article footer, or an `<address>` is round.
 - **Addresses**: `<address>` for contact details.
+- **New-tab links**: a link in text with `target="_blank"` gets " ↗".
 - **Document links**: links to `.pdf`, `.docx`, `.xlsx`, `.csv`, `.zip` get a label; `download` links an arrow.
 - **Images**: `<figure><img src="…" alt="…"><figcaption>Caption</figcaption></figure>`.
 - **Video embeds**: an `<iframe>` without a height is 16:9.

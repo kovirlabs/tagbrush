@@ -17,6 +17,7 @@ Text, media, tables, and code, including Markdown output.
 
 ## Links
 
+- **New-tab links**: a link in running text with `target="_blank"` ends in " ↗", read aloud as "(opens in a new tab)". Buttons, nav links, links in headings (cards), image links, and document or download links (which have their own label) don't get it.
 - **Document links**: a link to a document gets a small muted label saying what it is: `<a href="report.pdf">Annual report</a>` shows "PDF" (also DOC, XLS, CSV, ZIP), and a link with `download` gets an arrow. Buttons, nav links, and image links are left alone. Don't also write "(PDF)" in the link text.
 
 ## Media
