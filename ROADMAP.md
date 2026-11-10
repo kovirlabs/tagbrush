@@ -189,7 +189,13 @@ Later:
 
 Not planned: scroll-triggered reveal animations, parallax, and scroll progress bars (motion like this is a large part of what makes pages look generated), a sticky header by default (it changes every site's layout; maybe an opt-in pattern later), and a scrollspy table of contents (needs JavaScript, so TagAction).
 
-**Open question: a less generic default look.** AI-built sites cluster around a few looks: a gradient hero on white, everything centered, the same radius and shadow on every block, icons on tinted tiles. Several TagBrush.css defaults touch these: the centered hero on a primary tint, an identical frame on every card, and the feature icon tile. Options for a 2.0, or behind theme variables: a start-aligned hero on a near-neutral tint, cards framed by role (a fill, no border once filled, a shadow only for the featured card), plain icons at heading size, and theme-builder presets with deliberate font pairings. Decide before starting.
+**Decided (November 10, 2026): a less generic default look, as 2.0.** AI-built sites cluster around a few looks: a gradient hero on white, everything centered, the same radius and shadow on every block, icons on tinted tiles. 2.0 makes the new look the default, not an opt-in variable (see `EXPECTATIONS.md` in the family repo, section 2):
+- [x] Cards framed by role: a box only for a card with a link, button, or picture; a fill or a border, never both; a shadow only on overlays and the featured card.
+- [x] Plain icons at heading size; a muted, sentence-case label above a heading; no hero glow by default (`--hero-background: none`).
+- [x] Near-neutral grays (chroma capped at 0.012); nav and table links in the text color; a quote is text, a callout a box.
+- [x] More room between full-width sections and under a hero heading; a price pattern in cards.
+- [ ] Theme-builder presets with deliberate font pairings (not in 2.0).
+- [ ] Publish 2.0.0, and move the CDN lines in the docs and TagKit from `tagbrush@1` to `tagbrush@2` at the same time.
 
 ## Chunk 24: A guide that can grow
 

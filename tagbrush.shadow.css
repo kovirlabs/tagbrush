@@ -3,7 +3,7 @@
  * Angular ShadowDom). Page-level styles apply to :host instead of html/body.
  * Generated from tagbrush.css by scripts/build.mjs. Do not edit directly.
  *
- * TagBrush.css v1.2.0 - A lightweight, no-build CSS library for static sites and any framework
+ * TagBrush.css v2.0.0 - A lightweight, no-build CSS library for static sites and any framework
  * https://github.com/kovirlabs/tagbrush
  *
  * Everything lives inside the `tagbrush` cascade layer, so any CSS you write
@@ -27,14 +27,14 @@
 
     /* Colors */
     --color-primary: #2563eb;
-    /* Neutrals carry a faint tint of the primary's hue, so one color gives
-       the whole page a matching palette. The tint scales with the primary's
-       chroma: a gray or black primary gives pure grays. */
-    --color-background: light-dark(#ffffff, oklch(from var(--color-primary) 0.21 calc(c * 0.15) h));
-    --color-surface: light-dark(oklch(from var(--color-primary) 0.967 calc(c * 0.02) h), oklch(from var(--color-primary) 0.278 calc(c * 0.14) h));
-    --color-text: light-dark(oklch(from var(--color-primary) 0.278 calc(c * 0.14) h), oklch(from var(--color-primary) 0.967 calc(c * 0.02) h));
-    --color-text-muted: light-dark(oklch(from var(--color-primary) 0.528 calc(c * 0.08) h), oklch(from var(--color-primary) 0.714 calc(c * 0.09) h));
-    --color-border: light-dark(oklch(from var(--color-primary) 0.928 calc(c * 0.03) h), oklch(from var(--color-primary) 0.373 calc(c * 0.15) h));
+    /* Neutrals are near-neutral: they carry at most a trace of the primary's
+       hue (chroma capped at 0.012), so the brand color shows only where it
+       means something. A gray or black primary gives pure grays. */
+    --color-background: light-dark(#ffffff, oklch(from var(--color-primary) 0.21 min(c * 0.15, 0.012) h));
+    --color-surface: light-dark(oklch(from var(--color-primary) 0.967 min(c * 0.02, 0.012) h), oklch(from var(--color-primary) 0.278 min(c * 0.14, 0.012) h));
+    --color-text: light-dark(oklch(from var(--color-primary) 0.278 min(c * 0.14, 0.012) h), oklch(from var(--color-primary) 0.967 min(c * 0.02, 0.012) h));
+    --color-text-muted: light-dark(oklch(from var(--color-primary) 0.528 min(c * 0.08, 0.012) h), oklch(from var(--color-primary) 0.714 min(c * 0.09, 0.012) h));
+    --color-border: light-dark(oklch(from var(--color-primary) 0.928 min(c * 0.03, 0.012) h), oklch(from var(--color-primary) 0.373 min(c * 0.15, 0.012) h));
     --color-highlight: light-dark(#fef08a, #713f12);
     --color-error: light-dark(#dc2626, #f87171);
     --color-success: light-dark(#16a34a, #4ade80);
@@ -87,7 +87,7 @@
     --focus-ring-width: 3px;
     --shadow: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px rgb(0 0 0 / 0.06);
     --shadow-lg: 0 10px 25px rgb(0 0 0 / 0.15), 0 4px 10px rgb(0 0 0 / 0.1);
-    --hero-background: radial-gradient(ellipse 80% 70% at 50% 0%, color-mix(in oklab, var(--color-primary) 9%, transparent), transparent); /* behind a hero; none to turn off */
+    --hero-background: none; /* behind a hero, for example radial-gradient(ellipse 80% 70% at 50% 0%, color-mix(in oklab, var(--color-primary) 9%, transparent), transparent) */
     --transition-duration: 0.15s;
 
     /* Code highlighting: token colors for Prism, highlight.js, Hugo/Chroma,
@@ -177,7 +177,7 @@
   /* Readers who ask for more contrast get darker borders and full-contrast muted text */
   @media (prefers-contrast: more) {
     :host {
-      --color-border: light-dark(oklch(from var(--color-primary) 0.528 calc(c * 0.08) h), oklch(from var(--color-primary) 0.714 calc(c * 0.09) h));
+      --color-border: light-dark(oklch(from var(--color-primary) 0.528 min(c * 0.08, 0.012) h), oklch(from var(--color-primary) 0.714 min(c * 0.09, 0.012) h));
       --color-text-muted: var(--color-text);
     }
   }
@@ -334,12 +334,12 @@
     color: inherit;
   }
 
+  /* A quote is text set off by a rule, not a box (a callout is the box) */
   blockquote {
     margin: 0 0 var(--spacing-md) 0;
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-left: 4px solid color-mix(in oklab, var(--color-primary) 45%, var(--color-border));
-    color: var(--color-text-muted);
-    background-color: var(--color-surface);
+    padding: 0 var(--spacing-md);
+    border-left: 3px solid color-mix(in oklab, var(--color-text) 30%, transparent);
+    color: var(--color-text);
   }
 
   blockquote > :last-child {
@@ -358,9 +358,7 @@
   figure > blockquote:has(+ figcaption) {
     margin-bottom: var(--spacing-sm);
     padding: 0 0 0 var(--spacing-lg);
-    border-left-color: var(--color-primary);
     color: var(--color-text);
-    background: none;
     font-size: 1.25rem;
     line-height: 1.5;
   }
@@ -399,11 +397,8 @@
   /* A label before the heading: <hgroup><p>Pricing</p><h2>…</h2></hgroup> */
   hgroup > :not(h1, h2, h3, h4, h5, h6):has(~ :is(h1, h2, h3, h4, h5, h6)) {
     margin: 0 0 var(--spacing-xs);
-    color: var(--color-link, light-dark(oklch(from var(--color-primary) min(l, 0.5) c h), oklch(from var(--color-primary) max(l, 0.77) min(c, 0.15) h)));
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    color: var(--color-text-muted);
+    font-weight: 500;
   }
 
   code, pre, kbd, samp {
@@ -720,6 +715,16 @@
 
   nav :is(input, select, textarea, label) {
     margin-bottom: 0;
+  }
+
+  /* Navigation links are text, not brand color: muted, full contrast on
+     hover, and full contrast and heavier for the current page */
+  :where(nav a:not(.button)) {
+    color: var(--color-text-muted);
+  }
+
+  :where(nav a:not(.button):hover) {
+    color: var(--color-text);
   }
 
   :where(nav [aria-current]:not([aria-current="false"])) {
@@ -1731,7 +1736,6 @@
     padding: var(--spacing-md);
     border: var(--border-width) solid var(--color-border);
     border-radius: var(--card-radius);
-    background-color: var(--color-surface);
   }
 
   label:has(> input:is([type="checkbox"], [type="radio"])):has(> small) > small {
@@ -1884,6 +1888,11 @@
     background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
   }
 
+  /* Links in a table are underlined text, not brand color */
+  :where(td a:not(.button), th a:not(.button)) {
+    color: inherit;
+  }
+
   /* Rows light up under the pointer, on devices that can hover */
   @media (hover: hover) {
     :where(tbody tr:hover) {
@@ -1919,7 +1928,6 @@
   .card {
     margin-bottom: var(--spacing-md);
     padding: var(--card-padding);
-    border: var(--border-width) solid var(--color-border);
     border-radius: var(--card-radius);
     background-color: var(--color-surface);
   }
@@ -1978,8 +1986,14 @@
 
   :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))) > :where(article) {
     min-width: 0;
+  }
+
+  /* Frame by role: a card is a box (a fill, no border) only when it is one
+     thing you act on or compare: it has a link, a button, or a picture (a
+     plan, a post, a clickable card). A feature card (icon, heading, text) is
+     open, set apart by space. */
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article):where(:has(a[href], button, .button, img, picture, video)) {
     padding: var(--card-padding);
-    border: var(--border-width) solid var(--color-border);
     border-radius: var(--card-radius);
     background-color: var(--color-surface);
   }
@@ -1989,17 +2003,14 @@
   }
 
   /* Feature cards: an icon (an <svg> without width or height) first in a card
-     sits on a tinted tile. data-tone on the svg picks another color. */
+     is a plain icon at heading size in the text color. data-tone on the svg
+     picks a color. */
   :where(section > article > svg:first-child:not([width], [height])) {
     display: block;
-    box-sizing: border-box;
-    width: 2.75rem;
-    height: 2.75rem;
-    margin-bottom: var(--spacing-md);
-    padding: 0.625rem;
-    border-radius: var(--border-radius);
-    color: color-mix(in oklab, var(--tone, var(--color-primary)) 75%, var(--color-text));
-    background-color: color-mix(in oklab, var(--tone, var(--color-primary)) 14%, transparent);
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-bottom: var(--spacing-sm);
+    color: var(--tone, var(--color-heading));
   }
 
   section > article > svg:first-child + :is(h2, h3, h4, h5, h6) {
@@ -2009,8 +2020,21 @@
   /* The featured card in a row (a recommended plan) is the one whose button is
      solid while the others' are outlined */
   :where(section:has(> article + article):has(> article > :last-child > .outline) > article:has(> :last-child > :is(.button, button):not(.outline, .secondary))) {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 1px var(--color-primary), var(--shadow-lg);
+    box-shadow: 0 0 0 2px var(--color-primary), var(--shadow-lg);
+  }
+
+  /* A price in a card: a paragraph that starts with <strong> or <data> and
+     then a <small>: <p><strong>$12</strong> <small>per month</small></p> */
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article, .card) > p:has(> :is(strong, data):first-child + small) > :is(strong, data):first-child {
+    font-size: var(--font-size-h2);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article, .card) > p:has(> :is(strong, data):first-child + small) > small {
+    color: var(--color-text-muted);
   }
 
   /* A picture beside text: a <section> of just a <figure> and a <div> puts
@@ -2056,10 +2080,6 @@
 
   :where(ul:has(> li > article:only-child)) > li > article {
     height: 100%;
-    padding: var(--card-padding);
-    border: var(--border-width) solid var(--color-border);
-    border-radius: var(--card-radius);
-    background-color: var(--color-surface);
   }
 
   /* In every card, a last footer, button group, or paragraph of buttons sits
@@ -2095,7 +2115,7 @@
 
   @media (hover: hover) {
     :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article):where(:has(:is(h2, h3, h4, h5, h6) > a):not(:has(:not(h1, h2, h3, h4, h5, h6) > a, button, input, select, textarea))):hover {
-      border-color: color-mix(in oklab, var(--color-primary) 45%, var(--color-border));
+      background-color: color-mix(in oklab, var(--color-primary) 6%, var(--color-surface));
     }
   }
 
@@ -2113,7 +2133,7 @@
     width: calc(100% + 2 * var(--card-padding));
     max-width: none;
     margin: calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) var(--spacing-md);
-    border-radius: calc(var(--card-radius) - var(--border-width)) calc(var(--card-radius) - var(--border-width)) 0 0;
+    border-radius: var(--card-radius) var(--card-radius) 0 0;
     aspect-ratio: 16 / 10;
     object-fit: cover;
   }
@@ -2203,11 +2223,11 @@
   }
 
   :where(aside nav a:hover) {
-    background-color: color-mix(in srgb, var(--color-primary) 8%, transparent);
+    background-color: color-mix(in srgb, var(--color-text) 6%, transparent);
   }
 
   :where(aside nav [aria-current]:not([aria-current="false"])) {
-    background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
+    background-color: color-mix(in srgb, var(--color-text) 9%, transparent);
   }
 
   /* Key numbers: a <dl> whose items are wrapped in <div>s becomes a row of
@@ -2220,7 +2240,6 @@
 
   :where(dl:has(> div)) > div {
     padding: var(--spacing-md) var(--spacing-lg);
-    border: var(--border-width) solid var(--color-border);
     border-radius: var(--card-radius);
     background-color: var(--color-surface);
   }
