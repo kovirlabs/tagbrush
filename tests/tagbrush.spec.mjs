@@ -656,6 +656,142 @@ test.describe('article grid', () => {
   });
 });
 
+test.describe('landing patterns', () => {
+  const LANDING = fileUrl('tests/fixtures/landing.html');
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1100, height: 800 });
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.goto(LANDING);
+  });
+
+  test('a skip link stays out of sight until it is focused', async ({ page }) => {
+    const bottom = () => page.locator('#skip').evaluate((el) => el.getBoundingClientRect().bottom);
+    expect(await bottom()).toBeLessThanOrEqual(0);
+    await page.locator('#skip').focus();
+    expect(await bottom()).toBeGreaterThan(0);
+  });
+
+  test('sections in a full-width main are bands that center their content', async ({ page }) => {
+    expect(await style(page, 'main', 'paddingTop')).toBe('0px');
+    expect(await style(page, 'main', 'paddingLeft')).toBe('0px');
+    expect(await style(page, '#band', 'paddingLeft')).toBe('16px');
+    expect(await style(page, '#band', 'paddingTop')).toBe('32px');
+    expect(await style(page, '#dark-band', 'marginTop')).toBe('0px');
+    await page.setViewportSize({ width: 1600, height: 800 });
+    expect(await style(page, '#band', 'paddingLeft')).toBe('216px');
+    expect(await style(page, '#dark-band', 'backgroundColor')).not.toBe(await style(page, '#band', 'backgroundColor'));
+  });
+
+  test('the header menu sits in the bar on wide screens and behind a button on phones', async ({ page }) => {
+    expect(await style(page, '#menu', 'display')).toBe('contents');
+    await expect(page.locator('#menu-button')).toBeHidden();
+    await expect(page.locator('#menu a').first()).toBeVisible();
+    await page.setViewportSize({ width: 390, height: 800 });
+    await expect(page.locator('#menu-button')).toBeVisible();
+    await expect(page.locator('#menu a').first()).toBeHidden();
+    await page.click('#menu-button');
+    await expect(page.locator('#menu a').first()).toBeVisible();
+    expect(await style(page, '#menu ul', 'flexDirection')).toBe('column');
+    const box = await page.locator('#menu').boundingBox();
+    expect(Math.round(box.width)).toBe(390);
+  });
+
+  test('an ordered list of headed items is a numbered timeline', async ({ page }) => {
+    expect(await style(page, '#steps', 'listStyleType')).toBe('none');
+    expect(await style(page, '#steps > li', 'display')).toBe('grid');
+    const numbers = await page.locator('#steps > li').evaluateAll((els) => els.map((el) => getComputedStyle(el, '::before').content));
+    expect(numbers).toEqual(['counter(list-item)', 'counter(list-item)', 'counter(list-item)']);
+    const left = (sel) => page.locator(sel).evaluate((el) => Math.round(el.getBoundingClientRect().left));
+    expect(await left('#steps > li:nth-child(2) > p:last-child')).toBe(await left('#steps > li:nth-child(2) > h3'));
+    expect(await style(page, '#plain-list', 'listStyleType')).toBe('decimal');
+    expect(await style(page, '#plain-list > li', 'display')).toBe('list-item');
+  });
+
+  test('buttons line up at the bottom of a row of cards', async ({ page }) => {
+    const top = (sel) => page.locator(sel).evaluate((el) => Math.round(el.getBoundingClientRect().top));
+    expect(await top('#short-button')).toBe(await top('#tall-button'));
+  });
+
+  test('a picture first in a card runs to its edges', async ({ page }) => {
+    const card = await page.locator('#short-card').boundingBox();
+    const img = await page.locator('#card-image').boundingBox();
+    expect(Math.abs(img.x - card.x)).toBeLessThanOrEqual(1);
+    expect(Math.abs(img.y - card.y)).toBeLessThanOrEqual(1);
+    expect(Math.abs(img.width - card.width)).toBeLessThanOrEqual(2);
+  });
+
+  test('a quote in a card is plain text, not a box', async ({ page }) => {
+    expect(await style(page, '#quote-card > blockquote', 'borderLeftWidth')).toBe('0px');
+    expect(await style(page, '#quote-card > blockquote', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+  });
+
+  test('a list of images is a centered row; a list with other content is not', async ({ page }) => {
+    expect(await style(page, '#logos', 'display')).toBe('flex');
+    expect(await style(page, '#logos', 'justifyContent')).toBe('center');
+    expect(await style(page, '#mixed-list', 'display')).toBe('block');
+  });
+
+  test('the card with the only solid button in a row is featured', async ({ page }) => {
+    const primary = await token(page, 'var(--color-primary)');
+    expect(await style(page, '#tall-card', 'borderTopColor')).toBe(primary);
+    expect(await style(page, '#short-card', 'borderTopColor')).not.toBe(primary);
+  });
+
+  test('a section of a figure and a div puts them side by side; a heading and a figure stay stacked', async ({ page }) => {
+    const box = (sel) => page.locator(sel).boundingBox();
+    const [figure, text] = [await box('#media > figure'), await box('#media-text')];
+    expect(text.x).toBeGreaterThan(figure.x + figure.width);
+    expect(await style(page, '#chart', 'display')).toBe('block');
+    await page.setViewportSize({ width: 390, height: 800 });
+    const [f2, t2] = [await box('#media > figure'), await box('#media-text')];
+    expect(t2.y).toBeGreaterThan(f2.y + f2.height - 1);
+  });
+
+  test('a list of articles is a grid of cards', async ({ page }) => {
+    expect(await style(page, '#posts', 'display')).toBe('grid');
+    expect(await style(page, '#posts', 'listStyleType')).toBe('none');
+    expect(await style(page, '#posts article', 'backgroundColor')).toBe(await token(page, 'var(--color-surface)'));
+    const tops = await page.locator('#posts > li').evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().top)));
+    expect(new Set(tops).size).toBe(1);
+  });
+});
+
+test.describe('photo hero', () => {
+  for (const scheme of ['light', 'dark']) {
+    test(`an image first in the page header fills it behind light text, ${scheme}`, async ({ page }) => {
+      await page.setViewportSize({ width: 1100, height: 800 });
+      await page.emulateMedia({ colorScheme: scheme });
+      await page.goto(fileUrl('tests/fixtures/photo-hero.html'));
+      const hero = await page.locator('#hero').boundingBox();
+      const photo = await page.locator('#hero-photo').boundingBox();
+      // The photo fills the header's padding box (inside its bottom border)
+      for (const k of ["x", "y", "width"]) expect(Math.abs(photo[k] - hero[k])).toBeLessThanOrEqual(1);
+      expect(Math.abs(photo.height - hero.height)).toBeLessThanOrEqual(1);
+      expect(await style(page, '#hero', 'display')).not.toBe('grid');
+      expect(await style(page, '#hero hgroup', 'textAlign')).toBe('center');
+      // The fixture's photo is pure white, the worst case: blend it over the
+      // wash the way the browser does, then check the text against the result.
+      // Colors compute as oklch(); a canvas pixel turns them into sRGB.
+      const rgb = (sel, prop) => page.locator(sel).evaluate((el, prop) => {
+        const ctx = new OffscreenCanvas(1, 1).getContext('2d');
+        ctx.fillStyle = getComputedStyle(el)[prop];
+        ctx.fillRect(0, 0, 1, 1);
+        return [...ctx.getImageData(0, 0, 1, 1).data.slice(0, 3)];
+      }, prop);
+      const [wr, wg, wb] = await rgb('#hero', 'backgroundColor');
+      const opacity = Number(await style(page, '#hero-photo', 'opacity'));
+      const bg = [wr, wg, wb].map((v) => v * (1 - opacity) + 255 * opacity);
+      const lum = ([r, g, b]) => [r, g, b].map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; })
+        .reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
+      for (const sel of ['#title', '#sub', '#eyebrow', '#nav-link']) {
+        const fg = await rgb(sel, 'color');
+        const [a, b] = [lum(fg), lum(bg)].sort((x, y) => y - x);
+        expect((a + 0.05) / (b + 0.05), sel).toBeGreaterThanOrEqual(4.5);
+      }
+    });
+  }
+});
+
 test.describe('code highlighting', () => {
   const CODE = fileUrl('tests/fixtures/code.html');
   const KEYWORD = 'rgb(124, 58, 237)';
@@ -1314,8 +1450,11 @@ test.describe('accessibility', () => {
 });
 
 test.describe('size budget', () => {
-  // TagBrush.css favors covering more HTML over shaving bytes, but stays small.
-  const BUDGET = 10 * 1024;
+  // Coverage matters more than bytes (see ROADMAP.md); this ceiling only
+  // catches accidental bloat. The guide's length is the tighter constraint:
+  // agents read llms.txt on every page they build.
+  const BUDGET = 15 * 1024;
+  const GUIDE_TOKENS = 4000;
 
   test.skip(({ browserName }) => browserName !== 'chromium', 'File size is the same in every browser');
 
@@ -1324,6 +1463,12 @@ test.describe('size budget', () => {
     const { readFileSync } = await import('node:fs');
     const size = gzipSync(readFileSync('tagbrush.min.css'), { level: 9 }).length;
     expect(size).toBeLessThanOrEqual(BUDGET);
+  });
+
+  test(`llms.txt is at most ${GUIDE_TOKENS} tokens`, async () => {
+    const { encode } = await import('gpt-tokenizer');
+    const { readFileSync } = await import('node:fs');
+    expect(encode(readFileSync('llms.txt', 'utf8')).length).toBeLessThanOrEqual(GUIDE_TOKENS);
   });
 });
 
