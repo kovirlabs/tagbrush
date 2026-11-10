@@ -1545,7 +1545,7 @@
      field's label ends in a red asterisk. It isn't read aloud: the field
      itself tells screen readers it's required. A form where every field is
      required (a sign-in) gets none. */
-  :where(form:has(:optional:not(button, [type="hidden"], [type="submit"], [type="button"], [type="reset"], [type="image"])) label:is(:has(+ :required), :has(> :required)))::after {
+  :where(form:has(:optional:not(button, [type="hidden"], [type="submit"], [type="button"], [type="reset"], [type="image"])) label:is(:has(+ :required), :has(> :required), :has(+ [role="group"] > :required)))::after {
     content: " *";
     content: " *" / "";
     color: var(--color-error);

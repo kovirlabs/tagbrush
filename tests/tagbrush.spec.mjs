@@ -1549,6 +1549,7 @@ test.describe('states people expect', () => {
     const after = (sel) => style(page, sel, 'content', '::after');
     expect(await after('#label-name')).toMatch(/^" \*"/);
     expect(await after('#label-terms')).toMatch(/^" \*"/);
+    expect(await after('#label-password')).toMatch(/^" \*"/); // a field in a row with its button (TagAction's Show/Hide)
     expect(await style(page, '#label-name', 'color', '::after')).toBe(await token(page, 'var(--color-error)'));
     expect(await after('#label-company')).toBe('none');
     expect(await after('#label-news')).toBe('none');
