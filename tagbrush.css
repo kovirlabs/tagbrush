@@ -1157,6 +1157,17 @@
       box-shadow: none;
     }
   }
+  /* While a modal dialog is open the page behind it doesn't scroll, and the
+     scrollbar's space is always kept, so nothing shifts sideways when the
+     scrollbar goes away. Non-modal dialogs (show()) leave the page alone. */
+  :root {
+    scrollbar-gutter: stable;
+  }
+
+  :root:has(dialog:modal) {
+    overflow: hidden;
+  }
+
   /* Pages of the same site cross-fade into each other (Chromium, Safari) */
   @media (prefers-reduced-motion: no-preference) {
     @view-transition {

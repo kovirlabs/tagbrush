@@ -421,6 +421,23 @@ test.describe('semantic components', () => {
     expect(await style(page, '#demo-dialog footer', 'fontSize')).toBe('16px');
   });
 
+  test('a modal dialog stops the page behind it from scrolling, without shifting it; a non-modal one does not', async ({ page }) => {
+    const width = () => page.evaluate(() => document.body.getBoundingClientRect().width);
+    const overflow = () => page.evaluate(() => getComputedStyle(document.documentElement).overflowY);
+    expect(await style(page, 'html', 'scrollbarGutter')).toBe('stable');
+    const before = await width();
+    expect(await overflow()).toBe('visible');
+    await page.evaluate(() => document.querySelector('#demo-dialog').showModal());
+    expect(await overflow()).toBe('hidden');
+    expect(await width()).toBe(before);
+    await page.mouse.wheel(0, 600);
+    await page.waitForTimeout(100);
+    expect(await page.evaluate(() => scrollY)).toBe(0);
+    await page.evaluate(() => { const d = document.querySelector('#demo-dialog'); d.close(); d.show(); });
+    expect(await overflow()).toBe('visible');
+    await page.evaluate(() => document.querySelector('#demo-dialog').close());
+  });
+
   test('neighboring details join into an accordion', async ({ page }) => {
     const first = 'details[name=faq]:has(+ details)';
     expect(await style(page, first, 'marginBottom')).toBe('0px');

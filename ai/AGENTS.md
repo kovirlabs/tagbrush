@@ -66,7 +66,7 @@ Details: [llms/apps.md](https://kovirlabs.github.io/tagbrush/llms/apps.md)
 - **Changes**: `<ins>+12%</ins>` and `<del>−3%</del>`; in a stat tile, green ▲ and red ▼ text.
 - **Progress and meter**: `<progress value="40" max="100">` and `<meter value="0.7" low="0.5" high="0.8">`.
 - **Loading**: `aria-busy="true"` shows a spinner.
-- **Modal**: `<dialog><form method="dialog"><header><h2>…</h2><button aria-label="Close">✕</button></header>…<footer><button>OK</button></footer></form></dialog>`.
+- **Modal**: `<dialog><form method="dialog"><header><h2>…</h2><button aria-label="Close">✕</button></header>…<footer><button>OK</button></footer></form></dialog>`; the page behind doesn't scroll.
 - **Tabs**: `<div role="tablist">` of `<button role="tab" aria-controls="…">` and `role="tabpanel"` sections; TagAction switches them.
 - **Popover**: `<button popovertarget="tip">?</button><div popover id="tip">…</div>`.
 - **Buttons**: `<button>`, `class="secondary"`, `class="outline"`, and `<a class="button" href="…">`.
@@ -229,7 +229,7 @@ Layouts and components for pages people operate rather than read top to bottom.
 
 #### Overlays
 
-- **Modal**: `<dialog><form method="dialog"><header><h2>Delete user?</h2><button aria-label="Close">✕</button></header><p>This can't be undone.</p><footer><button class="secondary" value="cancel">Cancel</button><button value="ok">Delete</button></footer></form></dialog>`, opened with `dialog.showModal()`. The header puts the title and close button on one row; footer buttons align right. It fades in and out.
+- **Modal**: `<dialog><form method="dialog"><header><h2>Delete user?</h2><button aria-label="Close">✕</button></header><p>This can't be undone.</p><footer><button class="secondary" value="cancel">Cancel</button><button value="delete" data-tone="error">Delete</button></footer></form></dialog>`, opened with `dialog.showModal()`. The header puts the title and close button on one row; footer buttons align right. It fades in and out, and the page behind it doesn't scroll or shift while it's open.
 - **Tabs**: `<div role="tablist" aria-label="Install with"><button role="tab" aria-controls="npm" aria-selected="true">npm</button><button role="tab" aria-controls="cdn">CDN</button></div><section id="npm" role="tabpanel">…</section><section id="cdn" role="tabpanel">…</section>`. The tabs are a row with the selected one underlined. TagAction shows one panel at a time and adds the arrow keys; without it every panel shows, one after another.
 - **Popover**: `<button popovertarget="tip">?</button><div popover id="tip">…</div>`. It fades in and out.
 
