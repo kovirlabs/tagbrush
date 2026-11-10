@@ -76,6 +76,7 @@ Details: [tagbrush-apps.mdc](tagbrush-apps.mdc)
 - **Tabs**: `<div role="tablist">` of `<button role="tab" aria-controls="…">` and `role="tabpanel"` sections; TagAction switches them.
 - **Popover**: `<button popovertarget="tip">?</button><div popover id="tip">…</div>`.
 - **Buttons**: `<button>`, `class="secondary"`, `class="outline"`, and `<a class="button" href="…">`.
+- **Expand buttons**: `<button aria-expanded="false" aria-controls="menu">` shows a chevron that flips when `"true"`.
 - **Button row**: `<div role="group">` around buttons, or an input and a button.
 - **Icons**: an `<svg viewBox="0 0 24 24" aria-hidden="true">` without width/height in a button, link, or heading is sized to the text.
 

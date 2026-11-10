@@ -1462,6 +1462,23 @@ test.describe('polish: badges, icons, hero, sidebar, footer', () => {
   });
 });
 
+test.describe('states people expect', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+    await page.goto(fileUrl('tests/fixtures/states.html'));
+  });
+
+  test('a button with aria-expanded shows a chevron that flips when open; other buttons have none', async ({ page }) => {
+    const rotate = (sel) => style(page, sel, 'rotate', '::after');
+    expect(await style(page, '#expand-closed', 'borderRightStyle', '::after')).toBe('solid');
+    expect(await rotate('#expand-closed')).toBe('45deg');
+    expect(await rotate('#expand-open')).toBe('-135deg');
+    await page.locator('#expand-closed').evaluate((el) => el.setAttribute('aria-expanded', 'true'));
+    expect(await rotate('#expand-closed')).toBe('-135deg');
+    for (const sel of ['#plain-button', '#link-button']) expect(await style(page, sel, 'content', '::after')).toBe('none');
+  });
+});
+
 test.describe('chat and AI output', () => {
   // A chat message styled by the scoped build, with data-density="compact".
   test.beforeEach(async ({ page }) => {

@@ -5,6 +5,7 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ## Unreleased
 
 ### Added
+- Expand buttons: a `<button aria-expanded>` shows a chevron after its label that points up while `aria-expanded="true"`, so a dropdown button (TagAction's, or your own) says it opens something. Buttons without the attribute are unchanged.
 - Landing-page patterns that sites were writing by hand, found by moving the Kovir LLC site onto TagBrush.css (about 0.8 KB gzipped together):
   - Steps: an `<ol>` whose items each start with a heading is a numbered timeline. Other ordered lists are unchanged.
   - Phone menu: links in a `<div popover>` inside the header's `<nav>` sit in the bar on wide screens; on phones the `<button popovertarget>` before them opens them as a panel under the bar. No JavaScript.

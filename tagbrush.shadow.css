@@ -1176,6 +1176,26 @@
     gap: 0.5em;
   }
 
+  /* A button that opens something (aria-expanded) shows a chevron that flips
+     while it's open: <button aria-expanded="false" aria-controls="menu">Account</button> */
+  :where(button[aria-expanded])::after {
+    content: "";
+    display: inline-block;
+    width: 0.4em;
+    height: 0.4em;
+    margin-inline-start: 0.5em;
+    border: solid currentColor;
+    border-width: 0 0.12em 0.12em 0;
+    rotate: 45deg;
+    translate: 0 -0.2em;
+    transition: rotate var(--transition-duration), translate var(--transition-duration);
+  }
+
+  :where(button[aria-expanded="true"])::after {
+    rotate: -135deg;
+    translate: 0 0.05em;
+  }
+
   /* After the button rules so a busy button shows the progress cursor */
   :where([aria-busy="true"]) {
     cursor: progress;
