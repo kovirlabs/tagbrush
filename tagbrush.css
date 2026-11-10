@@ -1580,6 +1580,22 @@
     --_btn-border: var(--color-primary);
   }
 
+  /* A toggle that is on (aria-pressed="true") looks held down: a solid button
+     takes its hover color and an inset shadow, an outline or secondary one a
+     tint of the primary color. <button aria-pressed="false">Bold</button> */
+  :where(button[aria-pressed="true"]) {
+    --_btn-bg: var(--_btn-bg-hover);
+    box-shadow: inset 0 2px 4px rgb(0 0 0 / 0.2);
+  }
+
+  :where(button:is(.outline, .secondary)[aria-pressed="true"]) {
+    --_btn-bg: color-mix(in oklab, var(--color-primary) 16%, var(--color-background));
+    --_btn-bg-hover: color-mix(in oklab, var(--color-primary) 22%, var(--color-background));
+    --_btn-color: var(--color-text);
+    --_btn-border: var(--color-primary);
+    box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.15);
+  }
+
   /* ==========================================================================
      Forms
      ========================================================================== */

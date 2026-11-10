@@ -5,6 +5,7 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ## Unreleased
 
 ### Added
+- Toggle buttons: a `<button aria-pressed="true">` looks held down, with the hover color and an inset shadow, or a tint of the primary color on an `outline` or `secondary` button. TagAction's Show/Hide and theme buttons now show their state. `aria-pressed="false"` looks like any button.
 - Expand buttons: a `<button aria-expanded>` shows a chevron after its label that points up while `aria-expanded="true"`, so a dropdown button (TagAction's, or your own) says it opens something. Buttons without the attribute are unchanged.
 - Landing-page patterns that sites were writing by hand, found by moving the Kovir LLC site onto TagBrush.css (about 0.8 KB gzipped together):
   - Steps: an `<ol>` whose items each start with a heading is a numbered timeline. Other ordered lists are unchanged.

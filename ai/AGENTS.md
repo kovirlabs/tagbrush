@@ -71,6 +71,7 @@ Details: [llms/apps.md](https://kovirlabs.github.io/tagbrush/llms/apps.md)
 - **Popover**: `<button popovertarget="tip">?</button><div popover id="tip">…</div>`.
 - **Buttons**: `<button>`, `class="secondary"`, `class="outline"`, and `<a class="button" href="…">`.
 - **Expand buttons**: `<button aria-expanded="false" aria-controls="menu">` shows a chevron that flips when `"true"`.
+- **Toggle buttons**: `<button aria-pressed="true">` looks held down.
 - **Button row**: `<div role="group">` around buttons, or an input and a button.
 - **Icons**: an `<svg viewBox="0 0 24 24" aria-hidden="true">` without width/height in a button, link, or heading is sized to the text.
 
@@ -232,6 +233,7 @@ Layouts and components for pages people operate rather than read top to bottom.
 
 - **Buttons**: `<button>`. Secondary: `class="secondary"`. Outline: `class="outline"`. A link styled as a button: `<a class="button" href="…">`. These are the only classes buttons need.
 - **Expand buttons**: a `<button aria-expanded="false" aria-controls="menu">Account</button>` shows a chevron after its label, pointing up while `aria-expanded="true"`. TagAction's dropdown buttons get it. Buttons without `aria-expanded` (and links styled as buttons) are left alone; the browser's own popover state doesn't count, so a phone-menu `popovertarget` button stays plain.
+- **Toggle buttons**: `<button aria-pressed="false">Bold</button>` is a toggle; with `aria-pressed="true"` it looks held down (a solid button darkens with an inset shadow; an `outline` or `secondary` one fills with a tint). TagAction's Show/Hide and theme buttons use it. Update the attribute yourself (or with TagAction) when it changes.
 - **Button row**: wrap buttons, or an input with a button (a search bar), in `<div role="group">`. Inputs and `<select>`s in the group share the row.
 - **Icons**: an inline `<svg viewBox="0 0 24 24" aria-hidden="true">` without `width`/`height` inside a button, link, heading, label, list item, table cell, or `<mark>` is sized to the text and lined up with it. Give the SVG its own `fill`/`stroke` attributes (for example `fill="none" stroke="currentColor"`).
 

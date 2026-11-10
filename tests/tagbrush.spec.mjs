@@ -1477,6 +1477,15 @@ test.describe('states people expect', () => {
     expect(await rotate('#expand-closed')).toBe('-135deg');
     for (const sel of ['#plain-button', '#link-button']) expect(await style(page, sel, 'content', '::after')).toBe('none');
   });
+
+  test('a toggle with aria-pressed="true" looks held down; "false" looks like any button', async ({ page }) => {
+    expect(await style(page, '#pressed-on', 'boxShadow')).toContain('inset');
+    expect(await style(page, '#pressed-on', 'backgroundColor')).not.toBe(await style(page, '#pressed-off', 'backgroundColor'));
+    expect(await style(page, '#pressed-off', 'backgroundColor')).toBe(await style(page, '#plain-button', 'backgroundColor'));
+    expect(await style(page, '#pressed-off', 'boxShadow')).toBe('none');
+    expect(await style(page, '#outline-on', 'backgroundColor')).not.toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#outline-off', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+  });
 });
 
 test.describe('chat and AI output', () => {
