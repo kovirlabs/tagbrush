@@ -1168,6 +1168,40 @@
     overflow: hidden;
   }
 
+  /* A top bar that stays: <header data-layout="sticky"><nav>…</nav></header>.
+     It sticks to the top on its background, the page keeps room above a
+     heading you jump to, and where scroll-state queries are supported a soft
+     shadow shows once it's stuck (elsewhere the hairline alone). */
+  :where(body, body > :not([class])) > header[data-layout="sticky"] {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background-color: var(--color-background);
+    container: tagbrush-sticky-header / scroll-state;
+  }
+
+  :where(body, body > :not([class])) > header[data-layout="sticky"]::after {
+    content: "";
+    position: absolute;
+    inset: 100% 0 auto;
+    height: 0.75rem;
+    background: linear-gradient(rgb(0 0 0 / 0.08), transparent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-duration);
+  }
+
+  @container tagbrush-sticky-header scroll-state(stuck: top) {
+    :where(body, body > :not([class])) > header[data-layout="sticky"]::after {
+      opacity: 1;
+    }
+  }
+
+  /* Headings you jump to land below the bar, as do focused fields (WCAG 2.4.11) */
+  :root:has(> body > header[data-layout="sticky"], > body > :not([class]) > header[data-layout="sticky"]) {
+    scroll-padding-top: 5rem;
+  }
+
   /* Pages of the same site cross-fade into each other (Chromium, Safari) */
   @media (prefers-reduced-motion: no-preference) {
     @view-transition {

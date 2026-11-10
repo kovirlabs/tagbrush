@@ -1517,6 +1517,34 @@ test.describe('polish: badges, icons, hero, sidebar, footer', () => {
   });
 });
 
+test.describe('sticky header', () => {
+  test('header[data-layout="sticky"] stays at the top and a jumped-to heading lands below it', async ({ page, browserName }) => {
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 1000, height: 700 });
+    await page.goto(fileUrl('tests/fixtures/sticky.html'));
+    expect(await style(page, 'body > header', 'position')).toBe('sticky');
+    expect(await style(page, 'html', 'scrollPaddingTop')).toBe('80px');
+    expect(await style(page, 'body > header', 'content', '::after')).not.toBe('none');
+    const shadow = () => style(page, 'body > header', 'opacity', '::after');
+    expect(await shadow()).toBe('0');
+    await page.click('a[href="#pricing"]');
+    await page.waitForTimeout(100);
+    const header = await page.locator('body > header').boundingBox();
+    const heading = await page.locator('#pricing-heading').boundingBox();
+    expect(header.y).toBe(0);
+    expect(heading.y).toBeGreaterThanOrEqual(header.height);
+    const supported = await page.evaluate(() => CSS.supports('container-type: scroll-state'));
+    if (supported) await expect.poll(shadow).toBe('1'); // stuck: a soft shadow
+    else expect(await shadow(), `${browserName}: no scroll-state queries, hairline only`).toBe('0');
+  });
+
+  test('a header without the attribute, or a header in main, does not stick', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/landing.html'));
+    expect(await style(page, 'body > header', 'position')).toBe('static');
+    expect(await style(page, 'html', 'scrollPaddingTop')).toBe('auto');
+  });
+});
+
 test.describe('states people expect', () => {
   test.beforeEach(async ({ page }) => {
     await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
