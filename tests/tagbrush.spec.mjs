@@ -1491,6 +1491,17 @@ test.describe('states people expect', () => {
     expect(await style(page, '#plain-button', 'backgroundColor')).toBe(await token(page, 'var(--color-primary)'));
   });
 
+  test('required fields get a red asterisk, only in a form that also has optional fields', async ({ page }) => {
+    const after = (sel) => style(page, sel, 'content', '::after');
+    expect(await after('#label-name')).toMatch(/^" \*"/);
+    expect(await after('#label-terms')).toMatch(/^" \*"/);
+    expect(await style(page, '#label-name', 'color', '::after')).toBe(await token(page, 'var(--color-error)'));
+    expect(await after('#label-company')).toBe('none');
+    expect(await after('#label-news')).toBe('none');
+    // A sign-in form where every field is required (buttons and hidden fields don't count) has no marks.
+    expect(await after('#label-email')).toBe('none');
+  });
+
   test('a toggle with aria-pressed="true" looks held down; "false" looks like any button', async ({ page }) => {
     expect(await style(page, '#pressed-on', 'boxShadow')).toContain('inset');
     expect(await style(page, '#pressed-on', 'backgroundColor')).not.toBe(await style(page, '#pressed-off', 'backgroundColor'));

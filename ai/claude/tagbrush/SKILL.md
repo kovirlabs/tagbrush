@@ -88,6 +88,7 @@ Details: [references/forms.md](references/forms.md)
 - **Fields**: `<label for="email">Email</label><input type="email" id="email">`, or the input inside its label.
 - **Help text**: a `<small>` right after the field.
 - **Errors**: `aria-invalid="true"`; native validation shows after the user interacts.
+- **Required fields**: in a form that also has optional fields, a `required` field's label gets a red asterisk.
 - **Valid fields**: fields with `required`, `pattern` or `type="email"` turn green once met.
 - **Checkboxes and radios**: `<label><input type="checkbox"> Text</label>`.
 - **Choice cards**: `<label><input type="radio" name="plan"> <strong>Team</strong> <small>Up to 10 people</small></label>`.

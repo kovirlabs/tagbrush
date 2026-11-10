@@ -28,6 +28,24 @@
             <a href="#" class="button" data-tone="success" id="tone-link">Approve</a>
             <button id="custom-tone" style="--tone: #db2777">Custom</button>
         </div>
+        <form id="mixed">
+            <label for="m-name" id="label-name">Name</label>
+            <input id="m-name" required>
+            <label for="m-company" id="label-company">Company</label>
+            <input id="m-company">
+            <label id="label-terms"><input type="checkbox" required> I agree</label>
+            <label id="label-news"><input type="checkbox"> Newsletter</label>
+            <input type="hidden" name="token" value="x">
+            <button>Send</button>
+        </form>
+        <form id="all-required">
+            <label for="r-email" id="label-email">Email</label>
+            <input type="email" id="r-email" required>
+            <label for="r-password">Password</label>
+            <input type="password" id="r-password" required>
+            <input type="hidden" name="token" value="x">
+            <button>Sign in</button>
+        </form>
         <ul id="menu-list"><li><a href="#">Profile</a></li></ul>
     </main>
 </body>
