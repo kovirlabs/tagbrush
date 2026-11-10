@@ -428,6 +428,41 @@ test.describe('semantic components', () => {
     expect(await style(page, 'details + details', 'borderTopWidth')).toBe('0px');
     expect(await style(page, 'details:not(:has(+ details)):not(details + details)', 'marginBottom')).toBe('16px');
   });
+
+  test('a details marker is a chevron: at the start, or at the end in an accordion', async ({ page }) => {
+    const single = 'details:not(:has(+ details)):not(details + details)';
+    const accordion = 'details[name=faq]';
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    expect(await style(page, `${single} > summary`, 'listStyleType')).toBe('none');
+    expect(await style(page, `${single} > summary`, 'borderRightStyle', '::before')).toBe('solid');
+    expect(await style(page, `${single} > summary`, 'position', '::before')).toBe('static');
+    expect(await style(page, `${single} > summary`, 'rotate', '::before')).toBe('-45deg');
+    await page.locator(`${single} > summary`).click();
+    expect(await style(page, `${single} > summary`, 'rotate', '::before')).toBe('45deg');
+    expect(await style(page, `${accordion} > summary`, 'position', '::before')).toBe('absolute');
+    const [summary, chevron] = await page.locator(`${accordion} > summary`).first().evaluate((el) => [el.getBoundingClientRect().right, parseFloat(getComputedStyle(el, '::before').insetInlineEnd)]);
+    expect(summary).toBeGreaterThan(300);
+    expect(chevron).toBeLessThan(10);
+  });
+
+  test('a details eases open where ::details-content can animate, and opens at once with reduced motion', async ({ page, browserName }) => {
+    const supported = await page.evaluate(() => CSS.supports('selector(::details-content)') && CSS.supports('interpolate-size: allow-keywords'));
+    test.skip(!supported, `${browserName} opens details at once (no interpolate-size)`);
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    // Right after opening, the content is still shorter than it will be.
+    const running = () => page.locator('details[name=faq]').nth(1).evaluate(async (el) => {
+      el.open = true;
+      const height = () => parseFloat(getComputedStyle(el, '::details-content').blockSize);
+      const start = height();
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      return start < height();
+    });
+    expect(await running()).toBe(true);
+    await page.locator('details[name=faq]').nth(1).evaluate((el) => { el.open = false; });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.waitForTimeout(50);
+    expect(await running()).toBe(false);
+  });
 });
 
 test.describe('form finishing touches', () => {
@@ -847,6 +882,8 @@ test.describe('interaction and intent', () => {
     expect(await style(page, '#services > ul', 'flexDirection')).toBe('column');
     expect(await style(page, '#services', 'borderTopWidth')).toBe('0px');
     expect(await style(page, '#plain-details', 'borderTopWidth')).not.toBe('0px');
+    // The dropdown keeps its own chevron after the label, not the details marker.
+    expect(await style(page, '#services > summary', 'content', '::before')).toBe('none');
     // Inside the phone menu panel the dropdown opens in place
     await page.setViewportSize({ width: 390, height: 800 });
     await page.click('#menu-button');

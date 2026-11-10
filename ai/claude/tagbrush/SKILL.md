@@ -117,6 +117,7 @@ Details: [references/content.md](references/content.md)
 - **Numbers in tables**: a `<data>` value alone in a cell aligns right.
 - **Code**: `<pre><code>`; common highlighters' classes are colored.
 - **Accordion**: neighboring `<details>` with the same `name` join into one.
+- **Disclosure**: `<details><summary>…</summary>…</details>` has a chevron marker (at the end in an accordion) and eases open.
 - **Motion**: dialogs, popovers, and page changes animate on their own.
 
 ## Chat and AI output

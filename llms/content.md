@@ -28,6 +28,7 @@ Text, media, tables, and code, including Markdown output.
 - **Numbers in tables**: a cell holding only a `<data>` value aligns right in tabular figures: `<table><tr><td>Staff</td><td><data value="48000">$48,000</data></td></tr></table>`.
 - **Code**: `<pre><code>`. Highlighting classes from Prism, highlight.js, Shiki, Hugo, Jekyll, and Pandoc are colored automatically. Wide code scrolls with a shadow at the edge.
 - **Accordion**: neighboring `<details><summary>Question</summary><p>Answer</p></details>` join into one group. Give them the same `name="…"` so only one opens at a time.
+- **Disclosure**: a `<details>`'s marker is a chevron instead of the browser's triangle: at the start of the `<summary>`, turning down when open; in an accordion (neighboring `<details>`, or any with a `name`), at the end, turning up when open. Opening eases the height where the browser can animate to `auto` (Chromium); elsewhere, and with reduced motion, it opens at once. A dropdown `<details>` in the header nav keeps its own chevron. Don't add your own arrow to the summary.
 
 ## Automatic
 

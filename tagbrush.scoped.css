@@ -828,6 +828,78 @@
     color: var(--color-marker, var(--color-text-muted));
   }
 
+  /* The marker is a chevron: at the start of the summary, pointing to the
+     text and turning down when open; in an accordion (neighboring <details>,
+     or a name), at the end, pointing down and turning up. A dropdown in the
+     header nav draws its own. */
+  :where(details:not(header nav li > details)) > summary {
+    position: relative;
+    list-style: none;
+  }
+
+  :where(details:not(header nav li > details)) > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  :where(details:not(header nav li > details)) > summary::before {
+    content: "";
+    display: inline-block;
+    width: 0.45em;
+    height: 0.45em;
+    margin-inline-end: 0.65em;
+    border: solid var(--color-marker, var(--color-text-muted));
+    border-width: 0 0.13em 0.13em 0;
+    rotate: -45deg;
+    translate: 0 -0.1em;
+    transition: rotate var(--transition-duration), translate var(--transition-duration);
+  }
+
+  :where(details:not(header nav li > details)) > summary:dir(rtl)::before {
+    rotate: 135deg;
+  }
+
+  :where(details[open]:not(header nav li > details)) > summary::before {
+    rotate: 45deg;
+    translate: 0 -0.25em;
+  }
+
+  :where(details:is([name], :has(+ details), details + details):not(header nav li > details)) > summary {
+    padding-inline-end: 1.5em;
+  }
+
+  :where(details:is([name], :has(+ details), details + details):not(header nav li > details)) > summary::before {
+    position: absolute;
+    inset-inline-end: 0.25em;
+    top: 0.45em;
+    margin: 0;
+    rotate: 45deg;
+  }
+
+  :where(details[open]:is([name], :has(+ details), details + details):not(header nav li > details)) > summary::before {
+    rotate: -135deg;
+    translate: 0 0.15em;
+  }
+
+  /* Opening eases the content's height where the browser can animate to
+     auto (interpolate-size, ::details-content); elsewhere, and with reduced
+     motion, it opens at once */
+  @supports selector(::details-content) {
+    :where(details) {
+      interpolate-size: allow-keywords;
+    }
+
+    :where(details)::details-content {
+      block-size: 0;
+      overflow: clip;
+      overflow-clip-margin: calc(var(--focus-ring-width) + 2px);
+      transition: block-size var(--transition-duration) ease-out, content-visibility var(--transition-duration) allow-discrete;
+    }
+
+    :where(details[open])::details-content {
+      block-size: auto;
+    }
+  }
+
   :where(details[open] > summary) {
     margin-bottom: var(--spacing-sm);
   }
