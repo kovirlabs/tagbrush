@@ -5,6 +5,7 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ## Unreleased
 
 ### Added
+- Status banners: a `<p>`, `<div>`, `<section>` or `<aside>` with `role="status"` ("Saved") is an info-tinted banner and one with `role="alert"` ("Couldn't save") a red one; `data-tone` recolors either. Server-rendered or swapped in by htmx; nothing dismisses it. Empty live regions, inline ones, and regions TagAction adds are left alone.
 - Required fields: in a form that also has optional fields, the label of a `required` field (a `<label>` right before it, or one wrapping it) ends in a red asterisk, hidden from screen readers. A form where every field is required, like a sign-in, shows none.
 - Destructive buttons: `data-tone` now colors buttons too. `<button data-tone="error">Delete</button>` is solid red and `class="outline" data-tone="error"` red-bordered; the other tones and `style="--tone: …"` work the same way. The fill is darkened as far as white text needs (4.5:1 in both schemes, tested).
 - Toggle buttons: a `<button aria-pressed="true">` looks held down, with the hover color and an inset shadow, or a tint of the primary color on an `outline` or `secondary` button. TagAction's Show/Hide and theme buttons now show their state. `aria-pressed="false"` looks like any button.

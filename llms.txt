@@ -97,6 +97,7 @@ Details: [llms/content.md](https://kovirlabs.github.io/tagbrush/llms/content.md)
 
 - **Headings and subtitles**: `<hgroup><h1>Title</h1><p>Subtitle</p></hgroup>`.
 - **Inline text**: `<mark>`, `<kbd>`, `<code>`, `<abbr title="…">`, `<del>`, `<ins>`, `<small>`; `<s>` for an old price.
+- **Status banners**: `<p role="status">Saved.</p>` and `<p role="alert">Couldn't save.</p>` are tinted banners; `data-tone` recolors.
 - **Callouts**: `<aside>` inside an `<article>`, starting with a bold word; `data-tone` colors it.
 - **Quotes**: `<blockquote><p>…</p><footer>Author</footer></blockquote>`.
 - **Pull quote**: `<figure><blockquote>…</blockquote><figcaption>Name</figcaption></figure>`.

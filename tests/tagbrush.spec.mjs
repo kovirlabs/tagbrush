@@ -1502,6 +1502,19 @@ test.describe('states people expect', () => {
     expect(await after('#label-email')).toBe('none');
   });
 
+  test('role="status" and role="alert" blocks are tinted banners; empty, inline and TagAction regions are not', async ({ page }) => {
+    const bg = (sel) => style(page, sel, 'backgroundColor');
+    const [saved, failed, toned] = [await bg('#saved'), await bg('#failed'), await bg('#toned')];
+    expect(new Set([saved, failed, toned]).size).toBe(3);
+    expect(saved).not.toBe('rgba(0, 0, 0, 0)');
+    expect(failed).toBe(await token(page, 'color-mix(in oklab, var(--color-error) 14%, var(--color-background))'));
+    expect(await style(page, '#saved', 'paddingLeft')).not.toBe('0px');
+    for (const sel of ['#empty-region', '#inline-status', '#tagaction-status']) {
+      expect(await bg(sel), sel).toBe('rgba(0, 0, 0, 0)');
+      expect(await style(page, sel, 'paddingLeft'), sel).toBe('0px');
+    }
+  });
+
   test('a toggle with aria-pressed="true" looks held down; "false" looks like any button', async ({ page }) => {
     expect(await style(page, '#pressed-on', 'boxShadow')).toContain('inset');
     expect(await style(page, '#pressed-on', 'backgroundColor')).not.toBe(await style(page, '#pressed-off', 'backgroundColor'));

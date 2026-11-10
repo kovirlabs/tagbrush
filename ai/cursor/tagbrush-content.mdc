@@ -13,6 +13,7 @@ Text, media, tables, and code, including Markdown output.
 
 - **Headings and subtitles**: `<hgroup><h1>Title</h1><p>Subtitle</p></hgroup>` gives a heading a muted subtitle. Headings wrap in balanced lines.
 - **Inline text**: `<mark>`, `<kbd>`, `<code>`, `<abbr title="…">`, `<del>`, `<ins>`, `<small>`, `<q>`, `<dfn>`, and `<output>` are all styled. `<s>` is muted, so `<s>$49</s> <strong>$29</strong>` reads as a sale price.
+- **Status banners**: a message after an action, rendered by the server or swapped in by htmx: `<p role="status">Your changes were saved.</p>` is an info-tinted banner, `<div role="alert"><p>Couldn't save. Try again.</p></div>` a red one; `data-tone="success"` (or another tone) recolors either. It works on a `<p>`, `<div>`, `<section>` or `<aside>`. It stays until the page changes; there's no auto-dismiss. Left alone: an empty live region waiting for a message, a `role="status"` `<span>` or `<output>` inside text, and regions TagAction adds.
 - **Callouts**: an `<aside>` anywhere inside an `<article>` (also between its sections) is a highlighted callout: `<article><aside><strong>Note:</strong> Back up first.</aside></article>`. Start it with a bold word to label it; `data-tone="warning"` (or `error`, `success`, `info`) colors it.
 - **Quotes**: `<blockquote><p>…</p><footer>Author</footer></blockquote>`.
 - **Pull quote**: a quote with a caption in a figure stands out at a larger size: `<figure><blockquote><p>The grant came through.</p></blockquote><figcaption>Ana Ruiz, Director</figcaption></figure>`.

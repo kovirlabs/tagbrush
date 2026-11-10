@@ -46,6 +46,12 @@
             <input type="hidden" name="token" value="x">
             <button>Sign in</button>
         </form>
+        <p role="status" id="saved">Your changes were saved.</p>
+        <div role="alert" id="failed"><p>Couldn't save. Check your connection and try again.</p></div>
+        <p role="status" data-tone="success" id="toned">Published.</p>
+        <div role="status" id="empty-region"></div>
+        <p>Updated <span role="status" id="inline-status">just now</span>.</p>
+        <p role="status" data-tag="filter" id="tagaction-status">3 of 12 shown</p>
         <ul id="menu-list"><li><a href="#">Profile</a></li></ul>
     </main>
 </body>

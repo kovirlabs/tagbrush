@@ -783,6 +783,31 @@
     margin-bottom: 0;
   }
 
+  /* Status banners: a block with role="status" ("Saved") or role="alert"
+     ("Couldn't save") is a tinted banner, info and error by default;
+     data-tone picks another. Empty live regions waiting for a message, and
+     ones TagAction adds (data-tag), are left alone.
+     <p role="status">Your changes were saved.</p> */
+  :where(:is(div, p, section, aside):is([role="status"], [role="alert"]):not(:empty, [data-tag])) {
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    background-color: color-mix(in oklab, var(--tone) 14%, var(--color-background));
+    color: var(--color-text);
+  }
+
+  :where(:is(div, p, section, aside)[role="status"]:not([data-tone], [style*="--tone"])) {
+    --tone: var(--color-link, light-dark(oklch(from var(--color-primary) min(l, 0.5) c h), oklch(from var(--color-primary) max(l, 0.77) min(c, 0.15) h)));
+  }
+
+  :where(:is(div, p, section, aside)[role="alert"]:not([data-tone], [style*="--tone"])) {
+    --tone: var(--color-error);
+  }
+
+  :where(:is(div, p, section, aside):is([role="status"], [role="alert"])) > :last-child {
+    margin-bottom: 0;
+  }
+
 
   /* ==========================================================================
      Interactive Elements
