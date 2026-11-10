@@ -1018,22 +1018,33 @@
   }
 
   /* A footer with two or more <nav>s (site map columns): the navs become
-     columns of vertical links, and a last paragraph spans the width.
+     columns of vertical links at the end of the row, a leading paragraph
+     takes the free space before them, and a last paragraph spans the width.
      <footer><p>About</p><nav aria-label="Product"><h2>Product</h2><ul>…</ul></nav>…<p>© 2026</p></footer> */
   :where(body, body > :not([class])):where(:has(> main)) > footer:where(:has(> nav ~ nav)) {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(10rem, 100%), 1fr));
-    gap: var(--spacing-lg);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    gap: var(--spacing-lg) var(--spacing-xl);
+  }
+
+  :where(body, body > :not([class])):where(:has(> main)) > footer:where(:has(> nav ~ nav)) > :where(:first-child:not(nav)) {
+    flex: 1 1 16rem;
+    max-width: 24rem;
+    margin: 0;
+    margin-inline-end: auto;
   }
 
   :where(body, body > :not([class])):where(:has(> main)) > footer:where(:has(> nav ~ nav)) > :where(:last-child:not(nav)) {
-    grid-column: 1 / -1;
+    flex: 1 0 100%;
+    max-width: none;
     margin: 0;
     padding-top: var(--spacing-md);
     border-top: var(--border-width) solid var(--color-border);
   }
 
   :where(body, body > :not([class])):where(:has(> main)) > footer:where(:has(> nav ~ nav)) > nav {
+    flex: 0 1 10rem;
     flex-direction: column;
     align-items: start;
     justify-content: start;

@@ -1451,6 +1451,14 @@ test.describe('polish: badges, icons, hero, sidebar, footer', () => {
     expect(await style(page, 'body > footer > nav ul', 'flexDirection')).toBe('column');
     const copyright = await rect(page, '#copyright');
     expect(copyright.top).toBeGreaterThan(tops[0]);
+    // The leading paragraph takes the free space; the columns sit at the end of the row.
+    const navs = await page.locator('body > footer > nav').evaluateAll((els) => els.map((el) => el.getBoundingClientRect().toJSON()));
+    const lead = await rect(page, 'body > footer > p:first-child');
+    expect(lead.right).toBeLessThan(navs[0].left);
+    expect(Math.round(navs.at(-1).right)).toBeGreaterThanOrEqual(Math.round(copyright.right) - 2);
+    // On a phone the columns wrap and nothing overflows.
+    await page.setViewportSize({ width: 360, height: 800 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
   });
 });
 
