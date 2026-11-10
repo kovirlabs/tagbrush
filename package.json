@@ -50,6 +50,8 @@
     "tagbrush.shadow.css",
     "tagbrush.shadow.min.css",
     "llms.txt",
+    "llms-full.txt",
+    "llms/",
     "ai/",
     "bin/"
   ],

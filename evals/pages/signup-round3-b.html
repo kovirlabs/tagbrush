@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Join Portland Frontend Meetup</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+</head>
+<body>
+  <a href="#main">Skip to content</a>
+  <header>
+    <nav>
+      <strong>Portland Frontend</strong>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/events">Events</a></li>
+        <li><a href="/join" aria-current="page">Join</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article>
+      <hgroup>
+        <h1>Join the meetup</h1>
+        <p>Monthly talks, lightning demos, and pizza at the Central Library. Membership is free.</p>
+      </hgroup>
+
+      <form action="/join" method="post">
+        <fieldset>
+          <legend>Your account</legend>
+
+          <label for="name">Full name</label>
+          <input type="text" id="name" name="name" autocomplete="name" required value="Priya Raman">
+
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" autocomplete="email" required value="priya.raman@" aria-invalid="true" aria-describedby="email-error">
+          <small id="email-error">Enter a full email address, like name@example.com.</small>
+
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" autocomplete="new-password" required minlength="12" pattern="(?=.*\d)(?=.*[A-Za-z]).{12,}" aria-describedby="password-help">
+          <small id="password-help">At least 12 characters, with at least one letter and one number.</small>
+        </fieldset>
+
+        <fieldset>
+          <legend>About you</legend>
+
+          <label for="experience">Experience level</label>
+          <select id="experience" name="experience" required>
+            <option value="">Choose one</option>
+            <option value="new">Just starting out</option>
+            <option value="junior">1 to 3 years</option>
+            <option value="mid">3 to 7 years</option>
+            <option value="senior">7 years or more</option>
+          </select>
+        </fieldset>
+
+        <fieldset>
+          <legend>Interests</legend>
+          <label><input type="checkbox" name="interests" value="css"> CSS and design systems</label>
+          <label><input type="checkbox" name="interests" value="a11y"> Accessibility</label>
+          <label><input type="checkbox" name="interests" value="performance"> Web performance</label>
+          <label><input type="checkbox" name="interests" value="frameworks"> Frameworks and tooling</label>
+          <label><input type="checkbox" name="interests" value="speaking"> Giving a talk</label>
+        </fieldset>
+
+        <fieldset>
+          <legend>Preferences</legend>
+          <label><input type="checkbox" role="switch" name="newsletter" checked> Send me the monthly newsletter</label>
+          <label><input type="checkbox" name="terms" required> I agree to the <a href="/code-of-conduct">code of conduct</a> and <a href="/terms">terms of membership</a></label>
+        </fieldset>
+
+        <button type="submit">Create my account</button>
+      </form>
+    </article>
+  </main>
+
+  <footer>
+    <p><small>Portland Frontend Meetup, organized by volunteers. Questions? <a href="mailto:hello@pdxfrontend.example">hello@pdxfrontend.example</a></small></p>
+  </footer>
+</body>
+</html>

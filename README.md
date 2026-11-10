@@ -143,7 +143,7 @@ with no classes and no custom CSS, styled by TagBrush.css. Follow
 https://kovirlabs.github.io/tagbrush/llms.txt
 ```
 
-[`llms.txt`](llms.txt) is a short cheat sheet written for AI assistants: which elements to use, the few patterns that turn plain HTML into components (`role="switch"`, `aria-busy`, a `<section>` of `<article>`s), forms, and theming. Assistants that can read links will follow it.
+[`llms.txt`](llms.txt) is an index written for AI assistants: the rules, and every pattern in one line (the HTML to write and what it becomes), grouped by what you're building. Each group links to a detail file in [`llms/`](llms/) with full examples and what each pattern leaves alone, so an assistant reads the one it needs. [`llms-full.txt`](llms-full.txt) has everything in one file. Assistants that can read links will follow them.
 
 For coding agents, install it once and the agent follows it automatically. One command adds a [Claude Code skill, a Cursor rule, or an `AGENTS.md` section](ai/):
 
@@ -151,7 +151,7 @@ For coding agents, install it once and the agent follows it automatically. One c
 npx degit kovirlabs/tagbrush/ai/claude/tagbrush .claude/skills/tagbrush
 ```
 
-The tests render every snippet in `llms.txt`, so the instructions agents follow always match what TagBrush.css actually styles.
+The tests render every snippet in the guide, check that every pattern in a detail file is named in the index (so an agent always knows it exists), and keep the index under 4,000 tokens.
 
 ### Chat apps and AI output
 
@@ -404,9 +404,10 @@ Step-by-step guides with copy-paste snippets:
 | `index.html`              | Landing page, live demo, and theme builder           |
 | `starter.html`            | A complete page to copy as a starting point          |
 | `starters/`               | Pandoc, Hugo, Eleventy, and Astro starters (built by CI) |
-| `llms.txt`                | Usage cheat sheet for AI assistants                  |
+| `llms.txt`, `llms/`       | Guide for AI assistants: an index and detail files   |
+| `llms-full.txt`           | The whole guide in one file *(generated)*            |
 | `bin/tagbrush.mjs`        | `npx tagbrush check`, a dependency-free page checker |
-| `ai/`                     | Claude Code skill, Cursor rule, and `AGENTS.md` section *(generated from `llms.txt`)* |
+| `ai/`                     | Claude Code skill, Cursor rules, and `AGENTS.md` section *(generated from the guide)* |
 | `scripts/build.mjs`       | Generates the files above                            |
 | `tests/`                  | Cross-browser tests and screenshot baselines         |
 | `CHANGELOG.md`            | Release history                                      |
