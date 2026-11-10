@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Landing fixture</title>
+    <link rel="stylesheet" href="../../tagbrush.css">
+</head>
+<body>
+    <a href="#main" id="skip">Skip to content</a>
+    <header>
+        <nav>
+            <strong>Lumen</strong>
+            <button popovertarget="menu" aria-label="Menu" id="menu-button">☰</button>
+            <div popover id="menu">
+                <ul>
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">Pricing</a></li>
+                    <li><a class="button" href="#">Start free</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <main id="main" data-layout="full">
+        <section id="band">
+            <h2>How it works</h2>
+            <ol id="steps">
+                <li><h3>Plan</h3><p>Tell us what you need.</p></li>
+                <li><h3>Build</h3><p>We make it.</p><p>Usually in a week.</p></li>
+                <li><h3>Launch</h3><p>It goes live.</p></li>
+            </ol>
+            <ol id="plain-list">
+                <li>Not a step</li>
+                <li>Just a list</li>
+            </ol>
+        </section>
+        <section id="dark-band" data-theme="dark">
+            <h2>What clients say</h2>
+            <article id="quote-card">
+                <blockquote><p>They made the whole thing easy.</p></blockquote>
+                <footer><strong>Ana Ruiz</strong>, Director</footer>
+            </article>
+            <article>
+                <blockquote><p>Fast, careful, and kind. We would hire them again for the next project.</p></blockquote>
+                <footer><strong>Sam Lee</strong>, Founder</footer>
+            </article>
+        </section>
+        <section id="plans">
+            <h2>Plans</h2>
+            <article id="short-card">
+                <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%2394a3b8'/%3E%3C/svg%3E" alt="" id="card-image">
+                <h3>Starter</h3>
+                <p>For one person.</p>
+                <p id="short-button"><a class="button outline" href="#">Choose</a></p>
+            </article>
+            <article id="tall-card">
+                <h3>Team</h3>
+                <p>For a small team, with shared projects, reports, and invoices for every client you work with.</p>
+                <p>Everything in Starter.</p>
+                <p id="tall-button"><a class="button" href="#">Choose</a></p>
+            </article>
+        </section>
+        <section id="media">
+            <figure><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%2394a3b8'/%3E%3C/svg%3E" alt="Our office" id="media-image"></figure>
+            <div id="media-text"><h2>About us</h2><p>A small team that cares about the details.</p></div>
+        </section>
+        <section id="chart">
+            <h2>Revenue</h2>
+            <figure><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='100'/%3E" alt="Chart"></figure>
+        </section>
+        <section id="logos-band">
+            <h2>Trusted by</h2>
+            <ul id="logos">
+                <li><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Crect width='120' height='40' rx='6' fill='%2394a3b8'/%3E%3C/svg%3E" alt="Acme"></li>
+                <li><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40'%3E%3Crect width='120' height='40' rx='6' fill='%2394a3b8'/%3E%3C/svg%3E" alt="Globex"></li>
+            </ul>
+            <ul id="mixed-list">
+                <li><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'/%3E" alt=""> <a href="#">A link beside an image</a></li>
+            </ul>
+        </section>
+        <section id="posts-band">
+            <h2>Latest posts</h2>
+            <ul id="posts">
+                <li><article><h3>First post</h3><p>A short one.</p></article></li>
+                <li><article><h3>Second post</h3><p>A longer summary that takes more than one line in a narrow card.</p></article></li>
+            </ul>
+        </section>
+    </main>
+    <footer><p>© 2026 Lumen</p></footer>
+</body>
+</html>

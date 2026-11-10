@@ -509,6 +509,51 @@
     color: var(--color-marker, var(--color-text-muted));
   }
 
+  /* Steps: an <ol> whose items start with a heading is a numbered timeline.
+     <ol><li><h3>Plan</h3><p>…</p></li><li><h3>Build</h3><p>…</p></li></ol> */
+  ol:where(:has(> li > :is(h2, h3, h4, h5, h6):first-child)) {
+    padding: 0;
+    list-style: none;
+  }
+
+  :where(ol:has(> li > :is(h2, h3, h4, h5, h6):first-child)) > li {
+    display: grid;
+    counter-increment: list-item;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--spacing-md);
+    padding-block: var(--spacing-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+  }
+
+  :where(ol:has(> li > :is(h2, h3, h4, h5, h6):first-child)) > li:last-child {
+    border-bottom: 0;
+  }
+
+  :where(ol:has(> li > :is(h2, h3, h4, h5, h6):first-child)) > li::before {
+    content: counter(list-item);
+    display: grid;
+    grid-row: 1 / span 20;
+    place-items: center;
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    color: color-mix(in oklab, var(--color-primary) 75%, var(--color-text));
+    background-color: color-mix(in oklab, var(--color-primary) 14%, transparent);
+    font-weight: 700;
+  }
+
+  :where(ol:has(> li > :is(h2, h3, h4, h5, h6):first-child)) > li > * {
+    grid-column: 2;
+  }
+
+  :where(ol:has(> li > :is(h2, h3, h4, h5, h6):first-child)) > li > :first-child {
+    margin-top: 0;
+  }
+
+  :where(ol:has(> li > :is(h2, h3, h4, h5, h6):first-child)) > li > :last-child {
+    margin-bottom: 0;
+  }
+
   /* Footnotes as Markdown tools write them: GitHub and markdown-it
      (data-footnotes, .footnotes) and Pandoc (role="doc-endnotes") */
   :where([data-footnotes], [role="doc-endnotes"], .footnotes) {
@@ -840,34 +885,34 @@
 
   /* A hero with a picture: a <figure>, <img>, <picture> or <svg> after the
      hgroup sits beside the text on wide screens and below it on phones. */
-  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> figure, > img, > picture, > svg)) {
+  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> figure, > img, > picture, > svg):not(:has(> img:first-child))) {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     column-gap: var(--spacing-xl);
     align-items: center;
   }
 
-  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> figure, > img, > picture, > svg)) > * {
+  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> figure, > img, > picture, > svg):not(:has(> img:first-child))) > * {
     grid-column: 1;
   }
 
-  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> figure, > img, > picture, > svg)) > nav {
+  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> figure, > img, > picture, > svg):not(:has(> img:first-child))) > nav {
     grid-column: 1 / -1;
   }
 
-  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> figure, > img, > picture, > svg)) > hgroup {
+  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> figure, > img, > picture, > svg):not(:has(> img:first-child))) > hgroup {
     grid-column: 1;
     align-self: end;
     text-align: start;
   }
 
-  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> figure, > img, > picture, > svg)) > hgroup + [role="group"] {
+  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> figure, > img, > picture, > svg):not(:has(> img:first-child))) > hgroup + [role="group"] {
     grid-column: 1;
     align-self: start;
     justify-content: start;
   }
 
-  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> figure, > img, > picture, > svg)) > hgroup > :is(h1, h2) ~ * {
+  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> figure, > img, > picture, > svg):not(:has(> img:first-child))) > hgroup > :is(h1, h2) ~ * {
     margin-inline: 0;
   }
 
@@ -883,7 +928,7 @@
   }
 
   @media (max-width: 48rem) {
-    :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> figure, > img, > picture, > svg)) {
+    :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> figure, > img, > picture, > svg):not(:has(> img:first-child))) {
       grid-template-columns: minmax(0, 1fr);
     }
 
@@ -892,6 +937,35 @@
       grid-row: auto;
       margin-top: 0;
     }
+  }
+
+  /* A hero with a photo behind it: an <img> first in the page header (before
+     the <nav>) fills the header under a dark wash of the primary color, and
+     the header's text turns light. <header><img src="team.jpg" alt=""><nav>…</nav><hgroup>…</hgroup></header> */
+  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> img:first-child)) {
+    position: relative;
+    isolation: isolate;
+    color-scheme: dark;
+    color: var(--color-text);
+    background: oklch(from var(--color-primary) 0.2 min(c, 0.06) h);
+  }
+
+  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup)) > img:first-child {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    object-fit: cover;
+    opacity: 0.2;
+  }
+
+  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> img:first-child)) > hgroup > * {
+    color: var(--color-text);
   }
 
   /* A footer with two or more <nav>s (site map columns): the navs become
@@ -928,6 +1002,68 @@
     color: var(--color-text);
     font-size: var(--font-size-sm);
     font-weight: 600;
+  }
+
+  /* Skip link: a link to an id, first in <body>, stays out of sight until it
+     is focused. <body><a href="#main">Skip to content</a><header>… */
+  :where(body > a[href^="#"]:first-child) {
+    position: absolute;
+    z-index: 100;
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--border-radius);
+    background-color: var(--color-background);
+    translate: 0 -200%;
+  }
+
+  :where(body > a[href^="#"]:first-child:focus) {
+    translate: none;
+    box-shadow: var(--shadow-lg);
+  }
+
+  /* Bands: in <main data-layout="full">, each section (and a header) spans
+     the page and centers its content in the page column, so a band can have
+     its own background, such as <section data-theme="dark">. */
+  :where(body, body > :not([class])) > :where(main[data-layout="full"]:has(> section, > header)) {
+    padding-block: 0;
+  }
+
+  :where(body, body > :not([class])) > main[data-layout="full"] > :where(section, header) {
+    margin: 0;
+    padding: var(--spacing-xl) max(var(--container-padding), (100% - var(--container-max-width)) / 2 + var(--container-padding));
+  }
+
+  /* Phone menu: the header's links in a popover inside its nav. Wide screens
+     show them in the bar; narrow ones show the button, which opens them as a
+     panel. <nav><a href="/">Site</a><button popovertarget="menu" aria-label="Menu">☰</button>
+     <div popover id="menu"><ul><li><a href="/about">About</a></li></ul></div></nav> */
+  @media (width > 48rem) {
+    :where(body, body > :not([class])) > header > nav > [popover] {
+      display: contents;
+    }
+
+    :where(body, body > :not([class])) > header > nav > button[popovertarget] {
+      display: none;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    :where(body, body > :not([class])) > header > nav > [popover] {
+      inset: 4.5rem 0 auto;
+      width: 100%;
+      max-width: none;
+      max-height: calc(100dvh - 4.5rem);
+      margin: 0;
+      overflow-y: auto;
+      border-width: var(--border-width) 0;
+      border-radius: 0;
+    }
+
+    :where(body, body > :not([class])) > header > nav > [popover] :is(ul, ol, menu) {
+      flex-direction: column;
+      align-items: stretch;
+    }
   }
   /* Page layout: end */
 
@@ -1634,6 +1770,94 @@
 
   section > article > svg:first-child + :is(h2, h3, h4, h5, h6) {
     margin-top: 0;
+  }
+
+  /* The featured card in a row (a recommended plan) is the one whose button is
+     solid while the others' are outlined */
+  :where(section:has(> article + article):has(> article > :last-child > .outline) > article:has(> :last-child > :is(.button, button):not(.outline, .secondary))) {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary), var(--shadow-lg);
+  }
+
+  /* A picture beside text: a <section> of just a <figure> and a <div> puts
+     them side by side, in that order (stacked on phones).
+     <section><figure><img src="…" alt="…"></figure><div><h2>…</h2><p>…</p></div></section> */
+  :where(section:has(> figure:first-child + div:last-child, > div:first-child + figure:last-child)) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+    gap: var(--spacing-xl);
+    align-items: center;
+  }
+
+  :where(section:has(> figure:first-child + div:last-child, > div:first-child + figure:last-child)) > figure {
+    margin: 0;
+  }
+
+  :where(section:has(> figure:first-child + div:last-child, > div:first-child + figure:last-child)) > figure img {
+    width: 100%;
+    border-radius: var(--card-radius);
+  }
+
+  /* A list of only images (partner or client logos) is a centered row:
+     <ul><li><img src="acme.svg" alt="Acme" height="48"></li>…</ul> */
+  :where(section, header, footer) > ul:where(:has(> li > img:only-child):not(:has(> li > :not(img)))) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-lg) var(--spacing-xl);
+    padding: 0;
+    list-style: none;
+  }
+
+  /* A list of articles (posts, search results) is a grid of cards too:
+     <ul><li><article>…</article></li>…</ul> */
+  ul:where(:has(> li > article:only-child)) {
+    display: grid;
+    gap: var(--grid-gap);
+    grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-min-column), 100%), 1fr));
+    padding: 0;
+    list-style: none;
+  }
+
+  :where(ul:has(> li > article:only-child)) > li > article {
+    height: 100%;
+    padding: var(--card-padding);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--card-radius);
+    background-color: var(--color-surface);
+  }
+
+  /* In every card, a last footer, button group, or paragraph of buttons sits
+     at the bottom, so buttons line up across a row of cards; a picture first
+     in a card runs to its edges. */
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article) > :where(footer, [role="group"], p:has(> :is(.button, button))):last-child {
+    margin-top: auto;
+    margin-bottom: 0;
+  }
+
+  /* A quote in a card (a testimonial) is the card's text, not a box inside it */
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article) > blockquote {
+    flex-grow: 1;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    background: none;
+    font-size: 1.125rem;
+  }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article) > img:first-child {
+    width: calc(100% + 2 * var(--card-padding));
+    max-width: none;
+    margin: calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) var(--spacing-md);
+    border-radius: calc(var(--card-radius) - var(--border-width)) calc(var(--card-radius) - var(--border-width)) 0 0;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
   }
 
   /* ==========================================================================

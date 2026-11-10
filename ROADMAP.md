@@ -9,7 +9,11 @@ TagBrush.css is for people who know HTML and want good-looking pages fast: drop 
 The test for every change: **does it make more plain, semantic HTML look right without asking the user to learn something new?**
 
 - Prefer styling semantic HTML and ARIA (`role`, `aria-*`, native attributes) over adding classes.
-- Size is not the main constraint. Covering more HTML matters more than bytes, within a budget of **10 KB gzipped** (CI enforces this).
+- Coverage is the point, not size. Every pattern TagBrush.css lacks costs a site 50–150 lines of its own CSS, far more than the bytes the pattern adds, so covering more HTML wins over shaving bytes. A ceiling of **15 KB gzipped** (CI enforces this) only guards against accidental bloat; report the size in each release rather than designing around it.
+- The real costs of a pattern, checked for each one instead:
+  - **False matches.** A pattern fires on markup written for other reasons. Each one needs a test that nearby markup it shouldn't touch is left alone (a plain `<ol>` next to a list of steps).
+  - **Guide length.** Agents read `llms.txt` on every page they build, and a longer guide is followed less carefully. A pattern earns its place in one or two lines, and CI caps the guide at **4,000 tokens**.
+  - **Selectors are a promise.** Selectors people rely on only change in a major release, so a pattern is kept for good.
 - Everything stays plain CSS inside `@layer tagbrush`, readable from the theme variables, with no build step for users.
 - Default colors must meet WCAG AA in light and dark mode (CI enforces this).
 
@@ -19,7 +23,7 @@ The test for every change: **does it make more plain, semantic HTML look right w
 - [x] Links and `.outline` button text are lightened 35% in dark mode (6.4:1 on the page, 5.3:1 on cards).
 - [x] Light `--color-text-muted` changed to `#646b76` (4.88:1 on `--color-surface`; it was 4.39:1).
 - [x] Contrast test: every default text/background pair in both schemes (`tests/fixtures/contrast.html`).
-- [x] Size budget test: `tagbrush.min.css` must be at most 10 KB gzipped.
+- [x] Size budget test: `tagbrush.min.css` must be at most 10 KB gzipped (raised to 15 KB in chunk 22).
 - [ ] After merging: tag `v1.0.1`, `npm publish`, date the CHANGELOG entry, create the GitHub release.
 
 ## Chunk 2: 1.1.0, classless page layout
@@ -153,6 +157,13 @@ The benchmark (`evals/benchmark/`) showed TagBrush.css pages cost 3–4× less m
 - [x] Consider a built-in `--tone` pattern for badges and icons, as both benchmark 2 agents invented it. (Done as `data-tone` plus `--tone`.)
 - [x] Footer columns: a footer with several `<nav>`s, which both landing pages built by hand.
 - [x] Re-run the benchmarks and compare screenshots side by side (benchmark 2, `evals/benchmark-2/rerun/`: dashboard CSS down 45%, landing unchanged).
+
+## Chunk 22: Landing-page patterns, and coverage over size
+
+Found by moving the Kovir LLC site onto TagBrush.css: patterns every marketing site writes by hand.
+
+- [x] Steps (`<ol>` of headed items), a phone menu (`[popover]` in the header nav), a skip link, full-width bands (`<main data-layout="full">`), card improvements (edge-to-edge picture, buttons at the bottom, testimonials), a list of articles as cards, and a row of logos.
+- [x] Guiding principle: coverage over size. The size ceiling goes from 10 KB to 15 KB gzipped, and `llms.txt` gets a 4,000-token cap.
 
 ## Release
 

@@ -514,6 +514,51 @@
     color: var(--color-marker, var(--color-text-muted));
   }
 
+  /* Steps: an <ol> whose items start with a heading is a numbered timeline.
+     <ol><li><h3>Plan</h3><p>…</p></li><li><h3>Build</h3><p>…</p></li></ol> */
+  ol:where(:has(> li > :is(h2, h3, h4, h5, h6):first-child)) {
+    padding: 0;
+    list-style: none;
+  }
+
+  :where(ol:has(> li > :is(h2, h3, h4, h5, h6):first-child)) > li {
+    display: grid;
+    counter-increment: list-item;
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: var(--spacing-md);
+    padding-block: var(--spacing-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+  }
+
+  :where(ol:has(> li > :is(h2, h3, h4, h5, h6):first-child)) > li:last-child {
+    border-bottom: 0;
+  }
+
+  :where(ol:has(> li > :is(h2, h3, h4, h5, h6):first-child)) > li::before {
+    content: counter(list-item);
+    display: grid;
+    grid-row: 1 / span 20;
+    place-items: center;
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    color: color-mix(in oklab, var(--color-primary) 75%, var(--color-text));
+    background-color: color-mix(in oklab, var(--color-primary) 14%, transparent);
+    font-weight: 700;
+  }
+
+  :where(ol:has(> li > :is(h2, h3, h4, h5, h6):first-child)) > li > * {
+    grid-column: 2;
+  }
+
+  :where(ol:has(> li > :is(h2, h3, h4, h5, h6):first-child)) > li > :first-child {
+    margin-top: 0;
+  }
+
+  :where(ol:has(> li > :is(h2, h3, h4, h5, h6):first-child)) > li > :last-child {
+    margin-bottom: 0;
+  }
+
   /* Footnotes as Markdown tools write them: GitHub and markdown-it
      (data-footnotes, .footnotes) and Pandoc (role="doc-endnotes") */
   :where([data-footnotes], [role="doc-endnotes"], .footnotes) {
@@ -1394,6 +1439,94 @@
 
   section > article > svg:first-child + :is(h2, h3, h4, h5, h6) {
     margin-top: 0;
+  }
+
+  /* The featured card in a row (a recommended plan) is the one whose button is
+     solid while the others' are outlined */
+  :where(section:has(> article + article):has(> article > :last-child > .outline) > article:has(> :last-child > :is(.button, button):not(.outline, .secondary))) {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary), var(--shadow-lg);
+  }
+
+  /* A picture beside text: a <section> of just a <figure> and a <div> puts
+     them side by side, in that order (stacked on phones).
+     <section><figure><img src="…" alt="…"></figure><div><h2>…</h2><p>…</p></div></section> */
+  :where(section:has(> figure:first-child + div:last-child, > div:first-child + figure:last-child)) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
+    gap: var(--spacing-xl);
+    align-items: center;
+  }
+
+  :where(section:has(> figure:first-child + div:last-child, > div:first-child + figure:last-child)) > figure {
+    margin: 0;
+  }
+
+  :where(section:has(> figure:first-child + div:last-child, > div:first-child + figure:last-child)) > figure img {
+    width: 100%;
+    border-radius: var(--card-radius);
+  }
+
+  /* A list of only images (partner or client logos) is a centered row:
+     <ul><li><img src="acme.svg" alt="Acme" height="48"></li>…</ul> */
+  :where(section, header, footer) > ul:where(:has(> li > img:only-child):not(:has(> li > :not(img)))) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-lg) var(--spacing-xl);
+    padding: 0;
+    list-style: none;
+  }
+
+  /* A list of articles (posts, search results) is a grid of cards too:
+     <ul><li><article>…</article></li>…</ul> */
+  ul:where(:has(> li > article:only-child)) {
+    display: grid;
+    gap: var(--grid-gap);
+    grid-template-columns: repeat(auto-fit, minmax(min(var(--grid-min-column), 100%), 1fr));
+    padding: 0;
+    list-style: none;
+  }
+
+  :where(ul:has(> li > article:only-child)) > li > article {
+    height: 100%;
+    padding: var(--card-padding);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--card-radius);
+    background-color: var(--color-surface);
+  }
+
+  /* In every card, a last footer, button group, or paragraph of buttons sits
+     at the bottom, so buttons line up across a row of cards; a picture first
+     in a card runs to its edges. */
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article) {
+    display: flex;
+    flex-direction: column;
+  }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article) > :where(footer, [role="group"], p:has(> :is(.button, button))):last-child {
+    margin-top: auto;
+    margin-bottom: 0;
+  }
+
+  /* A quote in a card (a testimonial) is the card's text, not a box inside it */
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article) > blockquote {
+    flex-grow: 1;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    background: none;
+    font-size: 1.125rem;
+  }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article) > img:first-child {
+    width: calc(100% + 2 * var(--card-padding));
+    max-width: none;
+    margin: calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) var(--spacing-md);
+    border-radius: calc(var(--card-radius) - var(--border-width)) calc(var(--card-radius) - var(--border-width)) 0 0;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
   }
 
   /* ==========================================================================

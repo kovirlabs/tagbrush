@@ -4,6 +4,24 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 
 ## Unreleased
 
+### Added
+- Landing-page patterns that sites were writing by hand, found by moving the Kovir LLC site onto TagBrush.css (about 0.8 KB gzipped together):
+  - Steps: an `<ol>` whose items each start with a heading is a numbered timeline. Other ordered lists are unchanged.
+  - Phone menu: links in a `<div popover>` inside the header's `<nav>` sit in the bar on wide screens; on phones the `<button popovertarget>` before them opens them as a panel under the bar. No JavaScript.
+  - Skip link: a link to an id first in `<body>` stays out of sight until it's focused.
+  - Bands: in `<main data-layout="full">`, each `<section>` (and a `<header>`) spans the page with its content centered in the page column, and `<main>` loses its top and bottom padding.
+  - Cards: an `<img>` first in a card runs to the card's edges; a last `<footer>`, `<div role="group">`, or paragraph of buttons sits at the bottom of the card, so buttons line up across a row (cards are now flex columns); a `<blockquote>` in a card is the card's text rather than a box (testimonials).
+  - A `<ul>` of `<li><article>` items (a post list) is a grid of cards, like a `<section>` of articles.
+  - Photo hero: an `<img>` first in the page header (before the `<nav>`) fills the header behind a dark wash of the primary color, and the header's text turns light. The wash keeps text at 4.5:1 even over a white photo.
+  - Featured card: in a row of cards, the one whose button is solid while the others' are outlined gets a primary-colored border and a lift.
+  - Picture beside text: a `<section>` holding just a `<figure>` and a `<div>` puts them side by side in that order, stacked on phones.
+  - A `<ul>` holding only images, in a section, header, or footer, is a centered, wrapping row (logos). CSS can't see bare text, so an item with an image and plain text beside it (no element around the text) also counts.
+
+### Changed
+- Coverage over size: the size ceiling is now 15 KB gzipped (it was 10 KB), and `llms.txt` is capped at 4,000 tokens, since agents read it on every page. See the guiding principle in `ROADMAP.md`.
+
+**Changes to existing pages:** sections inside `<main data-layout="full">` used to get no side padding; they now get the page column's padding. Cards in an article grid are flex columns.
+
 ### Fixed
 - A docs page whose `<aside>` holds only hidden content (`<aside><nav data-tag-toc hidden></nav></aside>`, a table of contents TagAction fills and shows) no longer gets an empty sidebar column: the article takes the width, as on a page without the aside. Readers without JavaScript saw a blank column. The sidebar column needs an element in the aside that isn't `hidden`. Found by the Tag family agent evaluation.
 

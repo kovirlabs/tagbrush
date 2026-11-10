@@ -72,7 +72,7 @@ Or just [download `tagbrush.css`](tagbrush.css) and host it yourself.
 - **Themeable** – colors, fonts, type scale, spacing, and radius are semantic CSS variables, and one variable re-themes everything. The [theme builder](https://kovirlabs.github.io/tagbrush/#theming) writes the CSS for you.
 - **Accessible** – WCAG AA contrast, visible keyboard focus rings, `prefers-reduced-motion`, forced-colors support, and print styles.
 - **Small helpers when you want them** – `.grid`, `.card`, `.container`, and `role="group"` cover the layouts most sites need.
-- **No build step, no dependencies** – plain CSS you can link, copy, or import. About 8.5 KB minified and gzipped.
+- **No build step, no dependencies** – plain CSS you can link, copy, or import. About 9 KB minified and gzipped.
 - **Works with any framework** – import it once in your root layout. [Setup guides](frameworks/README.md) cover Astro, Next.js, React, Vue, Nuxt, Angular, SvelteKit, Solid, Web Components, and Tailwind.
 
 ## How it compares
@@ -101,14 +101,14 @@ TagBrush.css sits in a family of drop-in stylesheets for semantic HTML. [Pico CS
 | Category   | Elements                                                                 |
 |------------|--------------------------------------------------------------------------|
 | Typography | `h1`–`h6`, `hgroup` (muted subtitle; a `<p>` before the heading is an uppercase label), `p`, `a`, `strong`, `small`, `mark`, `abbr`, `del`, `ins`, `s`, `dfn`, `q`, `sub`, `sup`, `hr`, `address`, `blockquote` (with `footer` attribution), `code`, `pre`, `kbd`, `samp`, `output` |
-| Lists      | `ul`, `ol`, `menu` (including nested lists, muted `::marker`), Markdown task lists (checkbox replaces the bullet), `dl`, `dt`, `dd` |
+| Lists      | `ul`, `ol`, `menu` (including nested lists, muted `::marker`), Markdown task lists (checkbox replaces the bullet), `dl`, `dt`, `dd`. An `<ol>` whose items start with a heading is a numbered timeline of steps; a `<ul>` of only images in a section, header, or footer is a centered row of logos |
 | Media      | `img`, `picture`, `video`, `audio`, `canvas`, `svg`, `iframe`, `object`, `embed` (scale to fit), `figure`, `figcaption`. Inline SVG icons without `width`/`height` in buttons, links, headings, labels, list items, and badges are sized to the text |
 | Code highlighting | Token colors for Prism, highlight.js, Hugo (Chroma), Jekyll (Rouge), Pandoc, and Pygments output, and Shiki's dual themes and `css-variables` theme. Follows the theme and dark mode; a highlighter theme you load yourself still wins |
 | Markdown   | Footnotes from GitHub-flavored Markdown, markdown-it, and Pandoc (smaller, muted, highlighted when linked to); long URLs and words wrap instead of widening the page |
-| Article grids | A `<section>` of two or more `<article>`s becomes a responsive grid of cards; an icon `<svg>` first in a card sits on a tinted tile |
+| Article grids | A `<section>` of two or more `<article>`s, or a `<ul>` of `<li><article>`s, becomes a responsive grid of cards; an icon `<svg>` first in a card sits on a tinted tile, an `<img>` first runs to the card's edges, a last footer or paragraph of buttons sits at the bottom so buttons line up, a `<blockquote>` in a card is a testimonial, and the one card in a row with a solid button (the rest outlined) is featured |
 | Status badges | `<mark data-tone="success">` (also `warning`, `error`, `info`, `neutral`, or any color with `style="--tone: …"`) is a tinted pill that stays readable in both schemes; `data-tone` on an `article aside` colors the callout |
-| App patterns | `<aside>` next to `<main>` is a sidebar layout (vertical navigation, stacks on phones), full height when the `<aside>` comes before the `<header>`; `<aside>` next to an `<article>` in `<main>` is a sticky table of contents; a `<dl>` of `<div>`s is stat tiles; a `<header>` with a heading and buttons is one row; `<search>` lays out filters; an `<hgroup>` in the page header is a hero, with a `<figure>` or image beside it if you add one; a page `<footer>` with two or more `<nav>`s is a site map in columns |
-| Structure  | `nav` (with `ul`/`menu` rendered as a horizontal menu, `aria-current` highlighted), `header`, `main`, `footer`, `search`, `article aside` (callout), breadcrumbs (`<nav aria-label="Breadcrumb">` gets `/` separators) |
+| App patterns | `<aside>` next to `<main>` is a sidebar layout (vertical navigation, stacks on phones), full height when the `<aside>` comes before the `<header>`; `<aside>` next to an `<article>` in `<main>` is a sticky table of contents; a `<dl>` of `<div>`s is stat tiles; a `<header>` with a heading and buttons is one row; `<search>` lays out filters; an `<hgroup>` in the page header is a hero, with a `<figure>` or image beside it if you add one, or a photo behind it when an `<img>` comes first in the header; a `<section>` of just a `<figure>` and a `<div>` puts them side by side; a page `<footer>` with two or more `<nav>`s is a site map in columns |
+| Structure  | `nav` (with `ul`/`menu` rendered as a horizontal menu, `aria-current` highlighted; links in a `[popover]` in the header nav become a phone menu behind its `popovertarget` button), a skip link (`<a href="#main">` first in `<body>`, shown on focus), `header`, `main`, `footer`, `search`, `article aside` (callout), breadcrumbs (`<nav aria-label="Breadcrumb">` gets `/` separators) |
 | Buttons    | `button`, `input[type=submit/button/reset]`, `.button`, `:disabled`, `aria-disabled` |
 | Loading    | `aria-busy="true"` on a button or any element shows a spinner |
 | Forms      | `fieldset`, `legend`, `label` (including inputs wrapped in their label), `textarea` (grows as you type unless it has a `rows` attribute), `select` (consistent arrow in the theme's colors), `select[multiple]`, `optgroup`, every text-like `input` type (including `date`, `time`, `search`, …), `checkbox`, `radio`, toggle switches (`<input type="checkbox" role="switch">`), `range`, `color`, `file`, `image` |
@@ -207,12 +207,14 @@ Write the usual page landmarks and TagBrush.css lays them out:
 - A page without `<main>`, such as plain Markdown output, is centered at a comfortable reading width (`--reading-width`, 70 characters), and so is a `<main>` holding a single `<article>`, like a blog post or docs page. Pages with more varied content use the wider `--container-max-width`.
 - A `<section>` of two or more `<article>`s lays them out as a responsive grid of cards. Headings and paragraphs in the section span the full width above them.
 - A wrapper element without a class around the landmarks counts as the page too, so framework wrappers like `<div id="root">`, `<div id="__nuxt">`, and Angular's `<app-root>` work without changes.
-- An `<hgroup>` in the page `<header>` is a hero on a soft tint of the primary color (`--hero-background`). Add a `<figure>`, `<img>`, or `<svg>` after it to put a picture beside the text.
+- An `<hgroup>` in the page `<header>` is a hero on a soft tint of the primary color (`--hero-background`). Add a `<figure>`, `<img>`, or `<svg>` after it to put a picture beside the text. An `<img>` first in the header, before the `<nav>`, is a photo behind the hero instead, under a dark wash that keeps the text readable.
 - An `<aside>` next to `<main>` is a sidebar. Put it before the `<header>` and it runs the full height of the window, with the header as a top bar beside it.
 - A page `<footer>` with two or more `<nav>`s lays them out as columns of links; a last paragraph (the copyright line) spans the width below them.
+- Links in a `<div popover>` inside the header's `<nav>` are a phone menu: they sit in the bar on wide screens, and on phones the `<button popovertarget>` before them opens them as a panel. No JavaScript.
+- A link to an id first in `<body>` (`<a href="#main">Skip to content</a>`) is a skip link, out of sight until it's focused.
 - Pages that already use `.container` look exactly as before.
 
-To lay out the page yourself, add `data-layout="full"` to `<body>` (or to the wrapper). To let just one landmark go edge to edge, for example a full-width hero, put it on that element: `<header data-layout="full">`. Giving the wrapper element a class also tells TagBrush.css it's your own layout.
+To lay out the page yourself, add `data-layout="full"` to `<body>` (or to the wrapper). To let just one landmark go edge to edge, for example a full-width hero, put it on that element: `<header data-layout="full">`. On `<main data-layout="full">`, each `<section>` (and a `<header>`) inside becomes a full-width band whose content is centered in the page column, so landing pages can give a band its own background, such as `<section data-theme="dark">`. Giving the wrapper element a class also tells TagBrush.css it's your own layout.
 
 The scoped and Shadow DOM builds leave page layout out, because they style part of a page that something else lays out.
 
