@@ -463,9 +463,15 @@ test.describe('form finishing touches', () => {
   });
 
   test('the select arrow is drawn in the muted text color', async ({ page }) => {
+    const muted = await token(page, 'var(--color-text-muted)');
+    // Where the themed picker is supported, its own icon is the arrow
+    if (await style(page, '#topic', 'appearance') === 'base-select') {
+      expect(await style(page, '#topic', 'color', '::picker-icon')).toBe(muted);
+      return;
+    }
     const image = await style(page, '#topic', 'backgroundImage');
     expect(image).toContain('linear-gradient');
-    expect(image).toContain(await token(page, 'var(--color-text-muted)'));
+    expect(image).toContain(muted);
   });
 });
 
@@ -865,6 +871,90 @@ test.describe('interaction and intent', () => {
     expect(await after('#pdf-button')).toBe('none');
     expect(await after('#nav-pdf')).toBe('none');
     expect(await after('#plain-link')).toBe('none');
+  });
+});
+
+test.describe('content intent', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 900, height: 900 });
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.goto(fileUrl('tests/fixtures/content-intent.html'));
+  });
+
+  test('a radio label with a description is a choice card, outlined when chosen', async ({ page }) => {
+    expect(await style(page, '#plans', 'display')).toBe('grid');
+    expect(await style(page, '#solo', 'backgroundColor')).toBe(await token(page, 'var(--color-surface)'));
+    const primary = await token(page, 'var(--color-primary)');
+    expect(await style(page, '#team', 'borderTopColor')).toBe(primary);
+    expect(await style(page, '#solo', 'borderTopColor')).not.toBe(primary);
+    await page.click('#solo');
+    expect(await style(page, '#solo', 'borderTopColor')).toBe(primary);
+    // Plain radios stay plain
+    expect(await style(page, '#plain-radios', 'display')).toBe('block');
+    expect(await style(page, '#yes', 'borderTopWidth')).toBe('0px');
+  });
+
+  test('a field with a rule turns green once met; a field without one stays neutral', async ({ page }) => {
+    const success = await token(page, 'var(--color-success)');
+    await page.fill('#email', 'ana@example.org');
+    await page.fill('#nickname', 'Ana');
+    await page.locator('#nickname').blur();
+    // Borders ease into their new color, so wait for it to settle
+    await expect.poll(() => style(page, '#email', 'borderTopColor')).toBe(success);
+    await page.waitForTimeout(300);
+    expect(await style(page, '#nickname', 'borderTopColor')).not.toBe(success);
+  });
+
+  test('a quote with a caption in a figure is a pull quote; a plain quote is unchanged', async ({ page }) => {
+    expect(await style(page, '#pull > blockquote', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#pull > blockquote', 'fontSize')).toBe('20px');
+    expect(await style(page, '#plain-quote', 'backgroundColor')).toBe(await token(page, 'var(--color-surface)'));
+  });
+
+  test('a picture in a caption is a round avatar; a figure\'s own picture is not', async ({ page }) => {
+    expect(await style(page, '#avatar', 'width')).toBe('40px');
+    expect(await style(page, '#avatar', 'height')).toBe('40px');
+    expect(await style(page, '#avatar', 'borderTopLeftRadius')).toBe('50%');
+    expect(await style(page, '#chart-image', 'borderTopLeftRadius')).not.toBe('50%');
+  });
+
+  test('a <data> value lines up on the right in tabular figures', async ({ page }) => {
+    expect(await style(page, '#amount', 'textAlign')).toBe('end');
+    expect(await style(page, '#amount', 'fontVariantNumeric')).toBe('tabular-nums');
+    expect(await style(page, '#note', 'textAlign')).toBe('start');
+  });
+
+  test('an embed without a height is 16:9 at full width; one with a height keeps it', async ({ page }) => {
+    const box = await page.locator('#video').boundingBox();
+    const main = await page.locator('main').evaluate((el) => el.clientWidth - parseFloat(getComputedStyle(el).paddingLeft) - parseFloat(getComputedStyle(el).paddingRight));
+    expect(Math.round(box.width)).toBe(Math.round(main));
+    expect(Math.abs(box.height - (box.width * 9) / 16)).toBeLessThan(1);
+    expect(await style(page, '#sized', 'height')).toBe('300px');
+  });
+
+  test('a sale price: the old price is muted', async ({ page }) => {
+    expect(await style(page, '#was', 'color')).toBe(await token(page, 'var(--color-text-muted)'));
+  });
+
+  test('readers who ask for more contrast get darker borders and full-contrast muted text', async ({ page }) => {
+    const before = await style(page, '#solo', 'borderTopColor');
+    await page.emulateMedia({ contrast: 'more' });
+    expect(await style(page, '#solo', 'borderTopColor')).not.toBe(before);
+    expect(await style(page, '#solo > small', 'color')).toBe(await token(page, 'var(--color-text)'));
+  });
+
+  test('scrollbars follow the theme', async ({ page, browserName }) => {
+    test.skip(browserName === 'webkit', 'WebKit does not support scrollbar-color');
+    expect(await style(page, 'html', 'scrollbarColor')).not.toBe('auto');
+  });
+
+  test('a select opens a themed picker where supported', async ({ page, browserName }) => {
+    test.skip(browserName !== 'chromium', 'appearance: base-select is Chromium-only for now');
+    expect(await style(page, '#country', 'appearance')).toBe('base-select');
+    // The arrow is out of the flow, so a site's own display on selects can't wrap it
+    expect(await style(page, '#country', 'position', '::picker-icon')).toBe('absolute');
+    await page.addStyleTag({ content: 'select { display: inline-block; width: auto; }' });
+    expect(await style(page, '#country', 'height')).toBe('42px');
   });
 });
 

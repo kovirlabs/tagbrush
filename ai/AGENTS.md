@@ -63,19 +63,19 @@ Add this to `<head>`:
 - `<label for="email">Email</label><input type="email" id="email">`, or wrap the input in its `<label>`. Fields are full width and spaced automatically.
 - Help text: a `<small>` directly after the field.
 - Errors: `aria-invalid="true"` on the field (and its `<small>` turns red). Valid: `aria-invalid="false"`.
-- Checkboxes and radios: `<label><input type="checkbox"> Text</label>`.
+- Checkboxes and radios: `<label><input type="checkbox"> Text</label>`. Add a `<small>` description for a choice card: `<label><input type="radio" name="plan"> <strong>Team</strong> <small>Up to 10 people</small></label>`.
 - `<textarea>` without a `rows` attribute grows as the user types. `readonly` and `disabled` fields are styled.
 - Group related fields in `<fieldset><legend>Title</legend>…</fieldset>`.
 
 ### Content
 
-- Tables: plain `<table>` with `<thead>`/`<tbody>`. Wide tables scroll inside themselves. Wrap in `<figure>` to fill the width. Zebra rows: `class="striped"`.
+- Tables: plain `<table>` with `<thead>`/`<tbody>`. Wide tables scroll inside themselves. Wrap in `<figure>` to fill the width. Zebra rows: `class="striped"`. Numbers in `<data>` align right: `<table><tr><td><data value="1200">$1,200</data></td></tr></table>`.
 - Code: `<pre><code>`. Highlighting classes from Prism, highlight.js, Shiki, Hugo, Jekyll, and Pandoc are colored automatically.
-- Images: `<figure><img src="…" alt="…"><figcaption>Caption</figcaption></figure>`.
-- Quotes: `<blockquote><p>…</p><footer>Author</footer></blockquote>`.
+- Images: `<figure><img src="…" alt="…"><figcaption>Caption</figcaption></figure>`. An `<iframe>` without a height (a video) is 16:9.
+- Quotes: `<blockquote><p>…</p><footer>Author</footer></blockquote>`. Pull quote: `<figure><blockquote><p>…</p></blockquote><figcaption><img src="ana.jpg" alt="">Ana Ruiz, Director</figcaption></figure>`; an `<img>` in a figcaption, article footer or `<address>` is a round avatar.
 - Links to documents get a label: `<a href="report.pdf">Annual report</a>` shows "PDF" (also DOC, XLS, CSV, ZIP); `download` links get an arrow.
 - Dialogs and popovers fade in, pages cross-fade, and wide tables and code show a scroll shadow, all automatically.
-- Inline: `<mark>`, `<kbd>`, `<code>`, `<abbr title="…">`, `<del>`, `<ins>`, `<small>`.
+- Inline: `<mark>`, `<kbd>`, `<code>`, `<abbr title="…">`, `<del>`, `<ins>`, `<small>`, and `<s>` for an old price.
 
 ### Optional classes
 

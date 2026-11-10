@@ -168,6 +168,19 @@
     background-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
   }
 
+  /* Scrollbars in the theme's colors, the thumb at least 3:1 against the page */
+  :scope {
+    scrollbar-color: color-mix(in srgb, var(--color-text-muted) 80%, var(--color-background)) transparent;
+  }
+
+  /* Readers who ask for more contrast get darker borders and full-contrast muted text */
+  @media (prefers-contrast: more) {
+    :scope {
+      --color-border: light-dark(oklch(from var(--color-primary) 0.528 calc(c * 0.08) h), oklch(from var(--color-primary) 0.714 calc(c * 0.09) h));
+      --color-text-muted: var(--color-text);
+    }
+  }
+
   :where(:focus-visible) {
     outline: var(--focus-ring-width) solid var(--focus-ring-color, color-mix(in srgb, var(--color-primary) 50%, transparent));
     outline-offset: 2px;
@@ -338,6 +351,32 @@
 
   :where(blockquote footer)::before {
     content: "— ";
+  }
+
+  /* Pull quote: <figure><blockquote><p>…</p></blockquote><figcaption>Name, role</figcaption></figure> */
+  figure > blockquote:has(+ figcaption) {
+    margin-bottom: var(--spacing-sm);
+    padding: 0 0 0 var(--spacing-lg);
+    border-left-color: var(--color-primary);
+    color: var(--color-text);
+    background: none;
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
+
+  :where(figure > blockquote + figcaption) {
+    padding-left: var(--spacing-lg);
+  }
+
+  /* Avatars: a picture of a person beside their name, in an article's
+     footer, a figcaption, or an <address> */
+  :is(article > footer, figcaption, address) > img {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-inline-end: var(--spacing-sm);
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: middle;
   }
 
   /* Heading with a subtitle: <hgroup><h2>Title</h2><p>Subtitle</p></hgroup> */
@@ -599,6 +638,16 @@
   img, video {
     height: auto;
     vertical-align: middle;
+  }
+
+  /* An embed without a height (a video player) fills the width at 16:9 */
+  :where(iframe:not([height])) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin-bottom: var(--spacing-md);
+    border: 0;
+    border-radius: var(--border-radius);
   }
 
   /* An SVG with a width attribute and a viewBox keeps its proportions when
@@ -1216,6 +1265,54 @@
     padding: var(--spacing-xs) var(--spacing-sm);
   }
 
+  /* Where the browser allows it, a mouse-driven select opens a picker in the
+     theme's colors. Touch screens keep the system's own picker. */
+  @supports (appearance: base-select) {
+    @media (pointer: fine) {
+      :where(select:not([multiple], [size])),
+      :where(select:not([multiple], [size]))::picker(select) {
+        appearance: base-select;
+      }
+
+      /* The arrow sits in the padding the gradient arrow used, outside the
+         flow, so a site's own display on selects can't wrap it */
+      :where(select:not([multiple], [size])) {
+        position: relative;
+        background-image: none;
+      }
+
+      :where(select:not([multiple], [size]))::picker-icon {
+        position: absolute;
+        top: 50%;
+        right: var(--spacing-md);
+        translate: 0 -50%;
+        color: var(--color-text-muted);
+      }
+
+      :where(select:not([multiple], [size]))::picker(select) {
+        margin-block: var(--spacing-xs);
+        padding: var(--spacing-xs);
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--input-radius);
+        background-color: var(--color-background);
+        box-shadow: var(--shadow-lg);
+      }
+
+      :where(select:not([multiple], [size])) option {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        border-radius: calc(var(--input-radius) - 2px);
+      }
+
+      :where(select:not([multiple], [size])) option:where(:hover, :focus-visible) {
+        background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
+      }
+
+      :where(select:not([multiple], [size])) option::checkmark {
+        color: var(--color-primary);
+      }
+    }
+  }
+
   optgroup {
     font-weight: 600;
   }
@@ -1253,6 +1350,11 @@
   }
 
   :where(input, textarea, select):where([aria-invalid="false"]) {
+    border-color: var(--color-success);
+  }
+
+  /* A field with a rule to meet turns green once the user has met it */
+  :where(input, textarea, select):where(:user-valid):where([required], [pattern], [minlength], [min], [max], [type="email"], [type="url"]) {
     border-color: var(--color-success);
   }
 
@@ -1338,6 +1440,41 @@
     width: fit-content;
     font-weight: 400;
     cursor: pointer;
+  }
+
+  /* Choice cards: a radio or checkbox label with a description in <small> is
+     a card, outlined when chosen; a fieldset of them lays them in a row.
+     <label><input type="radio" name="plan"> <strong>Team</strong> <small>Up to 10 people</small></label> */
+  label:has(> input:is([type="checkbox"], [type="radio"])):has(> small) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: var(--spacing-sm);
+    width: auto;
+    padding: var(--spacing-md);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--card-radius);
+    background-color: var(--color-surface);
+  }
+
+  label:has(> input:is([type="checkbox"], [type="radio"])):has(> small) > small {
+    grid-column: 2;
+    color: var(--color-text-muted);
+  }
+
+  label:has(> input:is([type="checkbox"], [type="radio"])):has(> small):has(> :checked) {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+  }
+
+  :where(fieldset:has(> label > small)) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
+    gap: var(--spacing-sm);
+  }
+
+  :where(fieldset:has(> label > small)) > :is(legend, label) {
+    margin-bottom: 0;
   }
 
   :where(input[type="range"]) {
@@ -1456,6 +1593,19 @@
 
   :where(.striped tbody tr:nth-child(odd)) {
     background-color: color-mix(in srgb, var(--color-surface) 60%, transparent);
+  }
+
+  /* Numbers marked with <data> line up on the right: <td><data value="1200">$1,200</data></td> */
+  :where(td:has(> data:only-child)) {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Rows light up under the pointer, on devices that can hover */
+  @media (hover: hover) {
+    :where(tbody tr:hover) {
+      background-color: color-mix(in srgb, var(--color-primary) 6%, transparent);
+    }
   }
 
   /* ==========================================================================
