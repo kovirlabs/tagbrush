@@ -21,6 +21,7 @@ Add this to `<head>`:
 
 - `<header><nav><strong>Site name</strong><ul><li><a href="/" aria-current="page">Home</a></li>…</ul></nav></header>`: a top bar. Lists inside a `<nav>` are horizontal rows (top bar, footer links, pagination), except inside an `<aside>`, where they're vertical; `aria-current="page"` marks the current page.
 - Phone menu: `<nav><strong>Site</strong><button popovertarget="menu" aria-label="Menu">☰</button><div popover id="menu"><ul>…</ul></div></nav>` in the page header shows the links in the bar on wide screens and behind the button on phones.
+- Dropdown menu: `<li><details><summary>Services</summary><ul><li><a href="/grants">Grants</a></li></ul></details></li>` in the header nav. No JavaScript.
 - Skip link: a link to an id first in `<body>`, such as `<a href="#main">Skip to content</a>`, shows only when focused.
 - Hero (landing pages): `<header><nav>…</nav><hgroup><h1>Big promise</h1><p>Supporting line</p></hgroup><div role="group"><a class="button" href="/signup">Start free</a><a class="button outline" href="/tour">Take the tour</a></div></header>`: an `<hgroup>` in the page header after the `<nav>` becomes a large, centered hero on a soft tint of the primary color. Add a `<figure>` (or `<img>`, `<svg>`) after the buttons to put a picture beside the text (below it on phones). An `<img>` first in the header, before the `<nav>`, is a photo behind the hero instead.
 - `<nav aria-label="Pagination"><ul><li><a rel="prev" href="…">← Previous</a></li><li><a rel="next" href="…">Next →</a></li></ul></nav>`: previous/next links; the `rel="next"` link sits at the far end of the row. Add numbered page links between them if needed.
@@ -31,7 +32,7 @@ Add this to `<head>`:
 - Sidebar layout (apps, dashboards, admin pages): `<body><header>…</header><aside><nav aria-label="Sections"><ul><li><a href="/" aria-current="page">Dashboard</a></li>…</ul></nav></aside><main>…</main><footer>…</footer></body>`. An `<aside>` next to `<main>` becomes a sidebar column (stacked on phones), and main uses the full width. Put the `<aside>` before the `<header>` for a full-height sidebar with the header as a top bar beside it.
 - Docs page with a table of contents: `<main><aside><nav aria-label="On this page"><ul><li><a href="#install">Install</a></li>…</ul></nav></aside><article>…</article></main>`. The aside stays in view beside the article. An aside whose content is all `hidden` (such as TagAction's `<nav data-tag-toc hidden>` before it's filled) takes no column.
 - `<hgroup><h1>Title</h1><p>Subtitle</p></hgroup>`: a heading with a muted subtitle. A `<p>` before the heading is a small uppercase label: `<hgroup><p>Pricing</p><h2>Simple plans</h2></hgroup>`.
-- `<section><h2>Heading</h2><article>…</article><article>…</article></section>`: two or more `<article>`s in a `<section>` become a responsive grid of cards. Only headings, `hgroup`, `p`, `header`, and `footer` may sit beside the articles. An icon `<svg>` first in a card sits on a tinted tile (feature cards). An `<img>` first in a card runs to its edges; a last paragraph of buttons sits at the bottom; a `<blockquote>` plus `<footer>` makes a testimonial. A `<ul>` of `<li><article>` is a card grid too.
+- `<section><h2>Heading</h2><article>…</article><article>…</article></section>`: two or more `<article>`s in a `<section>` become a responsive grid of cards. Only headings, `hgroup`, `p`, `header`, and `footer` may sit beside the articles. An icon `<svg>` first in a card sits on a tinted tile (feature cards). An `<img>` first in a card runs to its edges; a last paragraph of buttons sits at the bottom; a `<blockquote>` plus `<footer>` makes a testimonial. A `<ul>` of `<li><article>` is a card grid too. A card whose heading holds its only link is clickable all over: `<article><h3><a href="/post">Title</a></h3><p>Summary</p></article>`.
 - In a row of cards, the one whose button is solid while the others use `class="button outline"` is featured (a recommended plan).
 - Picture beside text: `<section><figure><img src="…" alt="…"></figure><div><h2>About us</h2><p>…</p></div></section>`. Put the `<figure>` last for the picture on the right.
 - Steps: `<ol><li><h3>Plan</h3><p>…</p></li>…</ol>`. Items that start with a heading make a numbered timeline.
@@ -72,6 +73,8 @@ Add this to `<head>`:
 - Code: `<pre><code>`. Highlighting classes from Prism, highlight.js, Shiki, Hugo, Jekyll, and Pandoc are colored automatically.
 - Images: `<figure><img src="…" alt="…"><figcaption>Caption</figcaption></figure>`.
 - Quotes: `<blockquote><p>…</p><footer>Author</footer></blockquote>`.
+- Links to documents get a label: `<a href="report.pdf">Annual report</a>` shows "PDF" (also DOC, XLS, CSV, ZIP); `download` links get an arrow.
+- Dialogs and popovers fade in, pages cross-fade, and wide tables and code show a scroll shadow, all automatically.
 - Inline: `<mark>`, `<kbd>`, `<code>`, `<abbr title="…">`, `<del>`, `<ins>`, `<small>`.
 
 ### Optional classes
