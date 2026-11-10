@@ -1276,6 +1276,21 @@ test.describe('app patterns', () => {
     expect(await style(page, '#plain', 'display')).toBe('block');
   });
 
+  test('a change in a stat tile is colored text with an arrow; ins and del elsewhere stay edit marks', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/app.html'));
+    for (const [tag, arrow] of [['ins', '▲'], ['del', '▼']]) {
+      const sel = `#stats ${tag}`;
+      expect(await style(page, sel, 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+      expect(await style(page, sel, 'textDecorationLine')).toBe('none');
+      expect(await style(page, sel, 'content', '::before')).toContain(arrow);
+      expect(await style(page, sel, 'color')).not.toBe(await token(page, 'var(--color-text)'));
+    }
+    expect(await style(page, '#edits del', 'textDecorationLine')).toBe('line-through');
+    expect(await style(page, '#edits del', 'backgroundColor')).not.toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#edits ins', 'backgroundColor')).not.toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#edits ins', 'content', '::before')).toBe('none');
+  });
+
   test('a header with a title and a button puts them on one row', async ({ page }) => {
     await page.goto(fileUrl('tests/fixtures/app.html'));
     const title = await box(page, 'main > header > h1');

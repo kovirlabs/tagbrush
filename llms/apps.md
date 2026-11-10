@@ -13,7 +13,7 @@ Layouts and components for pages people operate rather than read top to bottom.
 
 - **Stat tiles**: a `<dl>` whose items are wrapped in `<div>`s becomes a row of tiles: `<dl><div><dt>Revenue</dt><dd>$84,312</dd><dd><ins>+12%</ins> vs. last month</dd></div><div><dt>Orders</dt><dd>1,148</dd></div></dl>`. A plain `<dl>` stays a list.
 - **Status badges**: `<mark data-tone="success">Paid</mark>` is a tinted pill whose text stays readable in both schemes. Tones: `success`, `warning`, `error`, `info`, `neutral`, or any color with `style="--tone: #db2777"`. A plain `<mark>` is a highlight.
-- **Changes**: `<ins>+12%</ins>` and `<del>−3%</del>` for changes up or down; they keep full-contrast text inside muted tiles.
+- **Changes**: `<ins>+12%</ins>` and `<del>−3%</del>` for changes up or down. In a stat tile they are green and red text after ▲ and ▼; elsewhere they stay highlighted edit marks.
 - **Progress and meter**: `<progress value="40" max="100">`; a meter turns green, amber, or red from its attributes: `<meter value="0.7" low="0.5" high="0.8" optimum="0.2">`.
 - **Loading**: `aria-busy="true"` on a button or any element shows a spinner.
 

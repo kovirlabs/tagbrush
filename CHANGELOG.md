@@ -42,6 +42,7 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 **Changes to existing pages:** sections inside `<main data-layout="full">` used to get no side padding; they now get the page column's padding. Cards in an article grid are flex columns. Every `<dialog>` and `[popover]` now starts at `opacity: 0` and `scale: 0.97` until it's open, so a popover you show some other way than the popover API needs its own `opacity: 1`.
 
 ### Fixed
+- A change in a stat tile, `<ins>` or `<del>` in a `<dl>` of `<div>`s, is green or red text after ▲ or ▼, with no background and no line. A drop written `<del>−0.4%</del>` was struck through on a red highlight, so it read as a deleted value. `<ins>` and `<del>` elsewhere are unchanged.
 - A docs page whose `<aside>` holds only hidden content (`<aside><nav data-tag-toc hidden></nav></aside>`, a table of contents TagAction fills and shows) no longer gets an empty sidebar column: the article takes the width, as on a page without the aside. Readers without JavaScript saw a blank column. The sidebar column needs an element in the aside that isn't `hidden`. Found by the Tag family agent evaluation.
 
 ### Docs

@@ -1996,6 +1996,19 @@
     color: var(--color-text-muted);
   }
 
+  /* A change in a tile is colored text after an arrow, not an edit mark:
+     <dd><ins>+12%</ins> vs. last month</dd>, <dd><del>−0.4%</del></dd> */
+  :where(dl:has(> div)) > div :is(ins, del) {
+    background: none;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  :where(dl:has(> div)) > div ins { color: color-mix(in oklab, var(--color-success) 55%, var(--color-text)); }
+  :where(dl:has(> div)) > div del { color: color-mix(in oklab, var(--color-error) 55%, var(--color-text)); }
+  :where(dl:has(> div)) > div ins::before { content: "▲ "; content: "▲ " / ""; }
+  :where(dl:has(> div)) > div del::before { content: "▼ "; content: "▼ " / ""; }
+
   /* A header with a title and actions: <header><h1>Users</h1><button>Invite</button></header> */
   :where(main, article, section) header:where(:has(> :is(h1, h2, h3, h4, hgroup)):has(> :is(button, .button, [role="group"]))) {
     display: flex;

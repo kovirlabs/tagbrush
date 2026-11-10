@@ -68,7 +68,7 @@ Details: [references/apps.md](references/apps.md)
 - **Search and filters**: `<search><input type="search" aria-label="Search"><button>Filter</button></search>` is a row.
 - **Stat tiles**: `<dl><div><dt>Revenue</dt><dd>$84,312</dd></div></dl>`.
 - **Status badges**: `<mark data-tone="success">Paid</mark>` (also `warning`, `error`, `info`, `neutral`).
-- **Changes**: `<ins>+12%</ins>` and `<del>−3%</del>`.
+- **Changes**: `<ins>+12%</ins>` and `<del>−3%</del>`; in a stat tile, green ▲ and red ▼ text.
 - **Progress and meter**: `<progress value="40" max="100">` and `<meter value="0.7" low="0.5" high="0.8">`.
 - **Loading**: `aria-busy="true"` shows a spinner.
 - **Modal**: `<dialog><form method="dialog"><header><h2>…</h2><button aria-label="Close">✕</button></header>…<footer><button>OK</button></footer></form></dialog>`.
