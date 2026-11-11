@@ -1019,6 +1019,19 @@
     margin-bottom: 0;
   }
 
+  /* A menu in a popover (a user menu) opens next to the button that opened
+     it and stays on screen: below it, flipping up or to the other side near
+     an edge (anchor positioning). Browsers without it keep the popover
+     centered. The phone menu has its own placement. */
+  @supports (position-area: block-end) {
+    :where([popover]:has(> nav, > ul, > ol, > menu):not(header > nav > [popover])) {
+      inset: auto;
+      margin: var(--spacing-xs) 0;
+      position-area: block-end span-inline-start;
+      position-try-fallbacks: flip-inline, flip-block, flip-block flip-inline;
+    }
+  }
+
   /* Tabs: <div role="tablist"><button role="tab" aria-controls="npm" aria-selected="true">npm</button>…</div>
      followed by the role="tabpanel" sections. TagAction shows one panel at a time. */
   :where([role="tablist"]) {

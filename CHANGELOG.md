@@ -5,6 +5,7 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ## Unreleased
 
 ### Added
+- Menus stay on screen: a popover holding a nav or a list (a user menu) opens next to the button that opened it, below it and flipping up or to the other side near an edge, with CSS anchor positioning (`position-area`, `position-try-fallbacks`), gated on `@supports (position-area: block-end)` so other browsers keep it centered (modern-web-guidance `viewport-aware-dropdowns`). Other popovers and the phone menu are unchanged.
 - New-tab links: a link in running text with `target="_blank"` ends in " ↗", read as "(opens in a new tab)". Buttons, nav links, heading links, image links, and document links are left alone.
 - Sticky top bar, opt-in: `<header data-layout="sticky">` stays at the top on the page background, the root gets `scroll-padding-top: 5rem` so a heading you jump to or a focused field doesn't land under it, and once it's stuck a soft shadow appears where `container-type: scroll-state` is supported (Chromium; elsewhere the hairline alone), following the modern-web-guidance `state-aware-sticky-headers` guide.
 - Modal dialogs lock the page: while a `dialog:modal` is open the page behind doesn't scroll (`overflow: hidden` on the root via `:has()`), and the root keeps the scrollbar's space (`scrollbar-gutter: stable`), so nothing shifts sideways. Non-modal dialogs leave the page alone. Not in the scoped and Shadow DOM builds.

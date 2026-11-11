@@ -38,7 +38,7 @@ Details: [tagbrush-pages.mdc](tagbrush-pages.mdc)
 - **Sticky top bar**: `<header data-layout="sticky">` stays at the top and keeps jumped-to headings below it.
 - **Phone menu**: `<nav><strong>Site</strong><button popovertarget="menu" aria-label="Menu">☰</button><div popover id="menu"><ul>…</ul></div></nav>`: links in the bar on wide screens, behind the button on phones.
 - **Dropdown menu**: `<li><details><summary>Services</summary><ul>…</ul></details></li>` in the header nav.
-- **User menu**: a header-nav button with `popovertarget` opening `<div popover><nav><ul>…</ul></nav></div>`.
+- **User menu**: a header-nav button with `popovertarget` opening `<div popover><nav><ul>…</ul></nav></div>`; it opens under the button and stays on screen.
 - **Pagination**: `<nav aria-label="Pagination">` with `rel="prev"` and `rel="next"` links.
 - **Breadcrumbs**: `<nav aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a aria-current="page">Page</a></li></ol></nav>`.
 - **Footer columns**: a page `<footer>` with two or more `<nav>`s (a heading and a list each).

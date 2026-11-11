@@ -1523,6 +1523,38 @@ test.describe('polish: badges, icons, hero, sidebar, footer', () => {
   });
 });
 
+test.describe('menus stay on screen', () => {
+  test('a menu popover opens under its button, flips at the edges, and a plain popover stays centered', async ({ page, browserName }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 800, height: 600 });
+    await page.goto(fileUrl('tests/fixtures/menus.html'));
+    test.skip(!(await page.evaluate(() => CSS.supports('position-area: block-end'))), `${browserName}: no anchor positioning, popovers stay centered`);
+    const box = (sel) => page.locator(sel).boundingBox();
+    await page.click('#left-button');
+    let [button, menu] = [await box('#left-button'), await box('#left-menu')];
+    expect(menu.y).toBeGreaterThanOrEqual(button.y + button.height);
+    expect(menu.x).toBeGreaterThanOrEqual(0);
+    expect(menu.x).toBeLessThan(button.x + button.width); // beside the button, not centered
+    await page.keyboard.press('Escape');
+    await page.click('#right-button');
+    [button, menu] = [await box('#right-button'), await box('#right-menu')];
+    expect(menu.x + menu.width).toBeLessThanOrEqual(800);
+    expect(menu.x + menu.width).toBeGreaterThan(button.x); // aligned to the button's edge
+    await page.keyboard.press('Escape');
+    // Near the bottom edge it flips up.
+    await page.setViewportSize({ width: 800, height: 260 });
+    await page.locator('#right-button').evaluate((el) => el.scrollIntoView({ block: 'end' }));
+    await page.click('#right-button');
+    [button, menu] = [await box('#right-button'), await box('#right-menu')];
+    expect(menu.y + menu.height).toBeLessThanOrEqual(button.y + 1);
+    await page.keyboard.press('Escape');
+    await page.setViewportSize({ width: 800, height: 600 });
+    await page.click('#tip-button');
+    const tip = await box('#tip');
+    expect(Math.abs(tip.x + tip.width / 2 - 400)).toBeLessThan(2);
+  });
+});
+
 test.describe('sticky header', () => {
   test('header[data-layout="sticky"] stays at the top and a jumped-to heading lands below it', async ({ page, browserName }) => {
     await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
