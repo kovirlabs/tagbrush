@@ -438,6 +438,24 @@ test.describe('semantic components', () => {
     await page.evaluate(() => document.querySelector('#demo-dialog').close());
   });
 
+  test('on a phone a modal dialog is a sheet from the bottom edge; on a wide screen it stays centered', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 390, height: 800 });
+    await page.evaluate(() => document.querySelector('#demo-dialog').showModal());
+    let box = await page.locator('#demo-dialog').boundingBox();
+    expect(Math.round(box.width)).toBe(390);
+    expect(Math.round(box.y + box.height)).toBe(800);
+    expect(await style(page, '#demo-dialog', 'borderBottomLeftRadius')).toBe('0px');
+    expect(await style(page, '#demo-dialog', 'borderTopLeftRadius')).not.toBe('0px');
+    await page.evaluate(() => document.querySelector('#demo-dialog').close());
+    await page.setViewportSize({ width: 1000, height: 800 });
+    await page.evaluate(() => document.querySelector('#demo-dialog').showModal());
+    box = await page.locator('#demo-dialog').boundingBox();
+    expect(box.width).toBeLessThan(600);
+    expect(Math.abs(box.y + box.height / 2 - 400)).toBeLessThan(2);
+    await page.evaluate(() => document.querySelector('#demo-dialog').close());
+  });
+
   test('neighboring details join into an accordion', async ({ page }) => {
     const first = 'details[name=faq]:has(+ details)';
     expect(await style(page, first, 'marginBottom')).toBe('0px');

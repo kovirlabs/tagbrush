@@ -65,7 +65,7 @@ Details: [llms/apps.md](https://kovirlabs.github.io/tagbrush/llms/apps.md)
 - **Changes**: `<ins>+12%</ins>` and `<del>−3%</del>`; in a stat tile, green ▲ and red ▼ text.
 - **Progress and meter**: `<progress value="40" max="100">` and `<meter value="0.7" low="0.5" high="0.8">`.
 - **Loading**: `aria-busy="true"` shows a spinner.
-- **Modal**: `<dialog><form method="dialog"><header><h2>…</h2><button aria-label="Close">✕</button></header>…<footer><button>OK</button></footer></form></dialog>`; the page behind doesn't scroll.
+- **Modal**: `<dialog><form method="dialog"><header><h2>…</h2><button aria-label="Close">✕</button></header>…<footer><button>OK</button></footer></form></dialog>`; the page behind doesn't scroll; on phones it's a bottom sheet.
 - **Tabs**: `<div role="tablist">` of `<button role="tab" aria-controls="…">` and `role="tabpanel"` sections; TagAction switches them.
 - **Tooltip**: `<button interestfor="tip" aria-describedby="tip">Save</button><div popover="hint" id="tip" role="tooltip">Saves a draft</div>`: small and inverted, on hover and focus where supported.
 - **Popover**: `<button popovertarget="tip">?</button><div popover id="tip">…</div>`.

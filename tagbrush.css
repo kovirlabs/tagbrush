@@ -1545,6 +1545,36 @@
     }
   }
 
+  /* On a phone a modal dialog is a sheet from the bottom edge, full width
+     with its top corners rounded, and it slides up instead of growing */
+  @media (max-width: 30rem) {
+    dialog:where(:modal) {
+      width: 100%;
+      max-width: none;
+      max-height: 85dvh;
+      margin: auto 0 0;
+      border-width: var(--border-width) 0 0;
+      border-radius: var(--card-radius) var(--card-radius) 0 0;
+    }
+
+    :where(dialog) {
+      scale: none;
+      translate: 0 100%;
+      transition: opacity var(--transition-duration) ease-out, translate calc(2 * var(--transition-duration)) ease-out,
+                  display calc(2 * var(--transition-duration)) allow-discrete, overlay calc(2 * var(--transition-duration)) allow-discrete;
+    }
+
+    :where(dialog[open]) {
+      translate: none;
+    }
+
+    @starting-style {
+      :where(dialog[open]) {
+        translate: 0 100%;
+      }
+    }
+  }
+
   /* A dropdown menu: a <details> in a list in the page header's nav.
      <li><details><summary>Services</summary><ul><li><a href="/a">A</a></li></ul></details></li> */
   header nav li > details {

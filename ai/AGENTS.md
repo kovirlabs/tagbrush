@@ -67,7 +67,7 @@ Details: [llms/apps.md](https://kovirlabs.github.io/tagbrush/llms/apps.md)
 - **Changes**: `<ins>+12%</ins>` and `<del>−3%</del>`; in a stat tile, green ▲ and red ▼ text.
 - **Progress and meter**: `<progress value="40" max="100">` and `<meter value="0.7" low="0.5" high="0.8">`.
 - **Loading**: `aria-busy="true"` shows a spinner.
-- **Modal**: `<dialog><form method="dialog"><header><h2>…</h2><button aria-label="Close">✕</button></header>…<footer><button>OK</button></footer></form></dialog>`; the page behind doesn't scroll.
+- **Modal**: `<dialog><form method="dialog"><header><h2>…</h2><button aria-label="Close">✕</button></header>…<footer><button>OK</button></footer></form></dialog>`; the page behind doesn't scroll; on phones it's a bottom sheet.
 - **Tabs**: `<div role="tablist">` of `<button role="tab" aria-controls="…">` and `role="tabpanel"` sections; TagAction switches them.
 - **Tooltip**: `<button interestfor="tip" aria-describedby="tip">Save</button><div popover="hint" id="tip" role="tooltip">Saves a draft</div>`: small and inverted, on hover and focus where supported.
 - **Popover**: `<button popovertarget="tip">?</button><div popover id="tip">…</div>`.
@@ -235,7 +235,7 @@ Layouts and components for pages people operate rather than read top to bottom.
 
 #### Overlays
 
-- **Modal**: `<dialog><form method="dialog"><header><h2>Delete user?</h2><button aria-label="Close">✕</button></header><p>This can't be undone.</p><footer><button class="secondary" value="cancel">Cancel</button><button value="delete" data-tone="error">Delete</button></footer></form></dialog>`, opened with `dialog.showModal()`. The header puts the title and close button on one row; footer buttons align right. It fades in and out, and the page behind it doesn't scroll or shift while it's open.
+- **Modal**: `<dialog><form method="dialog"><header><h2>Delete user?</h2><button aria-label="Close">✕</button></header><p>This can't be undone.</p><footer><button class="secondary" value="cancel">Cancel</button><button value="delete" data-tone="error">Delete</button></footer></form></dialog>`, opened with `dialog.showModal()`. The header puts the title and close button on one row; footer buttons align right. It fades in and out, and the page behind it doesn't scroll or shift while it's open. On a phone (under 30rem) it is a sheet that slides up from the bottom edge, full width.
 - **Tabs**: `<div role="tablist" aria-label="Install with"><button role="tab" aria-controls="npm" aria-selected="true">npm</button><button role="tab" aria-controls="cdn">CDN</button></div><section id="npm" role="tabpanel">…</section><section id="cdn" role="tabpanel">…</section>`. The tabs are a row with the selected one underlined. TagAction shows one panel at a time and adds the arrow keys; without it every panel shows, one after another.
 - **Tooltip**: `<button interestfor="save-tip" aria-describedby="save-tip">Save</button><div popover="hint" id="save-tip" role="tooltip">Saves a draft you can finish later.</div>`. The browser opens it on hover and focus (`interestfor`, Chromium today) and it sits above the trigger, small and inverted. Elsewhere it doesn't open, so only put in it what a reader can do without; for something they need, use a `?` button with `popovertarget` (a toggletip) or inline text. `aria-describedby` makes screen readers read it. A link with `interestfor` gets a dotted underline.
 - **Popover**: `<button popovertarget="tip">?</button><div popover id="tip">…</div>`. It fades in and out.
