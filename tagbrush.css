@@ -1570,7 +1570,7 @@
      with its top corners rounded, and it slides up instead of growing */
   @media (max-width: 30rem) {
     dialog:where(:modal) {
-      width: 100%;
+      width: 100vw; /* the whole screen, over the gutter kept for the page's scrollbar */
       max-width: none;
       max-height: 85dvh;
       margin: auto 0 0;

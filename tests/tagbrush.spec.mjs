@@ -448,8 +448,8 @@ test.describe('semantic components', () => {
     await page.setViewportSize({ width: 390, height: 800 });
     await page.evaluate(() => document.querySelector('#demo-dialog').showModal());
     let box = await page.locator('#demo-dialog').boundingBox();
-    // Full width: the page's width, which leaves out any scrollbar gutter
-    expect(Math.round(box.width)).toBe(await page.evaluate(() => document.documentElement.clientWidth));
+    // The whole screen width, over any gutter kept for the page's scrollbar
+    expect(Math.round(box.width)).toBe(390);
     expect(Math.round(box.y + box.height)).toBe(800);
     expect(await style(page, '#demo-dialog', 'borderBottomLeftRadius')).toBe('0px');
     expect(await style(page, '#demo-dialog', 'borderTopLeftRadius')).not.toBe('0px');
