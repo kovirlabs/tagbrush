@@ -1352,6 +1352,15 @@ test.describe('app patterns', () => {
     expect(await style(page, '#edits ins', 'content', '::before')).toBe('none');
   });
 
+  test('a search field in a search bar shows a magnifier; other fields do not', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/app.html'));
+    expect(await style(page, 'search input[type=search]', 'backgroundImage')).toContain('radial-gradient');
+    expect(parseFloat(await style(page, 'search input[type=search]', 'paddingLeft'))).toBeGreaterThan(30);
+    expect(await style(page, 'search select', 'backgroundImage')).not.toContain('radial-gradient');
+    await page.evaluate(() => document.querySelector('main').insertAdjacentHTML('beforeend', '<input type="search" id="loose" aria-label="Loose">'));
+    expect(await style(page, '#loose', 'backgroundImage')).toBe('none');
+  });
+
   test('a header with a title and a button puts them on one row', async ({ page }) => {
     await page.goto(fileUrl('tests/fixtures/app.html'));
     const title = await box(page, 'main > header > h1');

@@ -66,7 +66,7 @@ Details: [references/apps.md](references/apps.md)
 - **Sidebar layout**: an `<aside>` with a `<nav>` next to `<main>` is a sidebar; before the `<header>`, full height.
 - **Docs contents**: `<main><aside><nav>…</nav></aside><article>…</article></main>` keeps the contents in view.
 - **Title with actions**: `<header><h1>Users</h1><button>Invite user</button></header>` in `<main>` is one row.
-- **Search and filters**: `<search><input type="search" aria-label="Search"><button>Filter</button></search>` is a row.
+- **Search and filters**: `<search><input type="search" aria-label="Search"><button>Filter</button></search>` is a row; the search field shows a magnifier.
 - **Stat tiles**: `<dl><div><dt>Revenue</dt><dd>$84,312</dd></div></dl>`.
 - **Status badges**: `<mark data-tone="success">Paid</mark>` (also `warning`, `error`, `info`, `neutral`).
 - **Changes**: `<ins>+12%</ins>` and `<del>−3%</del>`; in a stat tile, green ▲ and red ▼ text.

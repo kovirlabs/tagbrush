@@ -2674,6 +2674,22 @@
     margin-bottom: 0;
   }
 
+  /* A search field in a search bar shows a magnifier, drawn with two
+     gradients in the muted text color so it follows the theme */
+  :where(search, form[role="search"]) :where(input[type="search"]) {
+    padding-inline-start: 2.25rem;
+    background-image:
+      radial-gradient(circle at 0.4rem 0.4rem, transparent 0.27rem, var(--color-text-muted) 0.29rem 0.37rem, transparent 0.39rem),
+      linear-gradient(45deg, transparent 40%, var(--color-text-muted) 40% 62%, transparent 62%);
+    background-position: 0.8rem calc(50% - 0.1rem), 1.3rem calc(50% + 0.42rem);
+    background-size: 0.8rem 0.8rem, 0.4rem 0.4rem;
+    background-repeat: no-repeat;
+  }
+
+  :where(search, form[role="search"]) :where(input[type="search"]):dir(rtl) {
+    background-position: right 0.8rem center, right 1.3rem top calc(50% + 0.42rem);
+  }
+
   /* Hide visually but keep available to screen readers */
   .visually-hidden {
     position: absolute !important;

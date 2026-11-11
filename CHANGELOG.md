@@ -5,6 +5,7 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ## Unreleased
 
 ### Added
+- A search field in a `<search>` (or `form[role="search"]`) shows a magnifier, drawn with gradients in `--color-text-muted` so it follows the theme. Search fields elsewhere are unchanged.
 - Tooltips: a `[popover="hint"]` (opened on hover and focus by an `interestfor` trigger) is small and inverted, placed above its trigger with anchor positioning where supported. CSS only, with no JavaScript fallback: browsers without `interestfor` don't open it (modern-web-guidance `interest-triggered-tooltips`). A link with `interestfor` gets a dotted underline.
 - Printing: navigation, search bars, buttons (not a table's sort buttons), and tab rows are left out of a printout; cards, stat tiles, steps, details, and banners aren't split across pages; and closed `<details>` print their content where `::details-content` is supported. TagAction opens them before printing in every browser.
 - Selectable rows: a table row whose first cell holds a checked checkbox is tinted. Toggle switches and checkboxes in later cells don't select a row. TagAction adds select-all, indeterminate, and Shift-click ranges.
