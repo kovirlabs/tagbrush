@@ -33,6 +33,8 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
   - A field with a rule (`required`, `pattern`, `minlength`, `min`, `max`, `type="email"` or `"url"`) turns green once the user has met it (`:user-valid`). Fields without a rule stay neutral.
   - Scrollbars use the theme's colors, the thumb at least 3:1 against the page. Under `prefers-contrast: more`, borders take the muted text color and muted text becomes full contrast.
 
+- Tabs: a `role="tablist"` of `role="tab"` buttons is a row with the selected tab underlined in the primary color, the rest muted. TagAction (from its next release) shows one `role="tabpanel"` at a time and adds the arrow keys; without it, every panel shows.
+
 ### Changed
 - The guide for AI agents is split so it can grow (roadmap chunk 24). `llms.txt` is now an index every agent reads: the rules and every pattern in one line, grouped by what you're building, each group linking to a detail file in `llms/` (pages, apps, forms, content, chat) with full examples and what each pattern leaves alone. `llms-full.txt` holds everything in one file. The Claude Code skill gets the detail files as references it reads on demand, Cursor gets one rule per topic, and `AGENTS.md` gets the full text. Tests check every snippet in every file, and that every pattern in a detail file is named in the index. The index is capped at 4,000 tokens (it's 3,038, down from 3,910 before the split), the full guide at 20,000 (it's 8,311).
 - Coverage over size: the size ceiling is now 15 KB gzipped (it was 10 KB), and `llms.txt` is capped at 4,000 tokens, since agents read it on every page. See the guiding principle in `ROADMAP.md`.

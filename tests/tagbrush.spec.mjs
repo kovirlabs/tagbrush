@@ -932,6 +932,14 @@ test.describe('content intent', () => {
     expect(await style(page, '#sized', 'height')).toBe('300px');
   });
 
+  test('tabs: a row with an underline under the selected tab', async ({ page }) => {
+    expect(await style(page, '#tablist', 'display')).toBe('flex');
+    expect(await style(page, '#tab-on', 'borderBottomColor')).toBe(await token(page, 'var(--color-primary)'));
+    expect(await style(page, '#tab-off', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#tab-off', 'color')).toBe(await token(page, 'var(--color-text-muted)'));
+    expect(await style(page, '#tab-on', 'color')).toBe(await token(page, 'var(--color-text)'));
+  });
+
   test('a sale price: the old price is muted', async ({ page }) => {
     expect(await style(page, '#was', 'color')).toBe(await token(page, 'var(--color-text-muted)'));
   });

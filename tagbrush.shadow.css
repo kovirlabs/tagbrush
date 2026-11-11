@@ -923,6 +923,40 @@
     margin-bottom: 0;
   }
 
+  /* Tabs: <div role="tablist"><button role="tab" aria-controls="npm" aria-selected="true">npm</button>…</div>
+     followed by the role="tabpanel" sections. TagAction shows one panel at a time. */
+  :where([role="tablist"]) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+  }
+
+  :where([role="tablist"]) > [role="tab"] {
+    --_btn-bg: transparent;
+    --_btn-bg-hover: color-mix(in srgb, var(--color-primary) 8%, transparent);
+    --_btn-color: var(--color-text-muted);
+    margin: 0 0 calc(-1 * var(--border-width));
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    font-weight: 500;
+  }
+
+  :where([role="tablist"]) > [role="tab"][aria-selected="true"] {
+    --_btn-color: var(--color-text);
+    border-bottom-color: var(--color-primary);
+  }
+
+  :where([role="tabpanel"]) > :last-child {
+    margin-bottom: 0;
+  }
+
+  :where([role="tabpanel"]) {
+    margin-bottom: var(--spacing-md);
+  }
+
   /* Dialogs and popovers fade and grow in, and fade out where the browser can
      animate display (Chromium, Safari). Reduced motion sets the duration to 0. */
   :where(dialog, [popover]) {
