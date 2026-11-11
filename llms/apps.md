@@ -20,6 +20,7 @@ Layouts and components for pages people operate rather than read top to bottom.
 ## Overlays
 
 - **Modal**: `<dialog><form method="dialog"><header><h2>Delete user?</h2><button aria-label="Close">✕</button></header><p>This can't be undone.</p><footer><button class="secondary" value="cancel">Cancel</button><button value="ok">Delete</button></footer></form></dialog>`, opened with `dialog.showModal()`. The header puts the title and close button on one row; footer buttons align right. It fades in and out.
+- **Tabs**: `<div role="tablist" aria-label="Install with"><button role="tab" aria-controls="npm" aria-selected="true">npm</button><button role="tab" aria-controls="cdn">CDN</button></div><section id="npm" role="tabpanel">…</section><section id="cdn" role="tabpanel">…</section>`. The tabs are a row with the selected one underlined. TagAction shows one panel at a time and adds the arrow keys; without it every panel shows, one after another.
 - **Popover**: `<button popovertarget="tip">?</button><div popover id="tip">…</div>`. It fades in and out.
 
 ## Buttons and icons
