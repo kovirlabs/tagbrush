@@ -1592,6 +1592,20 @@ test.describe('sticky header', () => {
     else expect(await shadow(), `${browserName}: no scroll-state queries, hairline only`).toBe('0');
   });
 
+  test('a field focused right under the sticky bar (an invalid field on submit) scrolls out from under it', async ({ page, browserName }) => {
+    // Measured: WebKit's focus() scroll stops about 5px short of scroll-padding-top,
+    // so TagAction scrolls the first invalid field to the middle itself.
+    test.skip(browserName === 'webkit', 'WebKit focus() scrolling stops short of scroll-padding-top');
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 1000, height: 700 });
+    await page.goto(fileUrl('tests/fixtures/sticky.html'));
+    // Put the field just under the top edge, behind the bar, then focus it the way form validation does.
+    await page.evaluate(() => scrollTo(0, document.querySelector('#email').getBoundingClientRect().top + scrollY - 10));
+    await page.locator('#email').evaluate((el) => el.focus());
+    const [header, field] = [await page.locator('body > header').boundingBox(), await page.locator('#email').boundingBox()];
+    expect(field.y).toBeGreaterThanOrEqual(header.y + header.height);
+  });
+
   test('a header without the attribute, or a header in main, does not stick', async ({ page }) => {
     await page.goto(fileUrl('tests/fixtures/landing.html'));
     expect(await style(page, 'body > header', 'position')).toBe('static');
