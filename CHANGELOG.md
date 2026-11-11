@@ -2,7 +2,23 @@
 
 All notable changes to TagBrush.css are listed here. This project follows [Semantic Versioning](https://semver.org/): variable names and the selectors you can rely on only change in a major release.
 
-## Unreleased
+## 2.0.0 (unreleased)
+
+A major release: the default look changes (roadmap chunk 23's open question, decided November 10, 2026). Pages read as designed rather than generated: boxes by role, near-neutral grays, the brand color only where it means something, and more room between sections. Everything else below (Added, Fixed) is new since 1.2.0 and changes nothing you rely on.
+
+### Changed: the 2.0 look
+- Frame by role. A card in a grid is a box only when it is one thing you act on or compare: it has a link, a button, or a picture (a plan, a post, a clickable card). A card of only text (a feature: icon, heading, text) is open, set apart by space. A box has a fill or a border, never both: cards, stat tiles, and `.card` are filled with no border; choice cards are outlined with no fill. Only overlays and the featured card have a shadow; the featured card's border is now a 2px ring.
+- A card icon (`<svg>` first in a card) is a plain 1.75rem icon in the heading color, not an icon on a tinted tile. `data-tone` still colors it.
+- The label before a heading in an `<hgroup>` is sentence case, muted, and normal spacing, not an uppercase, letter-spaced label in the brand color.
+- `--hero-background` is `none`: no glow of the brand color behind the hero. The variable stays; set a gradient to bring one back.
+- Neutrals are near-neutral: the background, surface, text, muted text, and border colors carry at most 0.012 chroma of the primary's hue (they took 2–15% of its chroma, so a blue primary made a navy dark mode). Lightness, and so contrast, is unchanged.
+- Navigation links are text, not brand blue: muted, full contrast on hover, and full contrast and heavier for `aria-current`. The sidebar's hover and current-page fills are neutral. Links in tables are underlined text. Links in prose, buttons, and focus rings keep the primary color.
+- A `<blockquote>` is text set off by a rule: no fill, normal text color. A callout (`<aside>` in an article) keeps its fill, so the two no longer look alike.
+- Rhythm: sections in `<main data-layout="full">` get `clamp(3rem, 8vw, 6rem)` above and below (they had 2rem). A hero `<h1>` has tighter tracking and line height and more room before its paragraph. (The hero heading already grew to 3.5rem; the list asked for that.)
+- New: a price in a card. A paragraph that starts with `<strong>` or `<data>` followed by `<small>` is a large figure and a small muted period: `<p><strong>$12</strong> <small>per month</small></p>`.
+
+**Changes to existing pages (2.0):** feature cards (no link, button, or picture) lose their box, padding, and fill; other cards, stat tiles, and `.card` lose their border; choice cards lose their fill; the app sidebar loses its border line. The label above a heading is no longer uppercase or brand-colored. The hero has no background unless you set `--hero-background`. Neutral colors lose most of their tint, so a strongly colored primary no longer colors the grays (set `--color-surface` and friends yourself to keep a tint). Header, footer, breadcrumb, and sidebar nav links are muted text instead of the link color, and table links are text-colored. Blockquotes lose their fill and muted color. Full-width bands are taller. A pricing paragraph written `<strong>$12</strong> per month` is unchanged; write `<small>per month</small>` to get the large price.
+
 
 ### Added
 - Sidebar menu on phones: a `body > aside` holding a `button[popovertarget]` and its `[popover]` shows the popover's nav in the sidebar on wide screens (the popover is `display: contents`, the button hidden) and only the button on phones, so the sidebar doesn't push the page down; the nav opens as a menu under the button. Checked first: at 360px a plain sidebar stacks its whole list above `<main>`.
