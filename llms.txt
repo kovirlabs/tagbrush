@@ -43,8 +43,9 @@ Details: [llms/pages.md](https://kovirlabs.github.io/tagbrush/llms/pages.md)
 - **Picture beside text**: `<section><figure><img src="…" alt="…"></figure><div>…</div></section>`.
 - **Logos**: a `<ul>` of only `<img>`s in a section is a centered row.
 - **Single-form page**: `<main><article><form>…</form></article></main>` is a narrow column.
-- **Card grid**: `<section><h2>…</h2><article>…</article><article>…</article></section>`.
-- **Card icon**: an `<svg>` without width/height first in a card sits on a tinted tile.
+- **Card grid**: `<section><h2>…</h2><article>…</article><article>…</article></section>`; a card with a link, button, or picture is a box, others are open.
+- **Card icon**: an `<svg>` without width/height first in a card is a plain icon at heading size.
+- **Price**: `<p><strong>$12</strong> <small>per month</small></p>` in a card is a large price.
 - **Card picture**: an `<img>` first in a card runs to its edges.
 - **Card buttons**: a last paragraph of buttons in a card sits at the bottom.
 - **Clickable card**: a card whose heading holds its only link is clickable all over.
@@ -145,7 +146,7 @@ Override variables in a `<style>` block. Colors take a light and a dark value wi
   --font-family-base: Georgia, serif;
   --border-radius: 0.75rem;
   --spacing: 1.25rem;                /* scales all spacing */
-  --hero-background: none;           /* turns off the hero tint */
+  --hero-background: linear-gradient(#eef2ff, transparent); /* a wash behind the hero; none by default */
   --color-background: light-dark(#fffdf7, #14110f);
 }
 ```

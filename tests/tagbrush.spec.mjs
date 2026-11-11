@@ -694,7 +694,9 @@ test.describe('article grid', () => {
     expect(await style(page, '#posts', 'display')).toBe('grid');
     const tops = await page.locator('#posts > article').evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().top)));
     expect(new Set(tops).size).toBe(1);
+    // Cards with a link are boxes: a fill and no border (2.0)
     expect(await style(page, '#posts > article', 'backgroundColor')).toBe(await token(page, 'var(--color-surface)'));
+    expect(await style(page, '#posts > article', 'borderTopWidth')).toBe('0px');
     expect(await style(page, '#posts > article', 'paddingLeft')).toBe('24px');
     expect(await style(page, '#posts > article > p', 'marginBottom')).toBe('0px');
   });
@@ -752,7 +754,7 @@ test.describe('landing patterns', () => {
     expect(await style(page, 'main', 'paddingTop')).toBe('0px');
     expect(await style(page, 'main', 'paddingLeft')).toBe('0px');
     expect(await style(page, '#band', 'paddingLeft')).toBe('16px');
-    expect(await style(page, '#band', 'paddingTop')).toBe('32px');
+    expect(await style(page, '#band', 'paddingTop')).toBe('88px'); // clamp(3rem, 8vw, 6rem) at 1100px
     expect(await style(page, '#dark-band', 'marginTop')).toBe('0px');
     await page.setViewportSize({ width: 1600, height: 800 });
     expect(await style(page, '#band', 'paddingLeft')).toBe('216px');
@@ -810,8 +812,9 @@ test.describe('landing patterns', () => {
 
   test('the card with the only solid button in a row is featured', async ({ page }) => {
     const primary = await token(page, 'var(--color-primary)');
-    expect(await style(page, '#tall-card', 'borderTopColor')).toBe(primary);
-    expect(await style(page, '#short-card', 'borderTopColor')).not.toBe(primary);
+    expect(await style(page, '#tall-card', 'boxShadow')).toContain('0px 0px 0px 2px');
+    expect(await style(page, '#short-card', 'boxShadow')).toBe('none');
+    expect(primary).toBeTruthy();
   });
 
   test('a section of a figure and a div puts them side by side; a heading and a figure stay stacked', async ({ page }) => {
@@ -962,7 +965,9 @@ test.describe('content intent', () => {
 
   test('a radio label with a description is a choice card, outlined when chosen', async ({ page }) => {
     expect(await style(page, '#plans', 'display')).toBe('grid');
-    expect(await style(page, '#solo', 'backgroundColor')).toBe(await token(page, 'var(--color-surface)'));
+    // A box has a border or a fill, never both (2.0): choice cards are outlined
+    expect(await style(page, '#solo', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#solo', 'borderTopWidth')).toBe('1px');
     const primary = await token(page, 'var(--color-primary)');
     expect(await style(page, '#team', 'borderTopColor')).toBe(primary);
     expect(await style(page, '#solo', 'borderTopColor')).not.toBe(primary);
@@ -987,7 +992,9 @@ test.describe('content intent', () => {
   test('a quote with a caption in a figure is a pull quote; a plain quote is unchanged', async ({ page }) => {
     expect(await style(page, '#pull > blockquote', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
     expect(await style(page, '#pull > blockquote', 'fontSize')).toBe('20px');
-    expect(await style(page, '#plain-quote', 'backgroundColor')).toBe(await token(page, 'var(--color-surface)'));
+    // A quote is text with a rule, no fill (2.0)
+    expect(await style(page, '#plain-quote', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#plain-quote', 'color')).toBe(await token(page, 'var(--color-text)'));
   });
 
   test('a picture in a caption is a round avatar; a figure\'s own picture is not', async ({ page }) => {
@@ -1454,7 +1461,9 @@ test.describe('polish: badges, icons, hero, sidebar, footer', () => {
   test('a label before the heading in an hgroup leaves the heading unmuted', async ({ page }) => {
     await page.goto(fileUrl('tests/fixtures/polish.html'));
     expect(await style(page, '#label-heading', 'color')).toBe(await token(page, 'var(--color-heading)'));
-    expect(await style(page, '#label', 'textTransform')).toBe('uppercase');
+    // Sentence case, muted, normal spacing (2.0)
+    expect(await style(page, '#label', 'textTransform')).toBe('none');
+    expect(await style(page, '#label', 'color')).toBe(await token(page, 'var(--color-text-muted)'));
     expect(await style(page, '#section-head > p:last-child', 'color')).toBe(await token(page, 'var(--color-text-muted)'));
     expect(await style(page, '#hero-title', 'color')).toBe(await token(page, 'var(--color-heading)'));
   });
@@ -1476,9 +1485,14 @@ test.describe('polish: badges, icons, hero, sidebar, footer', () => {
     expect(await style(page, '#icon-only', 'display')).toBe('inline-flex');
     expect((await rect(page, '#nav-icon svg')).width).toBe(20);
     expect((await rect(page, '#icon-only svg')).width).toBe(20);
-    const tile = await rect(page, '#features > article > svg');
-    expect(tile.width).toBe(44);
-    expect(await style(page, '#features > article > svg', 'backgroundColor')).not.toBe('rgba(0, 0, 0, 0)');
+    // A plain icon at heading size in the text color, no tile (2.0)
+    const icon = await rect(page, '#features > article > svg');
+    expect(icon.width).toBe(28);
+    expect(await style(page, '#features > article > svg', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#features > article > svg', 'color')).toBe(await token(page, 'var(--color-heading)'));
+    // A feature card without a link or picture is open: no fill, no padding.
+    expect(await style(page, '#features > article', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#features > article', 'paddingLeft')).toBe('0px');
     // An illustration with a width attribute, and a chart outside these places, keep their size.
     expect((await rect(page, '#hero-figure svg')).width).toBeGreaterThan(200);
   });
@@ -1490,6 +1504,9 @@ test.describe('polish: badges, icons, hero, sidebar, footer', () => {
     expect(figure.left).toBeGreaterThan(hero.right);
     expect((await rect(page, '#hero-note')).right).toBeLessThan(figure.left);
     expect(await style(page, '#hero', 'textAlign')).toBe('start');
+    // No glow behind the hero by default (2.0); --hero-background still sets one.
+    expect(await style(page, 'body > header', 'backgroundImage')).toBe('none');
+    await page.addStyleTag({ content: ':root { --hero-background: radial-gradient(red, blue); }' });
     expect(await style(page, 'body > header', 'backgroundImage')).toContain('radial-gradient');
     await page.setViewportSize({ width: 390, height: 900 });
     const [heroPhone, figurePhone] = [await rect(page, '#hero'), await rect(page, '#hero-figure')];
@@ -1672,6 +1689,55 @@ test.describe('sticky header', () => {
     await page.goto(fileUrl('tests/fixtures/landing.html'));
     expect(await style(page, 'body > header', 'position')).toBe('static');
     expect(await style(page, 'html', 'scrollPaddingTop')).toBe('auto');
+  });
+});
+
+test.describe('the 2.0 look', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+    await page.goto(fileUrl('tests/fixtures/look.html'));
+  });
+
+  test('a card is a box only when it has a link, button, or picture; a feature card is open', async ({ page }) => {
+    expect(await style(page, '#plan', 'backgroundColor')).toBe(await token(page, 'var(--color-surface)'));
+    expect(await style(page, '#plan', 'borderTopWidth')).toBe('0px');
+    expect(await style(page, '#feature', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#feature', 'paddingLeft')).toBe('0px');
+  });
+
+  test('a price in a card is a large figure and a muted period; other strong/small pairs are not', async ({ page }) => {
+    expect(parseFloat(await style(page, '#price strong', 'fontSize'))).toBeGreaterThan(24);
+    expect(await style(page, '#price small', 'color')).toBe(await token(page, 'var(--color-text-muted)'));
+    expect(parseFloat(await style(page, '#header-price strong', 'fontSize'))).toBeGreaterThan(24); // in the card's header too
+    for (const sel of ['#not-price strong', '#strong-small b', '#prose-price strong']) expect(await style(page, sel, 'fontSize'), sel).toBe('16px');
+  });
+
+  test('nav links are text-colored: muted, the current page full contrast; prose links keep the brand color', async ({ page }) => {
+    expect(await style(page, '#nav-other', 'color')).toBe(await token(page, 'var(--color-text-muted)'));
+    expect(await style(page, '#nav-current', 'color')).toBe(await token(page, 'var(--color-text)'));
+    expect(await style(page, '#nav-button', 'color')).not.toBe(await token(page, 'var(--color-text-muted)'));
+    expect(await style(page, '#table-link', 'color')).toBe(await token(page, 'var(--color-text)'));
+    expect(await style(page, '#table-link', 'textDecorationLine')).toBe('underline');
+    expect(await style(page, '#prose-link', 'color')).not.toBe(await token(page, 'var(--color-text)'));
+  });
+
+  test('neutrals stay near-neutral with a vivid primary, in both schemes', async ({ page }) => {
+    for (const scheme of ['light', 'dark']) {
+      await page.emulateMedia({ colorScheme: scheme });
+      await page.evaluate(() => document.documentElement.style.setProperty('--color-primary', '#ff0000'));
+      for (const name of ['background', 'surface', 'text', 'text-muted', 'border']) {
+        const chroma = await page.evaluate((name) => {
+          const probe = document.createElement('i');
+          probe.style.color = `oklch(from var(--color-${name}) l c h)`;
+          document.body.append(probe);
+          const value = getComputedStyle(probe).color;
+          probe.remove();
+          const match = value.match(/oklch\(([\d.]+) ([\d.]+)/);
+          return match ? Number(match[2]) : 0;
+        }, name);
+        expect(chroma, `${scheme} ${name}`).toBeLessThanOrEqual(0.0121);
+      }
+    }
   });
 });
 
