@@ -1064,7 +1064,30 @@
       flex-direction: column;
       align-items: stretch;
     }
+
+    :where(body, body > :not([class])) > header > nav > [popover] li > details > :is(ul, ol, menu) {
+      position: static;
+      padding-block: var(--spacing-xs) 0;
+      border: 0;
+      box-shadow: none;
+    }
   }
+  /* Pages of the same site cross-fade into each other (Chromium, Safari) */
+  @media (prefers-reduced-motion: no-preference) {
+    @view-transition {
+      navigation: auto;
+    }
+  }
+
+  /* Header links are a comfortable tap target on touch screens */
+  @media (pointer: coarse) {
+    :where(body, body > :not([class])) > header nav li > :is(a:not(.button), details > summary) {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.75rem;
+    }
+  }
+
   /* Page layout: end */
 
   /* ==========================================================================
@@ -1203,6 +1226,139 @@
 
   :where([popover]) > :last-child {
     margin-bottom: 0;
+  }
+
+  /* Dialogs and popovers fade and grow in, and fade out where the browser can
+     animate display (Chromium, Safari). Reduced motion sets the duration to 0. */
+  :where(dialog, [popover]) {
+    opacity: 0;
+    scale: 0.97;
+    transition: opacity var(--transition-duration) ease-out, scale var(--transition-duration) ease-out,
+                display var(--transition-duration) allow-discrete, overlay var(--transition-duration) allow-discrete;
+  }
+
+  :where(dialog[open], [popover]:popover-open) {
+    opacity: 1;
+    scale: none;
+  }
+
+  @starting-style {
+    :where(dialog[open], [popover]:popover-open) {
+      opacity: 0;
+      scale: 0.97;
+    }
+  }
+
+  :where(dialog)::backdrop {
+    opacity: 0;
+    transition: opacity var(--transition-duration), display var(--transition-duration) allow-discrete, overlay var(--transition-duration) allow-discrete;
+  }
+
+  :where(dialog[open])::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    :where(dialog[open])::backdrop {
+      opacity: 0;
+    }
+  }
+
+  /* A dropdown menu: a <details> in a list in the page header's nav.
+     <li><details><summary>Services</summary><ul><li><a href="/a">A</a></li></ul></details></li> */
+  header nav li > details {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  header nav li > details > summary {
+    margin: 0;
+    list-style: none;
+  }
+
+  header nav li > details > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  header nav li > details > summary::after {
+    content: "";
+    display: inline-block;
+    width: 0.4em;
+    height: 0.4em;
+    margin-inline-start: 0.45em;
+    border: solid currentColor;
+    border-width: 0 0.12em 0.12em 0;
+    rotate: 45deg;
+    translate: 0 -0.2em;
+    transition: rotate var(--transition-duration);
+  }
+
+  header nav li > details[open] > summary::after {
+    rotate: -135deg;
+    translate: 0 0.05em;
+  }
+
+  header nav li > details > :is(ul, ol, menu) {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + var(--spacing-sm));
+    left: 0;
+    min-width: 12rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--border-radius);
+    background-color: var(--color-background);
+    box-shadow: var(--shadow-lg);
+  }
+
+  header nav li:last-child > details > :is(ul, ol, menu) {
+    right: 0;
+    left: auto;
+  }
+
+  /* Wide tables and code blocks show a shadow at an edge with more to scroll
+     to (scroll-driven; browsers without it show none) */
+  @supports (animation-timeline: scroll()) {
+    :where(pre, table, figure:has(> table)) {
+      animation: tagbrush-scroll-shadow linear both;
+      animation-timeline: scroll(self inline);
+    }
+
+    :where(figure > table) {
+      animation: none;
+    }
+  }
+
+  @keyframes tagbrush-scroll-shadow {
+    from { box-shadow: inset 0 0 0 0 transparent, inset -1rem 0 1rem -1rem var(--_scroll-shadow); }
+    1%, 99% { box-shadow: inset 1rem 0 1rem -1rem var(--_scroll-shadow), inset -1rem 0 1rem -1rem var(--_scroll-shadow); }
+    to { box-shadow: inset 1rem 0 1rem -1rem var(--_scroll-shadow), inset 0 0 0 0 transparent; }
+  }
+
+  :where(pre, table, figure) {
+    --_scroll-shadow: color-mix(in srgb, var(--color-text) 35%, transparent);
+  }
+
+  /* A link to a document or a download says what it is: "Annual report PDF" */
+  :where(a:not(.button, nav *, :has(img))):where([href$=".pdf" i], [href*=".pdf?" i])::after { content: "PDF"; }
+  :where(a:not(.button, nav *, :has(img))):where([href$=".doc" i], [href$=".docx" i])::after { content: "DOC"; }
+  :where(a:not(.button, nav *, :has(img))):where([href$=".xls" i], [href$=".xlsx" i])::after { content: "XLS"; }
+  :where(a:not(.button, nav *, :has(img))):where([href$=".csv" i])::after { content: "CSV"; }
+  :where(a:not(.button, nav *, :has(img))):where([href$=".zip" i])::after { content: "ZIP"; }
+  :where(a:not(.button, nav *, :has(img)))[download]:not([href$=".pdf" i], [href*=".pdf?" i], [href$=".doc" i], [href$=".docx" i], [href$=".xls" i], [href$=".xlsx" i], [href$=".csv" i], [href$=".zip" i])::after { content: "↓" / "download"; }
+
+  :where(a:not(.button, nav *, :has(img))):where([download], [href$=".pdf" i], [href*=".pdf?" i], [href$=".doc" i], [href$=".docx" i], [href$=".xls" i], [href$=".xlsx" i], [href$=".csv" i], [href$=".zip" i])::after {
+    display: inline-block;
+    margin-inline-start: 0.35em;
+    color: var(--color-text-muted);
+    font-size: 0.75em;
+    font-weight: 600;
+    letter-spacing: 0.04em;
   }
 
   /* Loading: aria-busy="true" on a button or any container shows a spinner
@@ -1839,6 +1995,30 @@
   :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article) > :where(footer, [role="group"], p:has(> :is(.button, button))):last-child {
     margin-top: auto;
     margin-bottom: 0;
+  }
+
+  /* A card whose heading holds its only link (and no other control) is a link
+     all over: the link's ::after covers the card */
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article):where(:has(:is(h2, h3, h4, h5, h6) > a):not(:has(:not(h1, h2, h3, h4, h5, h6) > a, button, input, select, textarea))) {
+    position: relative;
+  }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article):where(:has(:is(h2, h3, h4, h5, h6) > a):not(:has(:not(h1, h2, h3, h4, h5, h6) > a, button, input, select, textarea))) :is(h2, h3, h4, h5, h6) > a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article):where(:has(:is(h2, h3, h4, h5, h6) > a:focus-visible)) {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color, color-mix(in srgb, var(--color-primary) 50%, transparent));
+    outline-offset: 2px;
+  }
+
+  @media (hover: hover) {
+    :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article):where(:has(:is(h2, h3, h4, h5, h6) > a):not(:has(:not(h1, h2, h3, h4, h5, h6) > a, button, input, select, textarea))):hover {
+      border-color: color-mix(in oklab, var(--color-primary) 45%, var(--color-border));
+    }
   }
 
   /* A quote in a card (a testimonial) is the card's text, not a box inside it */

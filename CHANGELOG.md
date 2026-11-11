@@ -17,10 +17,19 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
   - Picture beside text: a `<section>` holding just a `<figure>` and a `<div>` puts them side by side in that order, stacked on phones.
   - A `<ul>` holding only images, in a section, header, or footer, is a centered, wrapping row (logos). CSS can't see bare text, so an item with an image and plain text beside it (no element around the text) also counts.
 
+- Interaction and intent (roadmap chunk 23):
+  - Dialogs and popovers fade and grow in, and fade out where the browser can animate `display` (Chromium, Safari); the backdrop fades too. `prefers-reduced-motion` makes it instant.
+  - Pages of the same site cross-fade into each other (`@view-transition { navigation: auto }`, Chromium and Safari), unless the reader prefers reduced motion.
+  - A card whose heading holds its only link, with no other link or control, is clickable all over and shows hover and focus states on the card.
+  - A `<details>` in a list in the page header's nav is a dropdown menu, without JavaScript; in the phone menu panel it opens in place.
+  - Wide tables and code blocks show a shadow at an edge that has more to scroll to (scroll-driven animations: Chromium and Safari 26; none elsewhere).
+  - Header nav links are at least 44px tall on touch screens.
+  - Links to `.pdf`, `.doc(x)`, `.xls(x)`, `.csv` and `.zip` files get a small muted label ("PDF"); `download` links get an arrow. Buttons, nav links and image links are left alone.
+
 ### Changed
 - Coverage over size: the size ceiling is now 15 KB gzipped (it was 10 KB), and `llms.txt` is capped at 4,000 tokens, since agents read it on every page. See the guiding principle in `ROADMAP.md`.
 
-**Changes to existing pages:** sections inside `<main data-layout="full">` used to get no side padding; they now get the page column's padding. Cards in an article grid are flex columns.
+**Changes to existing pages:** sections inside `<main data-layout="full">` used to get no side padding; they now get the page column's padding. Cards in an article grid are flex columns. Every `<dialog>` and `[popover]` now starts at `opacity: 0` and `scale: 0.97` until it's open, so a popover you show some other way than the popover API needs its own `opacity: 1`.
 
 ### Fixed
 - A docs page whose `<aside>` holds only hidden content (`<aside><nav data-tag-toc hidden></nav></aside>`, a table of contents TagAction fills and shows) no longer gets an empty sidebar column: the article takes the width, as on a page without the aside. Readers without JavaScript saw a blank column. The sidebar column needs an element in the aside that isn't `hidden`. Found by the Tag family agent evaluation.
