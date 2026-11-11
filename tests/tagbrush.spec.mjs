@@ -427,11 +427,14 @@ test.describe('semantic components', () => {
     // No scrollbar space is reserved until a modal opens (no empty strip with classic scrollbars)
     expect(await style(page, 'html', 'scrollbarGutter')).toBe('auto');
     const before = await width();
+    // A painted classic scrollbar takes width; overlay scrollbars and headless runners take none
+    const bar = await page.evaluate(() => innerWidth - document.documentElement.clientWidth);
     expect(await overflow()).toBe('visible');
     await page.evaluate(() => document.querySelector('#demo-dialog').showModal());
     expect(await overflow()).toBe('hidden');
     expect(await style(page, 'html', 'scrollbarGutter')).toBe('stable');
-    expect(await width()).toBe(before);
+    // The page keeps the scrollbar's space, so it doesn't shift where a scrollbar was showing
+    if (bar > 0) expect(await width()).toBe(before);
     await page.mouse.wheel(0, 600);
     await page.waitForTimeout(100);
     expect(await page.evaluate(() => scrollY)).toBe(0);
@@ -445,7 +448,8 @@ test.describe('semantic components', () => {
     await page.setViewportSize({ width: 390, height: 800 });
     await page.evaluate(() => document.querySelector('#demo-dialog').showModal());
     let box = await page.locator('#demo-dialog').boundingBox();
-    expect(Math.round(box.width)).toBe(390);
+    // Full width: the page's width, which leaves out any scrollbar gutter
+    expect(Math.round(box.width)).toBe(await page.evaluate(() => document.documentElement.clientWidth));
     expect(Math.round(box.y + box.height)).toBe(800);
     expect(await style(page, '#demo-dialog', 'borderBottomLeftRadius')).toBe('0px');
     expect(await style(page, '#demo-dialog', 'borderTopLeftRadius')).not.toBe('0px');
@@ -1035,6 +1039,9 @@ test.describe('content intent', () => {
   test('readers who ask for more contrast get darker borders and full-contrast muted text', async ({ page }) => {
     const before = await style(page, '#solo', 'borderTopColor');
     await page.emulateMedia({ contrast: 'more' });
+    // Load the page again with the query already matching: Firefox under Playwright
+    // matches it in matchMedia without restyling a page that is already open
+    await page.reload();
     const emulated = await page.evaluate(() => matchMedia('(prefers-contrast: more)').matches);
     test.skip(!emulated, 'this browser does not emulate prefers-contrast, so the query never matches');
     expect(await style(page, '#solo', 'borderTopColor')).not.toBe(before);
