@@ -116,6 +116,7 @@ Details: [references/content.md](references/content.md)
 - **Images**: `<figure><img src="…" alt="…"><figcaption>Caption</figcaption></figure>`.
 - **Video embeds**: an `<iframe>` without a height is 16:9.
 - **Tables**: `<table>` with `<thead>`/`<tbody>`; wide ones scroll; `<figure>` around one fills the width; `class="striped"`.
+- **Selectable rows**: a checkbox first in each row (`<td><input type="checkbox" aria-label="Select Maya"></td>`) tints the row when checked.
 - **Numbers in tables**: a `<data>` value alone in a cell aligns right.
 - **Code**: `<pre><code>`; common highlighters' classes are colored.
 - **Accordion**: neighboring `<details>` with the same `name` join into one.

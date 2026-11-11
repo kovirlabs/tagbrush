@@ -1636,6 +1636,13 @@ test.describe('states people expect', () => {
     }
   });
 
+  test('a row with a checked checkbox in its first cell is tinted; a switch or a later checkbox is not', async ({ page }) => {
+    const none = 'rgba(0, 0, 0, 0)';
+    expect(await style(page, '#row-on', 'backgroundColor')).not.toBe(none);
+    expect(await style(page, '#row-off', 'backgroundColor')).toBe(none); // its switch is on, but it isn't selected
+    expect(await style(page, '#row-done', 'backgroundColor')).toBe(none); // a checkbox in a later cell is data
+  });
+
   test('a toggle with aria-pressed="true" looks held down; "false" looks like any button', async ({ page }) => {
     expect(await style(page, '#pressed-on', 'boxShadow')).toContain('inset');
     expect(await style(page, '#pressed-on', 'backgroundColor')).not.toBe(await style(page, '#pressed-off', 'backgroundColor'));

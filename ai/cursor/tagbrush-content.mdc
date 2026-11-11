@@ -33,6 +33,7 @@ Text, media, tables, and code, including Markdown output.
 ## Tables and code
 
 - **Tables**: plain `<table>` with `<thead>` and `<tbody>`. A table is as wide as its content, and a wide one scrolls inside itself with a shadow at the edge that has more. Wrap it in `<figure>` to fill the width. Zebra rows: `class="striped"`. Rows highlight under the pointer.
+- **Selectable rows**: put a checkbox first in each row, `<tr><td><input type="checkbox" name="user" value="42" aria-label="Select Maya Lin"></td><td>Maya Lin</td>…</tr>`, and a checked row is tinted. A checkbox in the header cell above them is a select-all box with TagAction (indeterminate when some rows are checked; Shift-click checks a range). A toggle switch, or a checkbox in a later cell (data such as "Done"), doesn't select its row.
 - **Numbers in tables**: a cell holding only a `<data>` value aligns right in tabular figures: `<table><tr><td>Staff</td><td><data value="48000">$48,000</data></td></tr></table>`.
 - **Code**: `<pre><code>`. Highlighting classes from Prism, highlight.js, Shiki, Hugo, Jekyll, and Pandoc are colored automatically. Wide code scrolls with a shadow at the edge.
 - **Accordion**: neighboring `<details><summary>Question</summary><p>Answer</p></details>` join into one group. Give them the same `name="…"` so only one opens at a time.

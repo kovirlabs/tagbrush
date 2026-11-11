@@ -1815,6 +1815,12 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* A row whose first cell holds a checked checkbox is selected: tinted.
+     <tr><td><input type="checkbox" aria-label="Select Maya"></td>…</tr> */
+  :where(tbody tr:has(> :first-child > input[type="checkbox"]:not([role="switch"]):checked, > :first-child > label > input[type="checkbox"]:not([role="switch"]):checked)) {
+    background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  }
+
   /* Rows light up under the pointer, on devices that can hover */
   @media (hover: hover) {
     :where(tbody tr:hover) {
