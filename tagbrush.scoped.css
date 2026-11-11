@@ -2451,6 +2451,24 @@
     :where(pre) {
       white-space: pre-wrap;
     }
+
+    /* Controls don't print: navigation, search and filter bars, buttons
+       (but a sort button holding a table header's text stays), and tab
+       rows. Cards, tiles, and steps aren't split across pages. */
+    :where(nav, search, form[role="search"], button:not([data-tag="sort"]), [role="tablist"]) {
+      display: none !important;
+    }
+
+    :where(article, dl > div, ol > li, details, aside, [role="status"], [role="alert"]) {
+      break-inside: avoid;
+    }
+
+    /* Closed <details> print their content where the browser can show it
+       (::details-content); TagAction also opens them before printing */
+    :where(details)::details-content {
+      block-size: auto;
+      content-visibility: visible;
+    }
   }
 }
 }

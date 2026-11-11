@@ -36,4 +36,5 @@ Text, media, tables, and code, including Markdown output.
 
 ## Automatic
 
+- **Printing**: a printout leaves out navigation, search bars, buttons, and tabs, keeps cards, tiles, steps, and callouts whole, prints link addresses, and prints closed `<details>` content (in Chromium; TagAction opens them everywhere).
 - **Motion**: dialogs and popovers fade in, pages of the same site cross-fade as you navigate, and hover effects only appear on devices that hover. All of it stops for readers who prefer reduced motion. Nothing to add.

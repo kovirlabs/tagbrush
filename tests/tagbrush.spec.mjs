@@ -1523,6 +1523,22 @@ test.describe('polish: badges, icons, hero, sidebar, footer', () => {
   });
 });
 
+test.describe('print', () => {
+  test('controls are left out of a printout; header sort text, links styled as buttons, and closed details content print', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/print.html'));
+    await page.emulateMedia({ media: 'print' });
+    for (const sel of ['body > header nav', 'search', '#action']) expect(await style(page, sel, 'display'), sel).toBe('none');
+    expect(await style(page, '#sort', 'display')).not.toBe('none');
+    expect(await style(page, '#link-button', 'display')).not.toBe('none');
+    expect(await style(page, '#card', 'breakInside')).toBe('avoid');
+    if (await page.evaluate(() => CSS.supports('selector(::details-content)'))) {
+      expect((await page.locator('#answer').boundingBox())?.height ?? 0).toBeGreaterThan(0);
+    }
+    await page.emulateMedia({ media: 'screen' });
+    expect(await style(page, '#action', 'display')).not.toBe('none'); // only in print
+  });
+});
+
 test.describe('menus stay on screen', () => {
   test('a menu popover opens under its button, flips at the edges, and a plain popover stays centered', async ({ page, browserName }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });

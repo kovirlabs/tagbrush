@@ -122,6 +122,7 @@ Details: [tagbrush-content.mdc](tagbrush-content.mdc)
 - **Code**: `<pre><code>`; common highlighters' classes are colored.
 - **Accordion**: neighboring `<details>` with the same `name` join into one.
 - **Disclosure**: `<details><summary>…</summary>…</details>` has a chevron marker (at the end in an accordion) and eases open.
+- **Printing**: navigation, search, and buttons are left out; cards stay whole; `<details>` content prints.
 - **Motion**: dialogs, popovers, and page changes animate on their own.
 
 ## Chat and AI output
