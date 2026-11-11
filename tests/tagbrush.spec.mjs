@@ -421,12 +421,82 @@ test.describe('semantic components', () => {
     expect(await style(page, '#demo-dialog footer', 'fontSize')).toBe('16px');
   });
 
+  test('a modal dialog stops the page behind it from scrolling, without shifting it; a non-modal one does not', async ({ page }) => {
+    const width = () => page.evaluate(() => document.body.getBoundingClientRect().width);
+    const overflow = () => page.evaluate(() => getComputedStyle(document.documentElement).overflowY);
+    expect(await style(page, 'html', 'scrollbarGutter')).toBe('stable');
+    const before = await width();
+    expect(await overflow()).toBe('visible');
+    await page.evaluate(() => document.querySelector('#demo-dialog').showModal());
+    expect(await overflow()).toBe('hidden');
+    expect(await width()).toBe(before);
+    await page.mouse.wheel(0, 600);
+    await page.waitForTimeout(100);
+    expect(await page.evaluate(() => scrollY)).toBe(0);
+    await page.evaluate(() => { const d = document.querySelector('#demo-dialog'); d.close(); d.show(); });
+    expect(await overflow()).toBe('visible');
+    await page.evaluate(() => document.querySelector('#demo-dialog').close());
+  });
+
+  test('on a phone a modal dialog is a sheet from the bottom edge; on a wide screen it stays centered', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 390, height: 800 });
+    await page.evaluate(() => document.querySelector('#demo-dialog').showModal());
+    let box = await page.locator('#demo-dialog').boundingBox();
+    expect(Math.round(box.width)).toBe(390);
+    expect(Math.round(box.y + box.height)).toBe(800);
+    expect(await style(page, '#demo-dialog', 'borderBottomLeftRadius')).toBe('0px');
+    expect(await style(page, '#demo-dialog', 'borderTopLeftRadius')).not.toBe('0px');
+    await page.evaluate(() => document.querySelector('#demo-dialog').close());
+    await page.setViewportSize({ width: 1000, height: 800 });
+    await page.evaluate(() => document.querySelector('#demo-dialog').showModal());
+    box = await page.locator('#demo-dialog').boundingBox();
+    expect(box.width).toBeLessThan(600);
+    expect(Math.abs(box.y + box.height / 2 - 400)).toBeLessThan(2);
+    await page.evaluate(() => document.querySelector('#demo-dialog').close());
+  });
+
   test('neighboring details join into an accordion', async ({ page }) => {
     const first = 'details[name=faq]:has(+ details)';
     expect(await style(page, first, 'marginBottom')).toBe('0px');
     expect(await style(page, first, 'borderBottomLeftRadius')).toBe('0px');
     expect(await style(page, 'details + details', 'borderTopWidth')).toBe('0px');
     expect(await style(page, 'details:not(:has(+ details)):not(details + details)', 'marginBottom')).toBe('16px');
+  });
+
+  test('a details marker is a chevron: at the start, or at the end in an accordion', async ({ page }) => {
+    const single = 'details:not(:has(+ details)):not(details + details)';
+    const accordion = 'details[name=faq]';
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    expect(await style(page, `${single} > summary`, 'listStyleType')).toBe('none');
+    expect(await style(page, `${single} > summary`, 'borderRightStyle', '::before')).toBe('solid');
+    expect(await style(page, `${single} > summary`, 'position', '::before')).toBe('static');
+    expect(await style(page, `${single} > summary`, 'rotate', '::before')).toBe('-45deg');
+    await page.locator(`${single} > summary`).click();
+    expect(await style(page, `${single} > summary`, 'rotate', '::before')).toBe('45deg');
+    expect(await style(page, `${accordion} > summary`, 'position', '::before')).toBe('absolute');
+    const [summary, chevron] = await page.locator(`${accordion} > summary`).first().evaluate((el) => [el.getBoundingClientRect().right, parseFloat(getComputedStyle(el, '::before').insetInlineEnd)]);
+    expect(summary).toBeGreaterThan(300);
+    expect(chevron).toBeLessThan(10);
+  });
+
+  test('a details eases open where ::details-content can animate, and opens at once with reduced motion', async ({ page, browserName }) => {
+    const supported = await page.evaluate(() => CSS.supports('selector(::details-content)') && CSS.supports('interpolate-size: allow-keywords'));
+    test.skip(!supported, `${browserName} opens details at once (no interpolate-size)`);
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    // Right after opening, the content is still shorter than it will be.
+    const running = () => page.locator('details[name=faq]').nth(1).evaluate(async (el) => {
+      el.open = true;
+      const height = () => parseFloat(getComputedStyle(el, '::details-content').blockSize);
+      const start = height();
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      return start < height();
+    });
+    expect(await running()).toBe(true);
+    await page.locator('details[name=faq]').nth(1).evaluate((el) => { el.open = false; });
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.waitForTimeout(50);
+    expect(await running()).toBe(false);
   });
 });
 
@@ -463,9 +533,15 @@ test.describe('form finishing touches', () => {
   });
 
   test('the select arrow is drawn in the muted text color', async ({ page }) => {
+    const muted = await token(page, 'var(--color-text-muted)');
+    // Where the themed picker is supported, its own icon is the arrow
+    if (await style(page, '#topic', 'appearance') === 'base-select') {
+      expect(await style(page, '#topic', 'color', '::picker-icon')).toBe(muted);
+      return;
+    }
     const image = await style(page, '#topic', 'backgroundImage');
     expect(image).toContain('linear-gradient');
-    expect(image).toContain(await token(page, 'var(--color-text-muted)'));
+    expect(image).toContain(muted);
   });
 });
 
@@ -475,7 +551,7 @@ test.describe('automatic contrast', () => {
     await page.goto(DEMO);
     const text = async (primary) => {
       await page.evaluate((value) => document.documentElement.style.setProperty('--color-primary', value), primary);
-      return style(page, 'button[value=ok]', 'color');
+      return style(page, '#demo-button', 'color');
     };
     expect(await text('#1e3a8a')).toMatch(/^(oklch\(1 0 0\)|rgb\(255, 255, 255\))$/);
     expect(await text('#facc15')).toMatch(/^(oklch\(0 0 0\)|rgb\(0, 0, 0\))$/);
@@ -485,16 +561,17 @@ test.describe('automatic contrast', () => {
     await page.emulateMedia({ colorScheme: 'dark', reducedMotion: 'reduce' });
     await page.goto(DEMO);
     await page.evaluate(() => document.documentElement.style.setProperty('--color-primary', 'light-dark(#047857, #34d399)'));
-    const button = 'button[value=ok]';
+    const button = '#demo-button';
     expect(await style(page, button, 'backgroundColor')).toBe('rgb(52, 211, 153)');
     // #34d399 is light, so the text is black rather than inheriting the page text color.
     expect(await style(page, button, 'color')).toMatch(/^(oklch\(0 0 0\)|rgb\(0, 0, 0\))$/);
   });
 
   test('--color-on-primary still overrides the automatic text color', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' }); // no color transition on a visible button
     await page.goto(DEMO);
     await page.addStyleTag({ content: ':root { --color-on-primary: rgb(1, 2, 3); }' });
-    expect(await style(page, 'button[value=ok]', 'color')).toBe('rgb(1, 2, 3)');
+    expect(await style(page, '#demo-button', 'color')).toBe('rgb(1, 2, 3)');
   });
 });
 
@@ -617,7 +694,9 @@ test.describe('article grid', () => {
     expect(await style(page, '#posts', 'display')).toBe('grid');
     const tops = await page.locator('#posts > article').evaluateAll((els) => els.map((el) => Math.round(el.getBoundingClientRect().top)));
     expect(new Set(tops).size).toBe(1);
+    // Cards with a link are boxes: a fill and no border (2.0)
     expect(await style(page, '#posts > article', 'backgroundColor')).toBe(await token(page, 'var(--color-surface)'));
+    expect(await style(page, '#posts > article', 'borderTopWidth')).toBe('0px');
     expect(await style(page, '#posts > article', 'paddingLeft')).toBe('24px');
     expect(await style(page, '#posts > article > p', 'marginBottom')).toBe('0px');
   });
@@ -675,7 +754,7 @@ test.describe('landing patterns', () => {
     expect(await style(page, 'main', 'paddingTop')).toBe('0px');
     expect(await style(page, 'main', 'paddingLeft')).toBe('0px');
     expect(await style(page, '#band', 'paddingLeft')).toBe('16px');
-    expect(await style(page, '#band', 'paddingTop')).toBe('32px');
+    expect(await style(page, '#band', 'paddingTop')).toBe('88px'); // clamp(3rem, 8vw, 6rem) at 1100px
     expect(await style(page, '#dark-band', 'marginTop')).toBe('0px');
     await page.setViewportSize({ width: 1600, height: 800 });
     expect(await style(page, '#band', 'paddingLeft')).toBe('216px');
@@ -692,8 +771,8 @@ test.describe('landing patterns', () => {
     await page.click('#menu-button');
     await expect(page.locator('#menu a').first()).toBeVisible();
     expect(await style(page, '#menu ul', 'flexDirection')).toBe('column');
-    const box = await page.locator('#menu').boundingBox();
-    expect(Math.round(box.width)).toBe(390);
+    // The panel grows in from 97%, so wait for it to settle
+    await expect.poll(async () => Math.round((await page.locator('#menu').boundingBox()).width)).toBe(390);
   });
 
   test('an ordered list of headed items is a numbered timeline', async ({ page }) => {
@@ -733,8 +812,9 @@ test.describe('landing patterns', () => {
 
   test('the card with the only solid button in a row is featured', async ({ page }) => {
     const primary = await token(page, 'var(--color-primary)');
-    expect(await style(page, '#tall-card', 'borderTopColor')).toBe(primary);
-    expect(await style(page, '#short-card', 'borderTopColor')).not.toBe(primary);
+    expect(await style(page, '#tall-card', 'boxShadow')).toContain('0px 0px 0px 2px');
+    expect(await style(page, '#short-card', 'boxShadow')).toBe('none');
+    expect(primary).toBeTruthy();
   });
 
   test('a section of a figure and a div puts them side by side; a heading and a figure stay stacked', async ({ page }) => {
@@ -790,6 +870,198 @@ test.describe('photo hero', () => {
       }
     });
   }
+});
+
+test.describe('interaction and intent', () => {
+  const INTERACTION = fileUrl('tests/fixtures/interaction.html');
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 1100, height: 800 });
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'no-preference' });
+    await page.goto(INTERACTION);
+  });
+
+  test('a dialog fades in, and appears at once with reduced motion', async ({ page }) => {
+    expect(await style(page, '#dialog', 'transitionProperty')).toContain('display');
+    await page.click('#open-dialog');
+    await expect.poll(() => style(page, '#dialog', 'opacity')).toBe('1');
+    expect(await style(page, '#dialog', 'transitionDuration')).not.toMatch(/^0s/);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    expect(await style(page, '#dialog', 'transitionDuration')).toMatch(/^0s/);
+  });
+
+  test('pages opt in to cross-document view transitions', async ({ page, browserName }) => {
+    test.skip(browserName === 'firefox', 'Firefox has no cross-document view transitions');
+    // A file:// stylesheet's rules can't be read, so parse the same text inline
+    const { readFileSync } = await import('node:fs');
+    await page.addStyleTag({ content: readFileSync('tagbrush.css', 'utf8') });
+    const found = await page.evaluate(() => {
+      const walk = (rules) => [...rules].some((r) => r.constructor.name === 'CSSViewTransitionRule' || (r.cssRules && walk(r.cssRules)));
+      return walk([...document.styleSheets].at(-1).cssRules);
+    });
+    expect(found).toBe(true);
+  });
+
+  test('a card whose heading is its only link is clickable all over', async ({ page }) => {
+    const box = await page.locator('#linked-card').boundingBox();
+    const hit = (x, y) => page.evaluate(([x, y]) => document.elementFromPoint(x, y)?.id, [x, y]);
+    expect(await hit(box.x + box.width - 10, box.y + box.height - 10)).toBe('card-link');
+    await page.mouse.click(box.x + box.width - 10, box.y + box.height - 10);
+    await expect(page).toHaveURL(/#post-1$/);
+    // A card with its own button, or without a link, is not one big link
+    const other = await page.locator('#action-card').boundingBox();
+    expect(await hit(other.x + other.width - 10, other.y + other.height / 2)).not.toBe('card-link');
+    expect(await style(page, '#plain-card', 'position')).toBe('static');
+  });
+
+  test('a details in the header nav is a dropdown, and a details elsewhere is not', async ({ page }) => {
+    await page.click('#services > summary');
+    await expect(page.locator('#dropdown-link')).toBeVisible();
+    expect(await style(page, '#services > ul', 'position')).toBe('absolute');
+    expect(await style(page, '#services > ul', 'flexDirection')).toBe('column');
+    expect(await style(page, '#services', 'borderTopWidth')).toBe('0px');
+    expect(await style(page, '#plain-details', 'borderTopWidth')).not.toBe('0px');
+    // The dropdown keeps its own chevron after the label, not the details marker.
+    expect(await style(page, '#services > summary', 'content', '::before')).toBe('none');
+    // Inside the phone menu panel the dropdown opens in place
+    await page.setViewportSize({ width: 390, height: 800 });
+    await page.click('#menu-button');
+    expect(await style(page, '#services > ul', 'position')).toBe('static');
+  });
+
+  test('a wide table shows a shadow on the side with more to scroll to', async ({ page, browserName }) => {
+    test.skip(browserName === 'firefox', 'No scroll-driven animations in Firefox');
+    expect(await style(page, '#wide-figure', 'animationName')).toBe('tagbrush-scroll-shadow');
+    const shadow = () => style(page, '#wide-figure', 'boxShadow');
+    const atStart = await shadow();
+    await page.locator('#wide-figure').evaluate((el) => { el.scrollLeft = el.scrollWidth; });
+    await expect.poll(shadow).not.toBe(atStart);
+    // Something that doesn't scroll has no shadow
+    expect(await style(page, '#short-code', 'boxShadow')).toBe('none');
+  });
+
+  test('a link in text that opens a new tab gets an arrow; buttons, nav links and document links do not', async ({ page }) => {
+    expect(await style(page, '#new-tab', 'content', '::after')).toMatch(/^" ↗"/);
+    for (const sel of ['#new-tab-button', '#nav-new-tab', '#plain-link']) expect(await style(page, sel, 'content', '::after'), sel).toBe('none');
+    expect(await style(page, '#new-tab-pdf', 'content', '::after')).toMatch(/PDF/);
+  });
+
+  test('links to documents say what they are; buttons, nav links and plain links do not', async ({ page }) => {
+    const after = (sel) => style(page, sel, 'content', '::after');
+    expect(await after('#pdf')).toBe('"PDF"');
+    expect(await after('#csv')).toBe('"CSV"');
+    expect(await after('#download')).toContain('↓');
+    expect(await after('#pdf-button')).toBe('none');
+    expect(await after('#nav-pdf')).toBe('none');
+    expect(await after('#plain-link')).toBe('none');
+  });
+});
+
+test.describe('content intent', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.setViewportSize({ width: 900, height: 900 });
+    await page.emulateMedia({ colorScheme: 'light' });
+    await page.goto(fileUrl('tests/fixtures/content-intent.html'));
+  });
+
+  test('a radio label with a description is a choice card, outlined when chosen', async ({ page }) => {
+    expect(await style(page, '#plans', 'display')).toBe('grid');
+    // A box has a border or a fill, never both (2.0): choice cards are outlined
+    expect(await style(page, '#solo', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#solo', 'borderTopWidth')).toBe('1px');
+    const primary = await token(page, 'var(--color-primary)');
+    expect(await style(page, '#team', 'borderTopColor')).toBe(primary);
+    expect(await style(page, '#solo', 'borderTopColor')).not.toBe(primary);
+    await page.click('#solo');
+    expect(await style(page, '#solo', 'borderTopColor')).toBe(primary);
+    // Plain radios stay plain
+    expect(await style(page, '#plain-radios', 'display')).toBe('block');
+    expect(await style(page, '#yes', 'borderTopWidth')).toBe('0px');
+  });
+
+  test('a field with a rule turns green once met; a field without one stays neutral', async ({ page }) => {
+    const success = await token(page, 'var(--color-success)');
+    await page.fill('#email', 'ana@example.org');
+    await page.fill('#nickname', 'Ana');
+    await page.locator('#nickname').blur();
+    // Borders ease into their new color, so wait for it to settle
+    await expect.poll(() => style(page, '#email', 'borderTopColor')).toBe(success);
+    await page.waitForTimeout(300);
+    expect(await style(page, '#nickname', 'borderTopColor')).not.toBe(success);
+  });
+
+  test('a quote with a caption in a figure is a pull quote; a plain quote is unchanged', async ({ page }) => {
+    expect(await style(page, '#pull > blockquote', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#pull > blockquote', 'fontSize')).toBe('20px');
+    // A quote is text with a rule, no fill (2.0)
+    expect(await style(page, '#plain-quote', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#plain-quote', 'color')).toBe(await token(page, 'var(--color-text)'));
+  });
+
+  test('a picture in a caption is a round avatar; a figure\'s own picture is not', async ({ page }) => {
+    expect(await style(page, '#avatar', 'width')).toBe('40px');
+    expect(await style(page, '#avatar', 'height')).toBe('40px');
+    expect(await style(page, '#avatar', 'borderTopLeftRadius')).toBe('50%');
+    expect(await style(page, '#chart-image', 'borderTopLeftRadius')).not.toBe('50%');
+  });
+
+  test('a <data> value lines up on the right in tabular figures', async ({ page }) => {
+    expect(await style(page, '#amount', 'textAlign')).toBe('end');
+    expect(await style(page, '#amount', 'fontVariantNumeric')).toBe('tabular-nums');
+    expect(await style(page, '#note', 'textAlign')).toBe('start');
+  });
+
+  test('an embed without a height is 16:9 at full width; one with a height keeps it', async ({ page }) => {
+    const box = await page.locator('#video').boundingBox();
+    const main = await page.locator('main').evaluate((el) => el.clientWidth - parseFloat(getComputedStyle(el).paddingLeft) - parseFloat(getComputedStyle(el).paddingRight));
+    expect(Math.round(box.width)).toBe(Math.round(main));
+    expect(Math.abs(box.height - (box.width * 9) / 16)).toBeLessThan(1);
+    expect(await style(page, '#sized', 'height')).toBe('300px');
+  });
+
+  test('tabs: a row with an underline under the selected tab', async ({ page }) => {
+    expect(await style(page, '#tablist', 'display')).toBe('flex');
+    expect(await style(page, '#tab-on', 'borderBottomColor')).toBe(await token(page, 'var(--color-primary)'));
+    expect(await style(page, '#tab-off', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#tab-off', 'color')).toBe(await token(page, 'var(--color-text-muted)'));
+    expect(await style(page, '#tab-on', 'color')).toBe(await token(page, 'var(--color-text)'));
+  });
+
+  test('a sale price: the old price is muted', async ({ page }) => {
+    expect(await style(page, '#was', 'color')).toBe(await token(page, 'var(--color-text-muted)'));
+  });
+
+  test('readers who ask for more contrast get darker borders and full-contrast muted text', async ({ page }) => {
+    const before = await style(page, '#solo', 'borderTopColor');
+    await page.emulateMedia({ contrast: 'more' });
+    expect(await style(page, '#solo', 'borderTopColor')).not.toBe(before);
+    expect(await style(page, '#solo > small', 'color')).toBe(await token(page, 'var(--color-text)'));
+  });
+
+  test('scrollbars follow the theme', async ({ page, browserName }) => {
+    test.skip(browserName === 'webkit', 'WebKit does not support scrollbar-color');
+    expect(await style(page, 'html', 'scrollbarColor')).not.toBe('auto');
+  });
+
+  test('a select opens a themed picker where supported', async ({ page, browserName }) => {
+    test.skip(browserName !== 'chromium', 'appearance: base-select is Chromium-only for now');
+    expect(await style(page, '#country', 'appearance')).toBe('base-select');
+    // The arrow is out of the flow, so a site's own display on selects can't wrap it
+    expect(await style(page, '#country', 'position', '::picker-icon')).toBe('absolute');
+    await page.addStyleTag({ content: 'select { display: inline-block; width: auto; }' });
+    expect(await style(page, '#country', 'height')).toBe('42px');
+  });
+});
+
+test.describe('touch screens', () => {
+  test.skip(({ browserName }) => browserName !== 'chromium', 'Touch emulation is checked in Chromium');
+  test('header links are at least 44px tall', async ({ browser }) => {
+    const context = await browser.newContext({ hasTouch: true, isMobile: true, viewport: { width: 1100, height: 800 } });
+    const page = await context.newPage();
+    await page.goto(fileUrl('tests/fixtures/interaction.html'));
+    const height = await page.locator('#nav-link').evaluate((el) => el.getBoundingClientRect().height);
+    expect(height).toBeGreaterThanOrEqual(44);
+    await context.close();
+  });
 });
 
 test.describe('code highlighting', () => {
@@ -850,9 +1122,34 @@ test.describe('code highlighting', () => {
 });
 
 test.describe('llms.txt contract', () => {
-  // llms.txt (and the agent files generated from it) tell AI agents which HTML
+  // llms.txt, llms/, and the agent files generated from them tell AI agents which HTML
   // TagBrush.css styles. These tests keep those instructions true.
-  const guideText = () => import('node:fs').then(({ readFileSync }) => readFileSync('llms.txt', 'utf8'));
+  // The whole guide: the index (llms.txt) and every detail file in llms/.
+  const guideText = () => import('node:fs').then(({ readFileSync, readdirSync }) =>
+    [readFileSync('llms.txt', 'utf8'), ...readdirSync('llms').filter((f) => f.endsWith('.md')).sort().map((f) => readFileSync(`llms/${f}`, 'utf8'))].join('\n'));
+
+  // Each pattern is a bullet starting with its name in bold: "- **Steps**: …".
+  const patternNames = (text) => [...text.matchAll(/^- \*\*([^*]+)\*\*:/gm)].map((m) => m[1]);
+
+  test('every pattern in a detail file has its line in the index, and every index line has details', async () => {
+    const { readFileSync, readdirSync } = await import('node:fs');
+    const index = patternNames(readFileSync('llms.txt', 'utf8'));
+    const detailed = readdirSync('llms').filter((f) => f.endsWith('.md')).flatMap((f) => patternNames(readFileSync(`llms/${f}`, 'utf8')));
+    expect(detailed.length).toBeGreaterThan(50);
+    expect(detailed.filter((name) => !index.includes(name)), 'patterns an agent reading only llms.txt would never hear of').toEqual([]);
+    expect(index.filter((name) => !detailed.includes(name)), 'index lines with no details').toEqual([]);
+    expect(new Set(detailed).size, 'pattern names must be unique').toBe(detailed.length);
+  });
+
+  test('llms.txt links to every detail file, and llms-full.txt holds them all', async () => {
+    const { readFileSync, readdirSync } = await import('node:fs');
+    const index = readFileSync('llms.txt', 'utf8');
+    const full = readFileSync('llms-full.txt', 'utf8');
+    for (const file of readdirSync('llms').filter((f) => f.endsWith('.md'))) {
+      expect(index).toContain(`https://kovirlabs.github.io/tagbrush/llms/${file}`);
+      for (const name of patternNames(readFileSync(`llms/${file}`, 'utf8'))) expect(full).toContain(`**${name}**:`);
+    }
+  });
   const css = () => import('node:fs').then(({ readFileSync }) => readFileSync('tagbrush.css', 'utf8'));
 
   // Inline code that is a real snippet: has a closing tag or attributes, and
@@ -1065,6 +1362,30 @@ test.describe('app patterns', () => {
     expect(await style(page, '#plain', 'display')).toBe('block');
   });
 
+  test('a change in a stat tile is colored text with an arrow; ins and del elsewhere stay edit marks', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/app.html'));
+    for (const [tag, arrow] of [['ins', '▲'], ['del', '▼']]) {
+      const sel = `#stats ${tag}`;
+      expect(await style(page, sel, 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+      expect(await style(page, sel, 'textDecorationLine')).toBe('none');
+      expect(await style(page, sel, 'content', '::before')).toContain(arrow);
+      expect(await style(page, sel, 'color')).not.toBe(await token(page, 'var(--color-text)'));
+    }
+    expect(await style(page, '#edits del', 'textDecorationLine')).toBe('line-through');
+    expect(await style(page, '#edits del', 'backgroundColor')).not.toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#edits ins', 'backgroundColor')).not.toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#edits ins', 'content', '::before')).toBe('none');
+  });
+
+  test('a search field in a search bar shows a magnifier; other fields do not', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/app.html'));
+    expect(await style(page, 'search input[type=search]', 'backgroundImage')).toContain('radial-gradient');
+    expect(parseFloat(await style(page, 'search input[type=search]', 'paddingLeft'))).toBeGreaterThan(30);
+    expect(await style(page, 'search select', 'backgroundImage')).not.toContain('radial-gradient');
+    await page.evaluate(() => document.querySelector('main').insertAdjacentHTML('beforeend', '<input type="search" id="loose" aria-label="Loose">'));
+    expect(await style(page, '#loose', 'backgroundImage')).toBe('none');
+  });
+
   test('a header with a title and a button puts them on one row', async ({ page }) => {
     await page.goto(fileUrl('tests/fixtures/app.html'));
     const title = await box(page, 'main > header > h1');
@@ -1140,7 +1461,9 @@ test.describe('polish: badges, icons, hero, sidebar, footer', () => {
   test('a label before the heading in an hgroup leaves the heading unmuted', async ({ page }) => {
     await page.goto(fileUrl('tests/fixtures/polish.html'));
     expect(await style(page, '#label-heading', 'color')).toBe(await token(page, 'var(--color-heading)'));
-    expect(await style(page, '#label', 'textTransform')).toBe('uppercase');
+    // Sentence case, muted, normal spacing (2.0)
+    expect(await style(page, '#label', 'textTransform')).toBe('none');
+    expect(await style(page, '#label', 'color')).toBe(await token(page, 'var(--color-text-muted)'));
     expect(await style(page, '#section-head > p:last-child', 'color')).toBe(await token(page, 'var(--color-text-muted)'));
     expect(await style(page, '#hero-title', 'color')).toBe(await token(page, 'var(--color-heading)'));
   });
@@ -1162,9 +1485,14 @@ test.describe('polish: badges, icons, hero, sidebar, footer', () => {
     expect(await style(page, '#icon-only', 'display')).toBe('inline-flex');
     expect((await rect(page, '#nav-icon svg')).width).toBe(20);
     expect((await rect(page, '#icon-only svg')).width).toBe(20);
-    const tile = await rect(page, '#features > article > svg');
-    expect(tile.width).toBe(44);
-    expect(await style(page, '#features > article > svg', 'backgroundColor')).not.toBe('rgba(0, 0, 0, 0)');
+    // A plain icon at heading size in the text color, no tile (2.0)
+    const icon = await rect(page, '#features > article > svg');
+    expect(icon.width).toBe(28);
+    expect(await style(page, '#features > article > svg', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#features > article > svg', 'color')).toBe(await token(page, 'var(--color-heading)'));
+    // A feature card without a link or picture is open: no fill, no padding.
+    expect(await style(page, '#features > article', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#features > article', 'paddingLeft')).toBe('0px');
     // An illustration with a width attribute, and a chart outside these places, keep their size.
     expect((await rect(page, '#hero-figure svg')).width).toBeGreaterThan(200);
   });
@@ -1176,6 +1504,9 @@ test.describe('polish: badges, icons, hero, sidebar, footer', () => {
     expect(figure.left).toBeGreaterThan(hero.right);
     expect((await rect(page, '#hero-note')).right).toBeLessThan(figure.left);
     expect(await style(page, '#hero', 'textAlign')).toBe('start');
+    // No glow behind the hero by default (2.0); --hero-background still sets one.
+    expect(await style(page, 'body > header', 'backgroundImage')).toBe('none');
+    await page.addStyleTag({ content: ':root { --hero-background: radial-gradient(red, blue); }' });
     expect(await style(page, 'body > header', 'backgroundImage')).toContain('radial-gradient');
     await page.setViewportSize({ width: 390, height: 900 });
     const [heroPhone, figurePhone] = [await rect(page, '#hero'), await rect(page, '#hero-figure')];
@@ -1225,6 +1556,258 @@ test.describe('polish: badges, icons, hero, sidebar, footer', () => {
     expect(await style(page, 'body > footer > nav ul', 'flexDirection')).toBe('column');
     const copyright = await rect(page, '#copyright');
     expect(copyright.top).toBeGreaterThan(tops[0]);
+    // The leading paragraph takes the free space; the columns sit at the end of the row.
+    const navs = await page.locator('body > footer > nav').evaluateAll((els) => els.map((el) => el.getBoundingClientRect().toJSON()));
+    const lead = await rect(page, 'body > footer > p:first-child');
+    expect(lead.right).toBeLessThan(navs[0].left);
+    expect(Math.round(navs.at(-1).right)).toBeGreaterThanOrEqual(Math.round(copyright.right) - 2);
+    // On a phone the columns wrap and nothing overflows.
+    await page.setViewportSize({ width: 360, height: 800 });
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
+  });
+});
+
+test.describe('print', () => {
+  test('controls are left out of a printout; header sort text, links styled as buttons, and closed details content print', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/print.html'));
+    await page.emulateMedia({ media: 'print' });
+    for (const sel of ['body > header nav', 'search', '#action']) expect(await style(page, sel, 'display'), sel).toBe('none');
+    expect(await style(page, '#sort', 'display')).not.toBe('none');
+    expect(await style(page, '#link-button', 'display')).not.toBe('none');
+    expect(await style(page, '#card', 'breakInside')).toBe('avoid');
+    if (await page.evaluate(() => CSS.supports('selector(::details-content)'))) {
+      expect((await page.locator('#answer').boundingBox())?.height ?? 0).toBeGreaterThan(0);
+    }
+    await page.emulateMedia({ media: 'screen' });
+    expect(await style(page, '#action', 'display')).not.toBe('none'); // only in print
+  });
+});
+
+test.describe('menus stay on screen', () => {
+  test('a menu popover opens under its button, flips at the edges, and a plain popover stays centered', async ({ page, browserName }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 800, height: 600 });
+    await page.goto(fileUrl('tests/fixtures/menus.html'));
+    test.skip(!(await page.evaluate(() => CSS.supports('position-area: block-end'))), `${browserName}: no anchor positioning, popovers stay centered`);
+    const box = (sel) => page.locator(sel).boundingBox();
+    await page.click('#left-button');
+    let [button, menu] = [await box('#left-button'), await box('#left-menu')];
+    expect(menu.y).toBeGreaterThanOrEqual(button.y + button.height);
+    expect(menu.x).toBeGreaterThanOrEqual(0);
+    expect(menu.x).toBeLessThan(button.x + button.width); // beside the button, not centered
+    await page.keyboard.press('Escape');
+    await page.click('#right-button');
+    [button, menu] = [await box('#right-button'), await box('#right-menu')];
+    expect(menu.x + menu.width).toBeLessThanOrEqual(800);
+    expect(menu.x + menu.width).toBeGreaterThan(button.x); // aligned to the button's edge
+    await page.keyboard.press('Escape');
+    // Near the bottom edge it flips up.
+    await page.setViewportSize({ width: 800, height: 260 });
+    await page.locator('#right-button').evaluate((el) => el.scrollIntoView({ block: 'end' }));
+    await page.click('#right-button');
+    [button, menu] = [await box('#right-button'), await box('#right-menu')];
+    expect(menu.y + menu.height).toBeLessThanOrEqual(button.y + 1);
+    await page.keyboard.press('Escape');
+    await page.setViewportSize({ width: 800, height: 600 });
+    await page.click('#tip-button');
+    const tip = await box('#tip');
+    expect(Math.abs(tip.x + tip.width / 2 - 400)).toBeLessThan(2);
+  });
+});
+
+test.describe('tooltips', () => {
+  test('a popover="hint" is a small inverted tooltip above its trigger; a plain popover keeps its look', async ({ page, browserName }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'light' });
+    await page.goto(fileUrl('tests/fixtures/menus.html'));
+    expect(await style(page, '#save-tip', 'backgroundColor')).toBe(await token(page, 'var(--color-text)'));
+    expect(await style(page, '#save-tip', 'color')).toBe(await token(page, 'var(--color-background)'));
+    expect(await style(page, '#save-tip', 'fontSize')).toBe('14px');
+    expect(await style(page, '#tip', 'backgroundColor')).toBe(await token(page, 'var(--color-background)')); // false match
+    test.skip(!(await page.evaluate(() => 'interestForElement' in HTMLButtonElement.prototype)), `${browserName}: no interestfor; the tooltip doesn't open (no JS fallback, by design)`);
+    await page.hover('#save');
+    await expect(page.locator('#save-tip')).toBeVisible();
+    const [button, tip] = [await page.locator('#save').boundingBox(), await page.locator('#save-tip').boundingBox()];
+    expect(tip.y + tip.height).toBeLessThanOrEqual(button.y);
+  });
+});
+
+test.describe('sidebar menu on phones', () => {
+  test('a sidebar nav in a popover shows in the sidebar on wide screens and behind its button on phones', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 1100, height: 700 });
+    await page.goto(fileUrl('tests/fixtures/sidebar-menu.html'));
+    await expect(page.locator('#sections-button')).toBeHidden();
+    await expect(page.locator('#orders-link')).toBeVisible();
+    await page.setViewportSize({ width: 360, height: 700 });
+    await expect(page.locator('#sections-button')).toBeVisible();
+    await expect(page.locator('#orders-link')).toBeHidden();
+    const [aside, title] = [await page.locator('body > aside').boundingBox(), await page.locator('#title').boundingBox()];
+    expect(aside.height).toBeLessThan(70); // just the button, not the whole list
+    expect(title.y).toBeLessThan(250);
+    await page.click('#sections-button');
+    await expect(page.locator('#orders-link')).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
+  });
+});
+
+test.describe('sticky header', () => {
+  test('header[data-layout="sticky"] stays at the top and a jumped-to heading lands below it', async ({ page, browserName }) => {
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 1000, height: 700 });
+    await page.goto(fileUrl('tests/fixtures/sticky.html'));
+    expect(await style(page, 'body > header', 'position')).toBe('sticky');
+    expect(await style(page, 'html', 'scrollPaddingTop')).toBe('80px');
+    expect(await style(page, 'body > header', 'content', '::after')).not.toBe('none');
+    const shadow = () => style(page, 'body > header', 'opacity', '::after');
+    expect(await shadow()).toBe('0');
+    await page.click('a[href="#pricing"]');
+    await page.waitForTimeout(100);
+    const header = await page.locator('body > header').boundingBox();
+    const heading = await page.locator('#pricing-heading').boundingBox();
+    expect(header.y).toBe(0);
+    expect(heading.y).toBeGreaterThanOrEqual(header.height);
+    const supported = await page.evaluate(() => CSS.supports('container-type: scroll-state'));
+    if (supported) await expect.poll(shadow).toBe('1'); // stuck: a soft shadow
+    else expect(await shadow(), `${browserName}: no scroll-state queries, hairline only`).toBe('0');
+  });
+
+  test('a field focused right under the sticky bar (an invalid field on submit) scrolls out from under it', async ({ page, browserName }) => {
+    // Measured: WebKit's focus() scroll stops about 5px short of scroll-padding-top,
+    // so TagAction scrolls the first invalid field to the middle itself.
+    test.skip(browserName === 'webkit', 'WebKit focus() scrolling stops short of scroll-padding-top');
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 1000, height: 700 });
+    await page.goto(fileUrl('tests/fixtures/sticky.html'));
+    // Put the field just under the top edge, behind the bar, then focus it the way form validation does.
+    await page.evaluate(() => scrollTo(0, document.querySelector('#email').getBoundingClientRect().top + scrollY - 10));
+    await page.locator('#email').evaluate((el) => el.focus());
+    const [header, field] = [await page.locator('body > header').boundingBox(), await page.locator('#email').boundingBox()];
+    expect(field.y).toBeGreaterThanOrEqual(header.y + header.height);
+  });
+
+  test('a header without the attribute, or a header in main, does not stick', async ({ page }) => {
+    await page.goto(fileUrl('tests/fixtures/landing.html'));
+    expect(await style(page, 'body > header', 'position')).toBe('static');
+    expect(await style(page, 'html', 'scrollPaddingTop')).toBe('auto');
+  });
+});
+
+test.describe('the 2.0 look', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+    await page.goto(fileUrl('tests/fixtures/look.html'));
+  });
+
+  test('a card is a box only when it has a link, button, or picture; a feature card is open', async ({ page }) => {
+    expect(await style(page, '#plan', 'backgroundColor')).toBe(await token(page, 'var(--color-surface)'));
+    expect(await style(page, '#plan', 'borderTopWidth')).toBe('0px');
+    expect(await style(page, '#feature', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#feature', 'paddingLeft')).toBe('0px');
+  });
+
+  test('a price in a card is a large figure and a muted period; other strong/small pairs are not', async ({ page }) => {
+    expect(parseFloat(await style(page, '#price strong', 'fontSize'))).toBeGreaterThan(24);
+    expect(await style(page, '#price small', 'color')).toBe(await token(page, 'var(--color-text-muted)'));
+    expect(parseFloat(await style(page, '#header-price strong', 'fontSize'))).toBeGreaterThan(24); // in the card's header too
+    for (const sel of ['#not-price strong', '#strong-small b', '#prose-price strong']) expect(await style(page, sel, 'fontSize'), sel).toBe('16px');
+  });
+
+  test('nav links are text-colored: muted, the current page full contrast; prose links keep the brand color', async ({ page }) => {
+    expect(await style(page, '#nav-other', 'color')).toBe(await token(page, 'var(--color-text-muted)'));
+    expect(await style(page, '#nav-current', 'color')).toBe(await token(page, 'var(--color-text)'));
+    expect(await style(page, '#nav-button', 'color')).not.toBe(await token(page, 'var(--color-text-muted)'));
+    expect(await style(page, '#table-link', 'color')).toBe(await token(page, 'var(--color-text)'));
+    expect(await style(page, '#table-link', 'textDecorationLine')).toBe('underline');
+    expect(await style(page, '#prose-link', 'color')).not.toBe(await token(page, 'var(--color-text)'));
+  });
+
+  test('neutrals stay near-neutral with a vivid primary, in both schemes', async ({ page }) => {
+    for (const scheme of ['light', 'dark']) {
+      await page.emulateMedia({ colorScheme: scheme });
+      await page.evaluate(() => document.documentElement.style.setProperty('--color-primary', '#ff0000'));
+      for (const name of ['background', 'surface', 'text', 'text-muted', 'border']) {
+        const chroma = await page.evaluate((name) => {
+          const probe = document.createElement('i');
+          probe.style.color = `oklch(from var(--color-${name}) l c h)`;
+          document.body.append(probe);
+          const value = getComputedStyle(probe).color;
+          probe.remove();
+          const match = value.match(/oklch\(([\d.]+) ([\d.]+)/);
+          return match ? Number(match[2]) : 0;
+        }, name);
+        expect(chroma, `${scheme} ${name}`).toBeLessThanOrEqual(0.0121);
+      }
+    }
+  });
+});
+
+test.describe('states people expect', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });
+    await page.goto(fileUrl('tests/fixtures/states.html'));
+  });
+
+  test('a button with aria-expanded shows a chevron that flips when open; other buttons have none', async ({ page }) => {
+    const rotate = (sel) => style(page, sel, 'rotate', '::after');
+    expect(await style(page, '#expand-closed', 'borderRightStyle', '::after')).toBe('solid');
+    expect(await rotate('#expand-closed')).toBe('45deg');
+    expect(await rotate('#expand-open')).toBe('-135deg');
+    await page.locator('#expand-closed').evaluate((el) => el.setAttribute('aria-expanded', 'true'));
+    expect(await rotate('#expand-closed')).toBe('-135deg');
+    for (const sel of ['#plain-button', '#link-button']) expect(await style(page, sel, 'content', '::after')).toBe('none');
+  });
+
+  test('a button with data-tone is filled with the tone; an outline one is bordered in it', async ({ page }) => {
+    const red = await token(page, 'oklch(from var(--color-error) min(l, 0.5) c h)');
+    expect(await style(page, '#danger', 'backgroundColor')).toBe(red);
+    expect(await style(page, '#danger', 'color')).toBe('rgb(255, 255, 255)');
+    expect(await style(page, '#danger-outline', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#danger-outline', 'borderTopColor')).toBe(await token(page, 'var(--color-error)'));
+    expect(await style(page, '#tone-link', 'backgroundColor')).not.toBe(await style(page, '#plain-button', 'backgroundColor'));
+    expect(await style(page, '#custom-tone', 'backgroundColor')).not.toBe(await style(page, '#plain-button', 'backgroundColor'));
+    // A badge with a tone is still a badge, not a button.
+    expect(await style(page, '#plain-button', 'backgroundColor')).toBe(await token(page, 'var(--color-primary)'));
+  });
+
+  test('required fields get a red asterisk, only in a form that also has optional fields', async ({ page }) => {
+    const after = (sel) => style(page, sel, 'content', '::after');
+    expect(await after('#label-name')).toMatch(/^" \*"/);
+    expect(await after('#label-terms')).toMatch(/^" \*"/);
+    expect(await after('#label-password')).toMatch(/^" \*"/); // a field in a row with its button (TagAction's Show/Hide)
+    expect(await style(page, '#label-name', 'color', '::after')).toBe(await token(page, 'var(--color-error)'));
+    expect(await after('#label-company')).toBe('none');
+    expect(await after('#label-news')).toBe('none');
+    // A sign-in form where every field is required (buttons and hidden fields don't count) has no marks.
+    expect(await after('#label-email')).toBe('none');
+  });
+
+  test('role="status" and role="alert" blocks are tinted banners; empty, inline and TagAction regions are not', async ({ page }) => {
+    const bg = (sel) => style(page, sel, 'backgroundColor');
+    const [saved, failed, toned] = [await bg('#saved'), await bg('#failed'), await bg('#toned')];
+    expect(new Set([saved, failed, toned]).size).toBe(3);
+    expect(saved).not.toBe('rgba(0, 0, 0, 0)');
+    expect(failed).toBe(await token(page, 'color-mix(in oklab, var(--color-error) 14%, var(--color-background))'));
+    expect(await style(page, '#saved', 'paddingLeft')).not.toBe('0px');
+    for (const sel of ['#empty-region', '#inline-status', '#tagaction-status']) {
+      expect(await bg(sel), sel).toBe('rgba(0, 0, 0, 0)');
+      expect(await style(page, sel, 'paddingLeft'), sel).toBe('0px');
+    }
+  });
+
+  test('a row with a checked checkbox in its first cell is tinted; a switch or a later checkbox is not', async ({ page }) => {
+    const none = 'rgba(0, 0, 0, 0)';
+    expect(await style(page, '#row-on', 'backgroundColor')).not.toBe(none);
+    expect(await style(page, '#row-off', 'backgroundColor')).toBe(none); // its switch is on, but it isn't selected
+    expect(await style(page, '#row-done', 'backgroundColor')).toBe(none); // a checkbox in a later cell is data
+  });
+
+  test('a toggle with aria-pressed="true" looks held down; "false" looks like any button', async ({ page }) => {
+    expect(await style(page, '#pressed-on', 'boxShadow')).toContain('inset');
+    expect(await style(page, '#pressed-on', 'backgroundColor')).not.toBe(await style(page, '#pressed-off', 'backgroundColor'));
+    expect(await style(page, '#pressed-off', 'backgroundColor')).toBe(await style(page, '#plain-button', 'backgroundColor'));
+    expect(await style(page, '#pressed-off', 'boxShadow')).toBe('none');
+    expect(await style(page, '#outline-on', 'backgroundColor')).not.toBe('rgba(0, 0, 0, 0)');
+    expect(await style(page, '#outline-off', 'backgroundColor')).toBe('rgba(0, 0, 0, 0)');
   });
 });
 
@@ -1451,10 +2034,12 @@ test.describe('accessibility', () => {
 
 test.describe('size budget', () => {
   // Coverage matters more than bytes (see ROADMAP.md); this ceiling only
-  // catches accidental bloat. The guide's length is the tighter constraint:
-  // agents read llms.txt on every page they build.
+  // catches accidental bloat. The index (llms.txt) is read on every page an
+  // agent builds, so it stays small; the detail files are read when a task
+  // needs them and only have a bloat check.
   const BUDGET = 15 * 1024;
   const GUIDE_TOKENS = 4000;
+  const FULL_GUIDE_TOKENS = 20000;
 
   test.skip(({ browserName }) => browserName !== 'chromium', 'File size is the same in every browser');
 
@@ -1469,6 +2054,12 @@ test.describe('size budget', () => {
     const { encode } = await import('gpt-tokenizer');
     const { readFileSync } = await import('node:fs');
     expect(encode(readFileSync('llms.txt', 'utf8')).length).toBeLessThanOrEqual(GUIDE_TOKENS);
+  });
+
+  test(`llms-full.txt is at most ${FULL_GUIDE_TOKENS} tokens`, async () => {
+    const { encode } = await import('gpt-tokenizer');
+    const { readFileSync } = await import('node:fs');
+    expect(encode(readFileSync('llms-full.txt', 'utf8')).length).toBeLessThanOrEqual(FULL_GUIDE_TOKENS);
   });
 });
 

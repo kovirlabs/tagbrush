@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Join Portland Code &amp; Coffee</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+</head>
+<body>
+  <a href="#main">Skip to content</a>
+  <header>
+    <nav>
+      <strong>Portland Code &amp; Coffee</strong>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/events">Events</a></li>
+        <li><a href="/signup" aria-current="page">Join</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="main">
+    <article>
+      <hgroup>
+        <p>Free membership</p>
+        <h1>Join the meetup</h1>
+        <p>Saturday mornings at Heart Coffee on East Burnside. Bring a laptop, a question, or just yourself.</p>
+      </hgroup>
+
+      <form action="/signup" method="post">
+        <label for="name">Full name</label>
+        <input type="text" id="name" name="name" autocomplete="name" required value="Priya Natarajan">
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" autocomplete="email" required value="priya.natarajan@gmial" aria-invalid="true" aria-describedby="email-help">
+        <small id="email-help">That address looks incomplete. Check the part after the @, for example gmail.com.</small>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="new-password" required minlength="12" aria-describedby="password-help">
+        <small id="password-help">At least 12 characters, with one number and one symbol. Avoid reusing a password from another site.</small>
+
+        <label for="experience">Experience level</label>
+        <select id="experience" name="experience" required>
+          <option value="">Choose one</option>
+          <option value="new">Just starting out</option>
+          <option value="some">Some experience (under 2 years)</option>
+          <option value="working">Working developer</option>
+          <option value="senior">Senior or lead</option>
+        </select>
+
+        <fieldset>
+          <legend>What are you interested in?</legend>
+          <label><input type="checkbox" name="interests" value="web"> Web development</label>
+          <label><input type="checkbox" name="interests" value="data"> Data and machine learning</label>
+          <label><input type="checkbox" name="interests" value="mobile"> Mobile apps</label>
+          <label><input type="checkbox" name="interests" value="devops"> DevOps and cloud</label>
+          <label><input type="checkbox" name="interests" value="career"> Career change and job search</label>
+        </fieldset>
+
+        <label><input type="checkbox" role="switch" name="newsletter" checked> Send me the monthly newsletter</label>
+        <small>One email a month with upcoming meetups and talks. Unsubscribe anytime.</small>
+
+        <label><input type="checkbox" name="terms" required> I agree to the <a href="/code-of-conduct">code of conduct</a> and <a href="/terms">terms of membership</a></label>
+
+        <button type="submit">Create my account</button>
+      </form>
+    </article>
+  </main>
+
+  <footer>
+    <p>Portland Code &amp; Coffee is volunteer-run and free to attend.</p>
+    <p>© 2026 Portland Code &amp; Coffee</p>
+  </footer>
+</body>
+</html>

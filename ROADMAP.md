@@ -165,6 +165,59 @@ Found by moving the Kovir LLC site onto TagBrush.css: patterns every marketing s
 - [x] Steps (`<ol>` of headed items), a phone menu (`[popover]` in the header nav), a skip link, full-width bands (`<main data-layout="full">`), card improvements (edge-to-edge picture, buttons at the bottom, testimonials), a list of articles as cards, and a row of logos.
 - [x] Guiding principle: coverage over size. The size ceiling goes from 10 KB to 15 KB gzipped, and `llms.txt` gets a 4,000-token cap.
 
+## Chunk 23: Interaction, and styling from what the HTML means
+
+An evaluation against modern-web practice found two gaps. TagBrush.css barely responds to the user: dialogs, popovers and pages snap instead of easing, and nothing shows that a table scrolls sideways. And several elements say what the author means but are styled like plain elements: a card whose heading is a link, a `<details>` in a nav, a link to a PDF. Everything here falls back to today's behavior in browsers without support, and motion stops under `prefers-reduced-motion`.
+
+Next round:
+- [x] Dialogs and popovers fade and scale in and out (`@starting-style`, `transition-behavior: allow-discrete`, `overlay`), backdrop included.
+- [x] Cross-page fades with `@view-transition { navigation: auto }` (Chromium and Safari; Firefox navigates instantly).
+- [x] A card whose heading is its only link is clickable all over, with a hover and focus state on the card.
+- [x] A `<details>` in a header nav list is a dropdown menu, no JavaScript; inline in the phone menu panel.
+- [x] Wide tables and code blocks show a shadow at an edge that has more content (scroll-driven, Chromium and Safari 26).
+- [x] Header nav links are at least 44px tall on touch screens; hover effects only on devices that hover.
+- [x] Links to documents (`.pdf`, `.docx`, `.xlsx`, `.csv`, `.zip`) and `download` links say what they are.
+
+Later:
+- [x] Choice cards: a `<fieldset>` of radio labels, the selected one highlighted (`label:has(:checked)`).
+- [x] Pull quote (`figure > blockquote + figcaption`) and avatars (a small `<img>` in a testimonial footer or `<address>`). Both were on the round 1 "not yet" list.
+- [x] Data tables: `<data>` values right-aligned in tabular figures, row hover. Not the sticky header: a `<figure>` scrolls sideways only, so `position: sticky` in it has nothing to stick to.
+- [x] `<iframe>` without a `height` is 16:9 at full width (video embeds).
+- [x] A sale price: `<s>` before a price is muted. Already true: `<s>` was muted since 1.1, so only the guide changed.
+- [x] Themed `<select>` picker behind `@supports (appearance: base-select)`, for mouse users; `:user-valid` on fields with a rule. Not `:autofill`: browsers already tint autofilled fields, and that tint overrides TagBrush.css's field background anyway.
+- [x] `scrollbar-color` from the theme; stronger borders under `prefers-contrast: more`.
+
+Not planned: scroll-triggered reveal animations, parallax, and scroll progress bars (motion like this is a large part of what makes pages look generated), a sticky header by default (it changes every site's layout; maybe an opt-in pattern later), and a scrollspy table of contents (needs JavaScript, so TagAction).
+
+**Decided (November 10, 2026): a less generic default look, as 2.0.** AI-built sites cluster around a few looks: a gradient hero on white, everything centered, the same radius and shadow on every block, icons on tinted tiles. 2.0 makes the new look the default, not an opt-in variable (see `EXPECTATIONS.md` in the family repo, section 2):
+- [x] Cards framed by role: a box only for a card with a link, button, or picture; a fill or a border, never both; a shadow only on overlays and the featured card.
+- [x] Plain icons at heading size; a muted, sentence-case label above a heading; no hero glow by default (`--hero-background: none`).
+- [x] Near-neutral grays (chroma capped at 0.012); nav and table links in the text color; a quote is text, a callout a box.
+- [x] More room between full-width sections and under a hero heading; a price pattern in cards.
+- [ ] Theme-builder presets with deliberate font pairings (not in 2.0).
+- [ ] Publish 2.0.0, and move the CDN lines in the docs and TagKit from `tagbrush@1` to `tagbrush@2` at the same time.
+
+## Chunk 24: A guide that can grow
+
+Agents read `llms.txt` before writing a page, and the 4,000-token cap was forcing useful detail out: the "this is left alone" notes that keep a pattern from being tripped by accident, and fuller snippets. Input tokens are cheaper than the output they make more accurate, so the guide should be allowed to grow, but an agent can't look up a pattern it doesn't know exists, and some tools load rule files on every request.
+
+- [x] `llms.txt` becomes an index that is always read: the rules, and every pattern in one line (the HTML and what it gives you), grouped by what you're building, each group linking to its detail file. Capped at 4,000 tokens.
+- [x] Detail files read when the task needs them: `llms/pages.md`, `llms/apps.md`, `llms/forms.md`, `llms/content.md`, `llms/chat.md`, with full snippets, variations, and what each pattern leaves alone.
+- [x] `llms-full.txt`: the index and every detail file in one, generated by the build, for tools that take a single file (the llms.txt convention).
+- [x] Agent files generated to suit each tool: the Claude Code skill gets the index as `SKILL.md` and the detail files as references it reads on demand; Cursor gets one rule per topic, each with a description; `AGENTS.md` gets the full text.
+- [x] CI: the snippet, class, attribute and variable contract tests cover every file; every pattern in a detail file must have its line in the index; the full guide has a 20,000-token bloat check.
+- [x] Measure it: the landing-page and sign-up requests, each written by fresh agents with today's guide, the index alone, and the index with the detail files, compared on invented classes, layout CSS, patterns used, output length, and the automated checks.
+
+  Result (evals round 3): all six pages clean with every guide; the index alone matched the full guide. The requests are too easy to separate them, so the next round uses harder ones and runs outside any project.
+
+Follow-ups the round 3 agents reported, whatever guide they had:
+- [ ] A price figure in a plan card (large amount, small period), and whether a feature list in a card is styled.
+- [ ] A muted alternate band beside `data-theme="dark"`, and whether a closing call-to-action band is centered.
+- [ ] Forms: an error message alongside help text, a list of password rules after a field, and `aria-describedby` in the examples.
+- [ ] A harder evaluation round, run outside any project: requests that hit what each pattern leaves alone.
+
+The CSS size ceiling follows the project's purpose too: it's raised when coverage needs it, and the size is reported in each release.
+
 ## Release
 
 - [x] Prepare 1.1.0 with chunks 2–18 (version bump, dated CHANGELOG, comparison and size claims updated).

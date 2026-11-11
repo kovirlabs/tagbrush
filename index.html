@@ -307,12 +307,29 @@
 
             <h3>Buttons</h3>
             <div role="group">
-                <button type="button">Button</button>
+                <button type="button" id="demo-button">Button</button>
                 <button type="button" class="secondary">Secondary</button>
                 <button type="button" class="outline">Outline</button>
                 <a href="#showcase" class="button">Link styled as button</a>
                 <button type="button" disabled>Disabled</button>
                 <a href="#showcase" class="button outline" aria-disabled="true">Disabled link</a>
+            </div>
+            <p>A button with <code>aria-expanded</code> shows a chevron that flips while it's open:</p>
+            <div role="group">
+                <button type="button" class="secondary" aria-expanded="false">Closed</button>
+                <button type="button" class="secondary" aria-expanded="true">Open</button>
+            </div>
+            <p>A toggle with <code>aria-pressed="true"</code> looks held down:</p>
+            <div role="group">
+                <button type="button" class="outline" aria-pressed="true">Bold</button>
+                <button type="button" class="outline" aria-pressed="false">Italic</button>
+                <button type="button" aria-pressed="true">Pinned</button>
+            </div>
+            <p><code>data-tone</code> colors a button; <code>"error"</code> marks a destructive action:</p>
+            <div role="group">
+                <button type="button" data-tone="error">Delete</button>
+                <button type="button" class="outline" data-tone="error">Remove</button>
+                <button type="button" data-tone="success">Approve</button>
             </div>
             <p>Set <code>aria-busy="true"</code> while something loads. It shows a spinner and tells screen readers to wait:</p>
             <div role="group">
@@ -340,7 +357,7 @@
                         </div>
                         <div>
                             <label for="email">Email</label>
-                            <input type="email" id="email" name="email" placeholder="you@example.com">
+                            <input type="email" id="email" name="email" placeholder="you@example.com" required>
                         </div>
                     </div>
                     <div>
@@ -469,6 +486,10 @@
                 </div>
             </div>
 
+            <p>A message after an action is a banner: <code>role="status"</code> for news, <code>role="alert"</code> for a problem.</p>
+            <p role="status">Your changes were saved.</p>
+            <p role="alert">Couldn't save. Check your connection and try again.</p>
+
             <h3>Disclosure and dialogs</h3>
             <details>
                 <summary>What is a &lt;details&gt; element?</summary>
@@ -503,7 +524,7 @@
                     <p>Opened with <code>showModal()</code>. A <code>&lt;header&gt;</code> with a button puts the close button beside the title, and a <code>&lt;footer&gt;</code> lines its buttons up on the right. Press <kbd>Esc</kbd> to close.</p>
                     <footer>
                         <button class="secondary" value="cancel">Cancel</button>
-                        <button value="ok">Confirm</button>
+                        <button value="delete" data-tone="error">Delete</button>
                     </footer>
                 </form>
             </dialog>
@@ -511,9 +532,9 @@
             <h3>Article grids</h3>
             <p>A <code>&lt;section&gt;</code> of two or more <code>&lt;article&gt;</code>s becomes a grid of cards, with no classes. Headings and paragraphs in the section span the full width:</p>
             <section id="article-grid-demo">
-                <article><h4>Blog posts</h4><p>A list of posts on a home page.</p></article>
-                <article><h4>Products</h4><p>Plans, products, or pricing tiers.</p></article>
-                <article><h4>Features</h4><p>Anything you'd show side by side.</p></article>
+                <article><h4><a href="#article-grid-demo">Blog posts</a></h4><p>A card with a link, a button, or a picture is a box.</p></article>
+                <article><h4>Plans</h4><p><strong>$12</strong> <small>per month</small></p><p><a class="button outline" href="#article-grid-demo">Choose</a></p></article>
+                <article><h4>Features</h4><p>A card of only text is open, set apart by space.</p></article>
             </section>
 
             <h3>App patterns</h3>
@@ -526,7 +547,7 @@
                 <dl>
                     <div><dt>Revenue</dt><dd>$84,312</dd><dd><ins>+12.4%</ins> vs. last month</dd></div>
                     <div><dt>Orders</dt><dd>1,148</dd></div>
-                    <div><dt>Conversion</dt><dd>2.86%</dd></div>
+                    <div><dt>Conversion</dt><dd>2.86%</dd><dd><del>−0.4%</del> vs. last month</dd></div>
                 </dl>
                 <search>
                     <input type="search" aria-label="Search orders" placeholder="Search orders">

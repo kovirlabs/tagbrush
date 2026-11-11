@@ -1,5 +1,5 @@
 /*
- * TagBrush.css v1.2.0 - A lightweight, no-build CSS library for static sites and any framework
+ * TagBrush.css v2.0.0 - A lightweight, no-build CSS library for static sites and any framework
  * https://github.com/kovirlabs/tagbrush
  *
  * Everything lives inside the `tagbrush` cascade layer, so any CSS you write
@@ -23,14 +23,14 @@
 
     /* Colors */
     --color-primary: #2563eb;
-    /* Neutrals carry a faint tint of the primary's hue, so one color gives
-       the whole page a matching palette. The tint scales with the primary's
-       chroma: a gray or black primary gives pure grays. */
-    --color-background: light-dark(#ffffff, oklch(from var(--color-primary) 0.21 calc(c * 0.15) h));
-    --color-surface: light-dark(oklch(from var(--color-primary) 0.967 calc(c * 0.02) h), oklch(from var(--color-primary) 0.278 calc(c * 0.14) h));
-    --color-text: light-dark(oklch(from var(--color-primary) 0.278 calc(c * 0.14) h), oklch(from var(--color-primary) 0.967 calc(c * 0.02) h));
-    --color-text-muted: light-dark(oklch(from var(--color-primary) 0.528 calc(c * 0.08) h), oklch(from var(--color-primary) 0.714 calc(c * 0.09) h));
-    --color-border: light-dark(oklch(from var(--color-primary) 0.928 calc(c * 0.03) h), oklch(from var(--color-primary) 0.373 calc(c * 0.15) h));
+    /* Neutrals are near-neutral: they carry at most a trace of the primary's
+       hue (chroma capped at 0.012), so the brand color shows only where it
+       means something. A gray or black primary gives pure grays. */
+    --color-background: light-dark(#ffffff, oklch(from var(--color-primary) 0.21 min(c * 0.15, 0.012) h));
+    --color-surface: light-dark(oklch(from var(--color-primary) 0.967 min(c * 0.02, 0.012) h), oklch(from var(--color-primary) 0.278 min(c * 0.14, 0.012) h));
+    --color-text: light-dark(oklch(from var(--color-primary) 0.278 min(c * 0.14, 0.012) h), oklch(from var(--color-primary) 0.967 min(c * 0.02, 0.012) h));
+    --color-text-muted: light-dark(oklch(from var(--color-primary) 0.528 min(c * 0.08, 0.012) h), oklch(from var(--color-primary) 0.714 min(c * 0.09, 0.012) h));
+    --color-border: light-dark(oklch(from var(--color-primary) 0.928 min(c * 0.03, 0.012) h), oklch(from var(--color-primary) 0.373 min(c * 0.15, 0.012) h));
     --color-highlight: light-dark(#fef08a, #713f12);
     --color-error: light-dark(#dc2626, #f87171);
     --color-success: light-dark(#16a34a, #4ade80);
@@ -83,7 +83,7 @@
     --focus-ring-width: 3px;
     --shadow: 0 1px 3px rgb(0 0 0 / 0.1), 0 1px 2px rgb(0 0 0 / 0.06);
     --shadow-lg: 0 10px 25px rgb(0 0 0 / 0.15), 0 4px 10px rgb(0 0 0 / 0.1);
-    --hero-background: radial-gradient(ellipse 80% 70% at 50% 0%, color-mix(in oklab, var(--color-primary) 9%, transparent), transparent); /* behind a hero; none to turn off */
+    --hero-background: none; /* behind a hero, for example radial-gradient(ellipse 80% 70% at 50% 0%, color-mix(in oklab, var(--color-primary) 9%, transparent), transparent) */
     --transition-duration: 0.15s;
 
     /* Code highlighting: token colors for Prism, highlight.js, Hugo/Chroma,
@@ -162,6 +162,19 @@
 
   ::selection {
     background-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+  }
+
+  /* Scrollbars in the theme's colors, the thumb at least 3:1 against the page */
+  :root {
+    scrollbar-color: color-mix(in srgb, var(--color-text-muted) 80%, var(--color-background)) transparent;
+  }
+
+  /* Readers who ask for more contrast get darker borders and full-contrast muted text */
+  @media (prefers-contrast: more) {
+    :root {
+      --color-border: light-dark(oklch(from var(--color-primary) 0.528 min(c * 0.08, 0.012) h), oklch(from var(--color-primary) 0.714 min(c * 0.09, 0.012) h));
+      --color-text-muted: var(--color-text);
+    }
   }
 
   :where(:focus-visible) {
@@ -316,12 +329,12 @@
     color: inherit;
   }
 
+  /* A quote is text set off by a rule, not a box (a callout is the box) */
   blockquote {
     margin: 0 0 var(--spacing-md) 0;
-    padding: var(--spacing-sm) var(--spacing-md);
-    border-left: 4px solid color-mix(in oklab, var(--color-primary) 45%, var(--color-border));
-    color: var(--color-text-muted);
-    background-color: var(--color-surface);
+    padding: 0 var(--spacing-md);
+    border-left: 3px solid color-mix(in oklab, var(--color-text) 30%, transparent);
+    color: var(--color-text);
   }
 
   blockquote > :last-child {
@@ -334,6 +347,30 @@
 
   :where(blockquote footer)::before {
     content: "— ";
+  }
+
+  /* Pull quote: <figure><blockquote><p>…</p></blockquote><figcaption>Name, role</figcaption></figure> */
+  figure > blockquote:has(+ figcaption) {
+    margin-bottom: var(--spacing-sm);
+    padding: 0 0 0 var(--spacing-lg);
+    color: var(--color-text);
+    font-size: 1.25rem;
+    line-height: 1.5;
+  }
+
+  :where(figure > blockquote + figcaption) {
+    padding-left: var(--spacing-lg);
+  }
+
+  /* Avatars: a picture of a person beside their name, in an article's
+     footer, a figcaption, or an <address> */
+  :is(article > footer, figcaption, address) > img {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-inline-end: var(--spacing-sm);
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: middle;
   }
 
   /* Heading with a subtitle: <hgroup><h2>Title</h2><p>Subtitle</p></hgroup> */
@@ -355,11 +392,8 @@
   /* A label before the heading: <hgroup><p>Pricing</p><h2>…</h2></hgroup> */
   hgroup > :not(h1, h2, h3, h4, h5, h6):has(~ :is(h1, h2, h3, h4, h5, h6)) {
     margin: 0 0 var(--spacing-xs);
-    color: var(--color-link, light-dark(oklch(from var(--color-primary) min(l, 0.5) c h), oklch(from var(--color-primary) max(l, 0.77) min(c, 0.15) h)));
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    color: var(--color-text-muted);
+    font-weight: 500;
   }
 
   code, pre, kbd, samp {
@@ -597,6 +631,16 @@
     vertical-align: middle;
   }
 
+  /* An embed without a height (a video player) fills the width at 16:9 */
+  :where(iframe:not([height])) {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    margin-bottom: var(--spacing-md);
+    border: 0;
+    border-radius: var(--border-radius);
+  }
+
   /* An SVG with a width attribute and a viewBox keeps its proportions when
      max-width shrinks it. SVGs without a viewBox have no ratio to keep, and
      preserveAspectRatio="none" means the author wants it to stretch. */
@@ -668,6 +712,16 @@
     margin-bottom: 0;
   }
 
+  /* Navigation links are text, not brand color: muted, full contrast on
+     hover, and full contrast and heavier for the current page */
+  :where(nav a:not(.button)) {
+    color: var(--color-text-muted);
+  }
+
+  :where(nav a:not(.button):hover) {
+    color: var(--color-text);
+  }
+
   :where(nav [aria-current]:not([aria-current="false"])) {
     color: var(--color-text);
     font-weight: 600;
@@ -727,6 +781,31 @@
   }
 
   :where(article aside) > :last-child {
+    margin-bottom: 0;
+  }
+
+  /* Status banners: a block with role="status" ("Saved") or role="alert"
+     ("Couldn't save") is a tinted banner, info and error by default;
+     data-tone picks another. Empty live regions waiting for a message, and
+     ones TagAction adds (data-tag), are left alone.
+     <p role="status">Your changes were saved.</p> */
+  :where(:is(div, p, section, aside):is([role="status"], [role="alert"]):not(:empty, [data-tag])) {
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    background-color: color-mix(in oklab, var(--tone) 14%, var(--color-background));
+    color: var(--color-text);
+  }
+
+  :where(:is(div, p, section, aside)[role="status"]:not([data-tone], [style*="--tone"])) {
+    --tone: var(--color-link, light-dark(oklch(from var(--color-primary) min(l, 0.5) c h), oklch(from var(--color-primary) max(l, 0.77) min(c, 0.15) h)));
+  }
+
+  :where(:is(div, p, section, aside)[role="alert"]:not([data-tone], [style*="--tone"])) {
+    --tone: var(--color-error);
+  }
+
+  :where(:is(div, p, section, aside):is([role="status"], [role="alert"])) > :last-child {
     margin-bottom: 0;
   }
 
@@ -817,13 +896,7 @@
   :where(body, body > :not([class])):where(:has(> aside ~ main, > main ~ aside)) > :where(aside) {
     grid-area: aside;
     padding: var(--spacing-lg) var(--container-padding);
-    border-inline-end: var(--border-width) solid var(--color-border);
     background-color: var(--color-surface);
-  }
-
-  :where(body, body > :not([class])):where(:has(> main ~ aside)) > :where(aside) {
-    border-inline-end: 0;
-    border-inline-start: var(--border-width) solid var(--color-border);
   }
 
   @media (max-width: 48rem) {
@@ -832,10 +905,26 @@
       grid-template-rows: auto auto 1fr auto;
       grid-template-areas: "header" "aside" "main" "footer";
     }
+  }
 
-    :where(body, body > :not([class])):where(:has(> aside ~ main, > main ~ aside)) > :where(aside) {
-      border-inline: 0;
-      border-bottom: var(--border-width) solid var(--color-border);
+  /* Sidebar menu on phones: the sidebar's nav in a popover, behind a button.
+     Wide screens show the nav in the sidebar and hide the button; narrow
+     ones show only the button, so the sidebar doesn't push the page down.
+     <aside><button popovertarget="sections">Sections</button>
+     <div popover id="sections"><nav aria-label="Sections"><ul>…</ul></nav></div></aside> */
+  @media (width > 48rem) {
+    :where(body, body > :not([class])) > aside > [popover] {
+      display: contents;
+    }
+
+    :where(body, body > :not([class])) > aside > button[popovertarget] {
+      display: none;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    :where(body, body > :not([class])) > aside:where(:has(> button[popovertarget] + [popover])) {
+      padding-block: var(--spacing-sm);
     }
   }
 
@@ -869,12 +958,14 @@
 
   :where(body, body > :not([class]):has(> main)) > header > hgroup > :is(h1, h2) {
     font-size: clamp(2.25rem, 1.6rem + 3vw, 3.5rem);
-    letter-spacing: -0.025em;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
   }
 
   :where(body, body > :not([class]):has(> main)) > header > hgroup > :is(h1, h2) ~ * {
     max-width: var(--reading-width);
     margin-inline: auto;
+    margin-top: var(--spacing-md);
     font-size: 1.25rem;
   }
 
@@ -964,27 +1055,44 @@
     opacity: 0.2;
   }
 
-  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> img:first-child)) > hgroup > * {
+  /* Over a photo, navigation links are full-contrast, not muted */
+  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> hgroup):has(> img:first-child)) > nav a:not(.button) {
+    color: var(--color-text);
+  }
+
+  /* :nth-child(n) outranks the muted label rule above the heading */
+  :where(body, body > :not([class])):where(:has(> main)) > header:where(:has(> img:first-child)) > hgroup > :nth-child(n) {
     color: var(--color-text);
   }
 
   /* A footer with two or more <nav>s (site map columns): the navs become
-     columns of vertical links, and a last paragraph spans the width.
+     columns of vertical links at the end of the row, a leading paragraph
+     takes the free space before them, and a last paragraph spans the width.
      <footer><p>About</p><nav aria-label="Product"><h2>Product</h2><ul>…</ul></nav>…<p>© 2026</p></footer> */
   :where(body, body > :not([class])):where(:has(> main)) > footer:where(:has(> nav ~ nav)) {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(10rem, 100%), 1fr));
-    gap: var(--spacing-lg);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
+    gap: var(--spacing-lg) var(--spacing-xl);
+  }
+
+  :where(body, body > :not([class])):where(:has(> main)) > footer:where(:has(> nav ~ nav)) > :where(:first-child:not(nav)) {
+    flex: 1 1 16rem;
+    max-width: 24rem;
+    margin: 0;
+    margin-inline-end: auto;
   }
 
   :where(body, body > :not([class])):where(:has(> main)) > footer:where(:has(> nav ~ nav)) > :where(:last-child:not(nav)) {
-    grid-column: 1 / -1;
+    flex: 1 0 100%;
+    max-width: none;
     margin: 0;
     padding-top: var(--spacing-md);
     border-top: var(--border-width) solid var(--color-border);
   }
 
   :where(body, body > :not([class])):where(:has(> main)) > footer:where(:has(> nav ~ nav)) > nav {
+    flex: 0 1 10rem;
     flex-direction: column;
     align-items: start;
     justify-content: start;
@@ -1031,7 +1139,7 @@
 
   :where(body, body > :not([class])) > main[data-layout="full"] > :where(section, header) {
     margin: 0;
-    padding: var(--spacing-xl) max(var(--container-padding), (100% - var(--container-max-width)) / 2 + var(--container-padding));
+    padding: clamp(3rem, 8vw, 6rem) max(var(--container-padding), (100% - var(--container-max-width)) / 2 + var(--container-padding));
   }
 
   /* Phone menu: the header's links in a popover inside its nav. Wide screens
@@ -1064,7 +1172,75 @@
       flex-direction: column;
       align-items: stretch;
     }
+
+    :where(body, body > :not([class])) > header > nav > [popover] li > details > :is(ul, ol, menu) {
+      position: static;
+      padding-block: var(--spacing-xs) 0;
+      border: 0;
+      box-shadow: none;
+    }
   }
+  /* While a modal dialog is open the page behind it doesn't scroll, and the
+     scrollbar's space is always kept, so nothing shifts sideways when the
+     scrollbar goes away. Non-modal dialogs (show()) leave the page alone. */
+  :root {
+    scrollbar-gutter: stable;
+  }
+
+  :root:has(dialog:modal) {
+    overflow: hidden;
+  }
+
+  /* A top bar that stays: <header data-layout="sticky"><nav>…</nav></header>.
+     It sticks to the top on its background, the page keeps room above a
+     heading you jump to, and where scroll-state queries are supported a soft
+     shadow shows once it's stuck (elsewhere the hairline alone). */
+  :where(body, body > :not([class])) > header[data-layout="sticky"] {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    background-color: var(--color-background);
+    container: tagbrush-sticky-header / scroll-state;
+  }
+
+  :where(body, body > :not([class])) > header[data-layout="sticky"]::after {
+    content: "";
+    position: absolute;
+    inset: 100% 0 auto;
+    height: 0.75rem;
+    background: linear-gradient(rgb(0 0 0 / 0.08), transparent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-duration);
+  }
+
+  @container tagbrush-sticky-header scroll-state(stuck: top) {
+    :where(body, body > :not([class])) > header[data-layout="sticky"]::after {
+      opacity: 1;
+    }
+  }
+
+  /* Headings you jump to land below the bar, as do focused fields (WCAG 2.4.11) */
+  :root:has(> body > header[data-layout="sticky"], > body > :not([class]) > header[data-layout="sticky"]) {
+    scroll-padding-top: 5rem;
+  }
+
+  /* Pages of the same site cross-fade into each other (Chromium, Safari) */
+  @media (prefers-reduced-motion: no-preference) {
+    @view-transition {
+      navigation: auto;
+    }
+  }
+
+  /* Header links are a comfortable tap target on touch screens */
+  @media (pointer: coarse) {
+    :where(body, body > :not([class])) > header nav li > :is(a:not(.button), details > summary) {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.75rem;
+    }
+  }
+
   /* Page layout: end */
 
   /* ==========================================================================
@@ -1084,6 +1260,78 @@
 
   summary::marker {
     color: var(--color-marker, var(--color-text-muted));
+  }
+
+  /* The marker is a chevron: at the start of the summary, pointing to the
+     text and turning down when open; in an accordion (neighboring <details>,
+     or a name), at the end, pointing down and turning up. A dropdown in the
+     header nav draws its own. */
+  :where(details:not(header nav li > details)) > summary {
+    position: relative;
+    list-style: none;
+  }
+
+  :where(details:not(header nav li > details)) > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  :where(details:not(header nav li > details)) > summary::before {
+    content: "";
+    display: inline-block;
+    width: 0.45em;
+    height: 0.45em;
+    margin-inline-end: 0.65em;
+    border: solid var(--color-marker, var(--color-text-muted));
+    border-width: 0 0.13em 0.13em 0;
+    rotate: -45deg;
+    translate: 0 -0.1em;
+    transition: rotate var(--transition-duration), translate var(--transition-duration);
+  }
+
+  :where(details:not(header nav li > details)) > summary:dir(rtl)::before {
+    rotate: 135deg;
+  }
+
+  :where(details[open]:not(header nav li > details)) > summary::before {
+    rotate: 45deg;
+    translate: 0 -0.25em;
+  }
+
+  :where(details:is([name], :has(+ details), details + details):not(header nav li > details)) > summary {
+    padding-inline-end: 1.5em;
+  }
+
+  :where(details:is([name], :has(+ details), details + details):not(header nav li > details)) > summary::before {
+    position: absolute;
+    inset-inline-end: 0.25em;
+    top: 0.45em;
+    margin: 0;
+    rotate: 45deg;
+  }
+
+  :where(details[open]:is([name], :has(+ details), details + details):not(header nav li > details)) > summary::before {
+    rotate: -135deg;
+    translate: 0 0.15em;
+  }
+
+  /* Opening eases the content's height where the browser can animate to
+     auto (interpolate-size, ::details-content); elsewhere, and with reduced
+     motion, it opens at once */
+  @supports selector(::details-content) {
+    :where(details) {
+      interpolate-size: allow-keywords;
+    }
+
+    :where(details)::details-content {
+      block-size: 0;
+      overflow: clip;
+      overflow-clip-margin: calc(var(--focus-ring-width) + 2px);
+      transition: block-size var(--transition-duration) ease-out, content-visibility var(--transition-duration) allow-discrete;
+    }
+
+    :where(details[open])::details-content {
+      block-size: auto;
+    }
   }
 
   :where(details[open] > summary) {
@@ -1205,6 +1453,256 @@
     margin-bottom: 0;
   }
 
+  /* A tooltip: <button interestfor="tip" aria-describedby="tip">Save</button>
+     <div popover="hint" id="tip" role="tooltip">Saves a draft</div>. The
+     browser opens it on hover and focus (interestfor); it is small and
+     inverted, above its trigger where anchor positioning is supported.
+     No JavaScript fallback: without interestfor it simply doesn't open. */
+  :where([popover="hint"]) {
+    max-width: min(100% - 2 * var(--spacing-md), 20rem);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 0;
+    border-radius: var(--border-radius);
+    background-color: var(--color-text);
+    color: var(--color-background);
+    box-shadow: var(--shadow);
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+  }
+
+  @supports (position-area: block-start) {
+    :where([popover="hint"]) {
+      inset: auto;
+      margin: var(--spacing-xs);
+      position-area: block-start;
+      position-try-fallbacks: flip-block, flip-inline;
+    }
+  }
+
+  /* A link with a tooltip shows there's more to it */
+  :where(a[interestfor]) {
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+  }
+
+  /* A menu in a popover (a user menu) opens next to the button that opened
+     it and stays on screen: below it, flipping up or to the other side near
+     an edge (anchor positioning). Browsers without it keep the popover
+     centered. The phone menu has its own placement. */
+  @supports (position-area: block-end) {
+    :where([popover]:has(> nav, > ul, > ol, > menu):not(header > nav > [popover])) {
+      inset: auto;
+      margin: var(--spacing-xs) 0;
+      position-area: block-end span-inline-start;
+      position-try-fallbacks: flip-inline, flip-block, flip-block flip-inline;
+    }
+  }
+
+  /* Tabs: <div role="tablist"><button role="tab" aria-controls="npm" aria-selected="true">npm</button>…</div>
+     followed by the role="tabpanel" sections. TagAction shows one panel at a time. */
+  :where([role="tablist"]) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+    margin-bottom: var(--spacing-md);
+    border-bottom: var(--border-width) solid var(--color-border);
+  }
+
+  :where([role="tablist"]) > [role="tab"] {
+    --_btn-bg: transparent;
+    --_btn-bg-hover: color-mix(in srgb, var(--color-primary) 8%, transparent);
+    --_btn-color: var(--color-text-muted);
+    margin: 0 0 calc(-1 * var(--border-width));
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    font-weight: 500;
+  }
+
+  :where([role="tablist"]) > [role="tab"][aria-selected="true"] {
+    --_btn-color: var(--color-text);
+    border-bottom-color: var(--color-primary);
+  }
+
+  :where([role="tabpanel"]) > :last-child {
+    margin-bottom: 0;
+  }
+
+  :where([role="tabpanel"]) {
+    margin-bottom: var(--spacing-md);
+  }
+
+  /* Dialogs and popovers fade and grow in, and fade out where the browser can
+     animate display (Chromium, Safari). Reduced motion sets the duration to 0. */
+  :where(dialog, [popover]) {
+    opacity: 0;
+    scale: 0.97;
+    transition: opacity var(--transition-duration) ease-out, scale var(--transition-duration) ease-out,
+                display var(--transition-duration) allow-discrete, overlay var(--transition-duration) allow-discrete;
+  }
+
+  :where(dialog[open], [popover]:popover-open) {
+    opacity: 1;
+    scale: none;
+  }
+
+  @starting-style {
+    :where(dialog[open], [popover]:popover-open) {
+      opacity: 0;
+      scale: 0.97;
+    }
+  }
+
+  :where(dialog)::backdrop {
+    opacity: 0;
+    transition: opacity var(--transition-duration), display var(--transition-duration) allow-discrete, overlay var(--transition-duration) allow-discrete;
+  }
+
+  :where(dialog[open])::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    :where(dialog[open])::backdrop {
+      opacity: 0;
+    }
+  }
+
+  /* On a phone a modal dialog is a sheet from the bottom edge, full width
+     with its top corners rounded, and it slides up instead of growing */
+  @media (max-width: 30rem) {
+    dialog:where(:modal) {
+      width: 100%;
+      max-width: none;
+      max-height: 85dvh;
+      margin: auto 0 0;
+      border-width: var(--border-width) 0 0;
+      border-radius: var(--card-radius) var(--card-radius) 0 0;
+    }
+
+    :where(dialog) {
+      scale: none;
+      translate: 0 100%;
+      transition: opacity var(--transition-duration) ease-out, translate calc(2 * var(--transition-duration)) ease-out,
+                  display calc(2 * var(--transition-duration)) allow-discrete, overlay calc(2 * var(--transition-duration)) allow-discrete;
+    }
+
+    :where(dialog[open]) {
+      translate: none;
+    }
+
+    @starting-style {
+      :where(dialog[open]) {
+        translate: 0 100%;
+      }
+    }
+  }
+
+  /* A dropdown menu: a <details> in a list in the page header's nav.
+     <li><details><summary>Services</summary><ul><li><a href="/a">A</a></li></ul></details></li> */
+  header nav li > details {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  header nav li > details > summary {
+    margin: 0;
+    list-style: none;
+  }
+
+  header nav li > details > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  header nav li > details > summary::after {
+    content: "";
+    display: inline-block;
+    width: 0.4em;
+    height: 0.4em;
+    margin-inline-start: 0.45em;
+    border: solid currentColor;
+    border-width: 0 0.12em 0.12em 0;
+    rotate: 45deg;
+    translate: 0 -0.2em;
+    transition: rotate var(--transition-duration);
+  }
+
+  header nav li > details[open] > summary::after {
+    rotate: -135deg;
+    translate: 0 0.05em;
+  }
+
+  header nav li > details > :is(ul, ol, menu) {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + var(--spacing-sm));
+    left: 0;
+    min-width: 12rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--border-radius);
+    background-color: var(--color-background);
+    box-shadow: var(--shadow-lg);
+  }
+
+  header nav li:last-child > details > :is(ul, ol, menu) {
+    right: 0;
+    left: auto;
+  }
+
+  /* Wide tables and code blocks show a shadow at an edge with more to scroll
+     to (scroll-driven; browsers without it show none) */
+  @supports (animation-timeline: scroll()) {
+    :where(pre, table, figure:has(> table)) {
+      animation: tagbrush-scroll-shadow linear both;
+      animation-timeline: scroll(self inline);
+    }
+
+    :where(figure > table) {
+      animation: none;
+    }
+  }
+
+  @keyframes tagbrush-scroll-shadow {
+    from { box-shadow: inset 0 0 0 0 transparent, inset -1rem 0 1rem -1rem var(--_scroll-shadow); }
+    1%, 99% { box-shadow: inset 1rem 0 1rem -1rem var(--_scroll-shadow), inset -1rem 0 1rem -1rem var(--_scroll-shadow); }
+    to { box-shadow: inset 1rem 0 1rem -1rem var(--_scroll-shadow), inset 0 0 0 0 transparent; }
+  }
+
+  :where(pre, table, figure) {
+    --_scroll-shadow: color-mix(in srgb, var(--color-text) 35%, transparent);
+  }
+
+  /* A link to a document or a download says what it is: "Annual report PDF" */
+  :where(a:not(.button, nav *, :has(img))):where([href$=".pdf" i], [href*=".pdf?" i])::after { content: "PDF"; }
+  :where(a:not(.button, nav *, :has(img))):where([href$=".doc" i], [href$=".docx" i])::after { content: "DOC"; }
+  :where(a:not(.button, nav *, :has(img))):where([href$=".xls" i], [href$=".xlsx" i])::after { content: "XLS"; }
+  :where(a:not(.button, nav *, :has(img))):where([href$=".csv" i])::after { content: "CSV"; }
+  :where(a:not(.button, nav *, :has(img))):where([href$=".zip" i])::after { content: "ZIP"; }
+  :where(a:not(.button, nav *, :has(img)))[download]:not([href$=".pdf" i], [href*=".pdf?" i], [href$=".doc" i], [href$=".docx" i], [href$=".xls" i], [href$=".xlsx" i], [href$=".csv" i], [href$=".zip" i])::after { content: "↓" / "download"; }
+
+  :where(a:not(.button, nav *, :has(img))):where([download], [href$=".pdf" i], [href*=".pdf?" i], [href$=".doc" i], [href$=".docx" i], [href$=".xls" i], [href$=".xlsx" i], [href$=".csv" i], [href$=".zip" i])::after {
+    display: inline-block;
+    margin-inline-start: 0.35em;
+    color: var(--color-text-muted);
+    font-size: 0.75em;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  /* A link in running text that opens a new tab says so: " ↗", read as
+     "(opens in a new tab)". Not on buttons, nav links, heading links (cards),
+     image links, or document and download links, which have their own label. */
+  :where(:is(p, li, dd, td, th, figcaption, caption, address, blockquote) a[target="_blank"]):where(:not(.button, nav *, :is(h1, h2, h3, h4, h5, h6) *, :has(img), [download], [href$=".pdf" i], [href*=".pdf?" i], [href$=".doc" i], [href$=".docx" i], [href$=".xls" i], [href$=".xlsx" i], [href$=".csv" i], [href$=".zip" i]))::after {
+    content: " ↗";
+    content: " ↗" / " (opens in a new tab)";
+  }
+
   /* Loading: aria-busy="true" on a button or any container shows a spinner
      and tells screen readers the content is updating */
   :where([aria-busy="true"]:not(html, body, input, select, textarea, img, video, iframe, progress, meter))::before {
@@ -1291,6 +1789,26 @@
     gap: 0.5em;
   }
 
+  /* A button that opens something (aria-expanded) shows a chevron that flips
+     while it's open: <button aria-expanded="false" aria-controls="menu">Account</button> */
+  :where(button[aria-expanded])::after {
+    content: "";
+    display: inline-block;
+    width: 0.4em;
+    height: 0.4em;
+    margin-inline-start: 0.5em;
+    border: solid currentColor;
+    border-width: 0 0.12em 0.12em 0;
+    rotate: 45deg;
+    translate: 0 -0.2em;
+    transition: rotate var(--transition-duration), translate var(--transition-duration);
+  }
+
+  :where(button[aria-expanded="true"])::after {
+    rotate: -135deg;
+    translate: 0 0.05em;
+  }
+
   /* After the button rules so a busy button shows the progress cursor */
   :where([aria-busy="true"]) {
     cursor: progress;
@@ -1308,6 +1826,38 @@
     --_btn-bg-hover: color-mix(in srgb, var(--color-primary) 8%, transparent);
     --_btn-color: var(--color-link, light-dark(oklch(from var(--color-primary) min(l, 0.5) c h), oklch(from var(--color-primary) max(l, 0.77) min(c, 0.15) h)));
     --_btn-border: var(--color-primary);
+  }
+
+  /* A button with a tone: <button data-tone="error">Delete</button> is red,
+     solid or .outline. The fill is darkened as far as white text needs. */
+  :where(button, input:is([type="submit"], [type="button"], [type="reset"]), .button):where([data-tone], [style*="--tone"]) {
+    --_btn-bg: oklch(from var(--tone) min(l, 0.5) c h);
+    --_btn-bg-hover: oklch(from var(--tone) calc(min(l, 0.5) - 0.07) c h);
+    --_btn-color: #fff;
+    --_btn-border: transparent;
+  }
+
+  :where(.outline):where([data-tone], [style*="--tone"]) {
+    --_btn-bg: transparent;
+    --_btn-bg-hover: color-mix(in srgb, var(--tone) 8%, transparent);
+    --_btn-color: light-dark(oklch(from var(--tone) min(l, 0.5) c h), oklch(from var(--tone) max(l, 0.77) min(c, 0.15) h));
+    --_btn-border: var(--tone);
+  }
+
+  /* A toggle that is on (aria-pressed="true") looks held down: a solid button
+     takes its hover color and an inset shadow, an outline or secondary one a
+     tint of the primary color. <button aria-pressed="false">Bold</button> */
+  :where(button[aria-pressed="true"]) {
+    --_btn-bg: var(--_btn-bg-hover);
+    box-shadow: inset 0 2px 4px rgb(0 0 0 / 0.2);
+  }
+
+  :where(button:is(.outline, .secondary)[aria-pressed="true"]) {
+    --_btn-bg: color-mix(in oklab, var(--color-primary) 16%, var(--color-background));
+    --_btn-bg-hover: color-mix(in oklab, var(--color-primary) 22%, var(--color-background));
+    --_btn-color: var(--color-text);
+    --_btn-border: var(--color-primary);
+    box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.15);
   }
 
   /* ==========================================================================
@@ -1415,6 +1965,54 @@
     padding: var(--spacing-xs) var(--spacing-sm);
   }
 
+  /* Where the browser allows it, a mouse-driven select opens a picker in the
+     theme's colors. Touch screens keep the system's own picker. */
+  @supports (appearance: base-select) {
+    @media (pointer: fine) {
+      :where(select:not([multiple], [size])),
+      :where(select:not([multiple], [size]))::picker(select) {
+        appearance: base-select;
+      }
+
+      /* The arrow sits in the padding the gradient arrow used, outside the
+         flow, so a site's own display on selects can't wrap it */
+      :where(select:not([multiple], [size])) {
+        position: relative;
+        background-image: none;
+      }
+
+      :where(select:not([multiple], [size]))::picker-icon {
+        position: absolute;
+        top: 50%;
+        right: var(--spacing-md);
+        translate: 0 -50%;
+        color: var(--color-text-muted);
+      }
+
+      :where(select:not([multiple], [size]))::picker(select) {
+        margin-block: var(--spacing-xs);
+        padding: var(--spacing-xs);
+        border: var(--border-width) solid var(--color-border);
+        border-radius: var(--input-radius);
+        background-color: var(--color-background);
+        box-shadow: var(--shadow-lg);
+      }
+
+      :where(select:not([multiple], [size])) option {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        border-radius: calc(var(--input-radius) - 2px);
+      }
+
+      :where(select:not([multiple], [size])) option:where(:hover, :focus-visible) {
+        background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
+      }
+
+      :where(select:not([multiple], [size])) option::checkmark {
+        color: var(--color-primary);
+      }
+    }
+  }
+
   optgroup {
     font-weight: 600;
   }
@@ -1453,6 +2051,21 @@
 
   :where(input, textarea, select):where([aria-invalid="false"]) {
     border-color: var(--color-success);
+  }
+
+  /* A field with a rule to meet turns green once the user has met it */
+  :where(input, textarea, select):where(:user-valid):where([required], [pattern], [minlength], [min], [max], [type="email"], [type="url"]) {
+    border-color: var(--color-success);
+  }
+
+  /* Required fields: in a form that also has optional fields, a required
+     field's label ends in a red asterisk. It isn't read aloud: the field
+     itself tells screen readers it's required. A form where every field is
+     required (a sign-in) gets none. */
+  :where(form:has(:optional:not(button, [type="hidden"], [type="submit"], [type="button"], [type="reset"], [type="image"])) label:is(:has(+ :required), :has(> :required), :has(+ [role="group"] > :required)))::after {
+    content: " *";
+    content: " *" / "";
+    color: var(--color-error);
   }
 
   /* Help text: <small> directly after a field */
@@ -1537,6 +2150,40 @@
     width: fit-content;
     font-weight: 400;
     cursor: pointer;
+  }
+
+  /* Choice cards: a radio or checkbox label with a description in <small> is
+     a card, outlined when chosen; a fieldset of them lays them in a row.
+     <label><input type="radio" name="plan"> <strong>Team</strong> <small>Up to 10 people</small></label> */
+  label:has(> input:is([type="checkbox"], [type="radio"])):has(> small) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: var(--spacing-sm);
+    width: auto;
+    padding: var(--spacing-md);
+    border: var(--border-width) solid var(--color-border);
+    border-radius: var(--card-radius);
+  }
+
+  label:has(> input:is([type="checkbox"], [type="radio"])):has(> small) > small {
+    grid-column: 2;
+    color: var(--color-text-muted);
+  }
+
+  label:has(> input:is([type="checkbox"], [type="radio"])):has(> small):has(> :checked) {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 1px var(--color-primary);
+  }
+
+  :where(fieldset:has(> label > small)) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
+    gap: var(--spacing-sm);
+  }
+
+  :where(fieldset:has(> label > small)) > :is(legend, label) {
+    margin-bottom: 0;
   }
 
   :where(input[type="range"]) {
@@ -1657,6 +2304,30 @@
     background-color: color-mix(in srgb, var(--color-surface) 60%, transparent);
   }
 
+  /* Numbers marked with <data> line up on the right: <td><data value="1200">$1,200</data></td> */
+  :where(td:has(> data:only-child)) {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* A row whose first cell holds a checked checkbox is selected: tinted.
+     <tr><td><input type="checkbox" aria-label="Select Maya"></td>…</tr> */
+  :where(tbody tr:has(> :first-child > input[type="checkbox"]:not([role="switch"]):checked, > :first-child > label > input[type="checkbox"]:not([role="switch"]):checked)) {
+    background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  }
+
+  /* Links in a table are underlined text, not brand color */
+  :where(td a:not(.button), th a:not(.button)) {
+    color: inherit;
+  }
+
+  /* Rows light up under the pointer, on devices that can hover */
+  @media (hover: hover) {
+    :where(tbody tr:hover) {
+      background-color: color-mix(in srgb, var(--color-primary) 6%, transparent);
+    }
+  }
+
   /* ==========================================================================
      Utilities
      ========================================================================== */
@@ -1685,7 +2356,6 @@
   .card {
     margin-bottom: var(--spacing-md);
     padding: var(--card-padding);
-    border: var(--border-width) solid var(--color-border);
     border-radius: var(--card-radius);
     background-color: var(--color-surface);
   }
@@ -1744,8 +2414,14 @@
 
   :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer)))) > :where(article) {
     min-width: 0;
+  }
+
+  /* Frame by role: a card is a box (a fill, no border) only when it is one
+     thing you act on or compare: it has a link, a button, or a picture (a
+     plan, a post, a clickable card). A feature card (icon, heading, text) is
+     open, set apart by space. */
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article):where(:has(a[href], button, .button, img, picture, video)) {
     padding: var(--card-padding);
-    border: var(--border-width) solid var(--color-border);
     border-radius: var(--card-radius);
     background-color: var(--color-surface);
   }
@@ -1755,17 +2431,14 @@
   }
 
   /* Feature cards: an icon (an <svg> without width or height) first in a card
-     sits on a tinted tile. data-tone on the svg picks another color. */
+     is a plain icon at heading size in the text color. data-tone on the svg
+     picks a color. */
   :where(section > article > svg:first-child:not([width], [height])) {
     display: block;
-    box-sizing: border-box;
-    width: 2.75rem;
-    height: 2.75rem;
-    margin-bottom: var(--spacing-md);
-    padding: 0.625rem;
-    border-radius: var(--border-radius);
-    color: color-mix(in oklab, var(--tone, var(--color-primary)) 75%, var(--color-text));
-    background-color: color-mix(in oklab, var(--tone, var(--color-primary)) 14%, transparent);
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-bottom: var(--spacing-sm);
+    color: var(--tone, var(--color-heading));
   }
 
   section > article > svg:first-child + :is(h2, h3, h4, h5, h6) {
@@ -1775,8 +2448,23 @@
   /* The featured card in a row (a recommended plan) is the one whose button is
      solid while the others' are outlined */
   :where(section:has(> article + article):has(> article > :last-child > .outline) > article:has(> :last-child > :is(.button, button):not(.outline, .secondary))) {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 1px var(--color-primary), var(--shadow-lg);
+    box-shadow: 0 0 0 2px var(--color-primary), var(--shadow-lg);
+  }
+
+  /* A price in a card: a paragraph that starts with <strong> or <data> and
+     then a <small>, also in the card's header: <p><strong>$12</strong> <small>per month</small></p> */
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article, .card) > p:has(> :is(strong, data):first-child + small) > :is(strong, data):first-child,
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article, .card) > header > p:has(> :is(strong, data):first-child + small) > :is(strong, data):first-child {
+    font-size: var(--font-size-h2);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article, .card) > p:has(> :is(strong, data):first-child + small) > small,
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article, .card) > header > p:has(> :is(strong, data):first-child + small) > small {
+    color: var(--color-text-muted);
   }
 
   /* A picture beside text: a <section> of just a <figure> and a <div> puts
@@ -1822,10 +2510,6 @@
 
   :where(ul:has(> li > article:only-child)) > li > article {
     height: 100%;
-    padding: var(--card-padding);
-    border: var(--border-width) solid var(--color-border);
-    border-radius: var(--card-radius);
-    background-color: var(--color-surface);
   }
 
   /* In every card, a last footer, button group, or paragraph of buttons sits
@@ -1839,6 +2523,30 @@
   :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article) > :where(footer, [role="group"], p:has(> :is(.button, button))):last-child {
     margin-top: auto;
     margin-bottom: 0;
+  }
+
+  /* A card whose heading holds its only link (and no other control) is a link
+     all over: the link's ::after covers the card */
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article):where(:has(:is(h2, h3, h4, h5, h6) > a):not(:has(:not(h1, h2, h3, h4, h5, h6) > a, button, input, select, textarea))) {
+    position: relative;
+  }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article):where(:has(:is(h2, h3, h4, h5, h6) > a):not(:has(:not(h1, h2, h3, h4, h5, h6) > a, button, input, select, textarea))) :is(h2, h3, h4, h5, h6) > a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article):where(:has(:is(h2, h3, h4, h5, h6) > a:focus-visible)) {
+    outline: var(--focus-ring-width) solid var(--focus-ring-color, color-mix(in srgb, var(--color-primary) 50%, transparent));
+    outline-offset: 2px;
+  }
+
+  @media (hover: hover) {
+    :where(section:has(> article + article):not(:has(> :not(article, h1, h2, h3, h4, h5, h6, hgroup, p, header, footer))) > article, ul:has(> li > article:only-child) > li > article):where(:has(:is(h2, h3, h4, h5, h6) > a):not(:has(:not(h1, h2, h3, h4, h5, h6) > a, button, input, select, textarea))):hover {
+      background-color: color-mix(in oklab, var(--color-primary) 6%, var(--color-surface));
+    }
   }
 
   /* A quote in a card (a testimonial) is the card's text, not a box inside it */
@@ -1855,7 +2563,7 @@
     width: calc(100% + 2 * var(--card-padding));
     max-width: none;
     margin: calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) var(--spacing-md);
-    border-radius: calc(var(--card-radius) - var(--border-width)) calc(var(--card-radius) - var(--border-width)) 0 0;
+    border-radius: var(--card-radius) var(--card-radius) 0 0;
     aspect-ratio: 16 / 10;
     object-fit: cover;
   }
@@ -1945,11 +2653,11 @@
   }
 
   :where(aside nav a:hover) {
-    background-color: color-mix(in srgb, var(--color-primary) 8%, transparent);
+    background-color: color-mix(in srgb, var(--color-text) 6%, transparent);
   }
 
   :where(aside nav [aria-current]:not([aria-current="false"])) {
-    background-color: color-mix(in srgb, var(--color-primary) 12%, transparent);
+    background-color: color-mix(in srgb, var(--color-text) 9%, transparent);
   }
 
   /* Key numbers: a <dl> whose items are wrapped in <div>s becomes a row of
@@ -1962,7 +2670,6 @@
 
   :where(dl:has(> div)) > div {
     padding: var(--spacing-md) var(--spacing-lg);
-    border: var(--border-width) solid var(--color-border);
     border-radius: var(--card-radius);
     background-color: var(--color-surface);
   }
@@ -1986,6 +2693,19 @@
     font-weight: 400;
     color: var(--color-text-muted);
   }
+
+  /* A change in a tile is colored text after an arrow, not an edit mark:
+     <dd><ins>+12%</ins> vs. last month</dd>, <dd><del>−0.4%</del></dd> */
+  :where(dl:has(> div)) > div :is(ins, del) {
+    background: none;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  :where(dl:has(> div)) > div ins { color: color-mix(in oklab, var(--color-success) 55%, var(--color-text)); }
+  :where(dl:has(> div)) > div del { color: color-mix(in oklab, var(--color-error) 55%, var(--color-text)); }
+  :where(dl:has(> div)) > div ins::before { content: "▲ "; content: "▲ " / ""; }
+  :where(dl:has(> div)) > div del::before { content: "▼ "; content: "▼ " / ""; }
 
   /* A header with a title and actions: <header><h1>Users</h1><button>Invite</button></header> */
   :where(main, article, section) header:where(:has(> :is(h1, h2, h3, h4, hgroup)):has(> :is(button, .button, [role="group"]))) {
@@ -2021,6 +2741,22 @@
 
   :where(search, form[role="search"]) :where(input, select) {
     margin-bottom: 0;
+  }
+
+  /* A search field in a search bar shows a magnifier, drawn with two
+     gradients in the muted text color so it follows the theme */
+  :where(search, form[role="search"]) :where(input[type="search"]) {
+    padding-inline-start: 2.25rem;
+    background-image:
+      radial-gradient(circle at 0.4rem 0.4rem, transparent 0.27rem, var(--color-text-muted) 0.29rem 0.37rem, transparent 0.39rem),
+      linear-gradient(45deg, transparent 40%, var(--color-text-muted) 40% 62%, transparent 62%);
+    background-position: 0.8rem calc(50% - 0.1rem), 1.3rem calc(50% + 0.42rem);
+    background-size: 0.8rem 0.8rem, 0.4rem 0.4rem;
+    background-repeat: no-repeat;
+  }
+
+  :where(search, form[role="search"]) :where(input[type="search"]):dir(rtl) {
+    background-position: right 0.8rem center, right 1.3rem top calc(50% + 0.42rem);
   }
 
   /* Hide visually but keep available to screen readers */
@@ -2242,6 +2978,24 @@
 
     :where(pre) {
       white-space: pre-wrap;
+    }
+
+    /* Controls don't print: navigation, search and filter bars, buttons
+       (but a sort button holding a table header's text stays), and tab
+       rows. Cards, tiles, and steps aren't split across pages. */
+    :where(nav, search, form[role="search"], button:not([data-tag="sort"]), [role="tablist"]) {
+      display: none !important;
+    }
+
+    :where(article, dl > div, ol > li, details, aside, [role="status"], [role="alert"]) {
+      break-inside: avoid;
+    }
+
+    /* Closed <details> print their content where the browser can show it
+       (::details-content); TagAction also opens them before printing */
+    :where(details)::details-content {
+      block-size: auto;
+      content-visibility: visible;
     }
   }
 }

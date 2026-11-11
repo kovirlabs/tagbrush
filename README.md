@@ -70,7 +70,7 @@ Or just [download `tagbrush.css`](tagbrush.css) and host it yourself.
 - **Dark mode** – follows the system setting automatically, or force it per page or per element with `data-theme`.
 - **Easy to override** – everything lives in a `@layer`, so any CSS you write wins without `!important`.
 - **Themeable** – colors, fonts, type scale, spacing, and radius are semantic CSS variables, and one variable re-themes everything. The [theme builder](https://kovirlabs.github.io/tagbrush/#theming) writes the CSS for you.
-- **Accessible** – WCAG AA contrast, visible keyboard focus rings, `prefers-reduced-motion`, forced-colors support, and print styles.
+- **Accessible** – WCAG AA contrast (darker borders and full-contrast muted text under `prefers-contrast: more`), scrollbars in the theme's colors, visible keyboard focus rings, `prefers-reduced-motion`, forced-colors support, and print styles.
 - **Small helpers when you want them** – `.grid`, `.card`, `.container`, and `role="group"` cover the layouts most sites need.
 - **No build step, no dependencies** – plain CSS you can link, copy, or import. About 9 KB minified and gzipped.
 - **Works with any framework** – import it once in your root layout. [Setup guides](frameworks/README.md) cover Astro, Next.js, React, Vue, Nuxt, Angular, SvelteKit, Solid, Web Components, and Tailwind.
@@ -100,21 +100,22 @@ TagBrush.css sits in a family of drop-in stylesheets for semantic HTML. [Pico CS
 
 | Category   | Elements                                                                 |
 |------------|--------------------------------------------------------------------------|
-| Typography | `h1`–`h6`, `hgroup` (muted subtitle; a `<p>` before the heading is an uppercase label), `p`, `a`, `strong`, `small`, `mark`, `abbr`, `del`, `ins`, `s`, `dfn`, `q`, `sub`, `sup`, `hr`, `address`, `blockquote` (with `footer` attribution), `code`, `pre`, `kbd`, `samp`, `output` |
+| Typography | `h1`–`h6`, `hgroup` (muted subtitle; a `<p>` before the heading is a muted label), `p`, `a`, `strong`, `small`, `mark`, `abbr`, `del`, `ins`, `s`, `dfn`, `q`, `sub`, `sup`, `hr`, `address`, `blockquote` (with `footer` attribution; in a `figure` with a `figcaption`, a pull quote), `code`, `pre`, `kbd`, `samp`, `output` |
 | Lists      | `ul`, `ol`, `menu` (including nested lists, muted `::marker`), Markdown task lists (checkbox replaces the bullet), `dl`, `dt`, `dd`. An `<ol>` whose items start with a heading is a numbered timeline of steps; a `<ul>` of only images in a section, header, or footer is a centered row of logos |
-| Media      | `img`, `picture`, `video`, `audio`, `canvas`, `svg`, `iframe`, `object`, `embed` (scale to fit), `figure`, `figcaption`. Inline SVG icons without `width`/`height` in buttons, links, headings, labels, list items, and badges are sized to the text |
+| Media      | an `iframe` without a `height` (16:9, full width), a small `img` in a `figcaption`, article `footer` or `address` (round avatar), `img`, `picture`, `video`, `audio`, `canvas`, `svg`, `iframe`, `object`, `embed` (scale to fit), `figure`, `figcaption`. Inline SVG icons without `width`/`height` in buttons, links, headings, labels, list items, and badges are sized to the text |
 | Code highlighting | Token colors for Prism, highlight.js, Hugo (Chroma), Jekyll (Rouge), Pandoc, and Pygments output, and Shiki's dual themes and `css-variables` theme. Follows the theme and dark mode; a highlighter theme you load yourself still wins |
 | Markdown   | Footnotes from GitHub-flavored Markdown, markdown-it, and Pandoc (smaller, muted, highlighted when linked to); long URLs and words wrap instead of widening the page |
-| Article grids | A `<section>` of two or more `<article>`s, or a `<ul>` of `<li><article>`s, becomes a responsive grid of cards; an icon `<svg>` first in a card sits on a tinted tile, an `<img>` first runs to the card's edges, a last footer or paragraph of buttons sits at the bottom so buttons line up, a `<blockquote>` in a card is a testimonial, and the one card in a row with a solid button (the rest outlined) is featured |
-| Status badges | `<mark data-tone="success">` (also `warning`, `error`, `info`, `neutral`, or any color with `style="--tone: …"`) is a tinted pill that stays readable in both schemes; `data-tone` on an `article aside` colors the callout |
+| Article grids | A `<section>` of two or more `<article>`s, or a `<ul>` of `<li><article>`s, becomes a responsive grid of cards; a card with a link, button, or picture is a filled box and a card of only text is open; an icon `<svg>` first in a card is a plain icon at heading size, a `<strong>` price with a `<small>` period is a large figure, an `<img>` first runs to the card's edges, a last footer or paragraph of buttons sits at the bottom so buttons line up, a card whose heading holds its only link is clickable all over, a `<blockquote>` in a card is a testimonial, and the one card in a row with a solid button (the rest outlined) is featured |
+| Status badges | `<p role="status">` and `<p role="alert">` (or a `div`, `section`, `aside`) are info and error banners, recolored by `data-tone`; `<mark data-tone="success">` (also `warning`, `error`, `info`, `neutral`, or any color with `style="--tone: …"`) is a tinted pill that stays readable in both schemes; `data-tone` on an `article aside` colors the callout |
 | App patterns | `<aside>` next to `<main>` is a sidebar layout (vertical navigation, stacks on phones), full height when the `<aside>` comes before the `<header>`; `<aside>` next to an `<article>` in `<main>` is a sticky table of contents; a `<dl>` of `<div>`s is stat tiles; a `<header>` with a heading and buttons is one row; `<search>` lays out filters; an `<hgroup>` in the page header is a hero, with a `<figure>` or image beside it if you add one, or a photo behind it when an `<img>` comes first in the header; a `<section>` of just a `<figure>` and a `<div>` puts them side by side; a page `<footer>` with two or more `<nav>`s is a site map in columns |
-| Structure  | `nav` (with `ul`/`menu` rendered as a horizontal menu, `aria-current` highlighted; links in a `[popover]` in the header nav become a phone menu behind its `popovertarget` button), a skip link (`<a href="#main">` first in `<body>`, shown on focus), `header`, `main`, `footer`, `search`, `article aside` (callout), breadcrumbs (`<nav aria-label="Breadcrumb">` gets `/` separators) |
-| Buttons    | `button`, `input[type=submit/button/reset]`, `.button`, `:disabled`, `aria-disabled` |
+| Structure  | `<header data-layout="sticky">` (a top bar that stays, with room kept above jumped-to headings), `nav` (with `ul`/`menu` rendered as a horizontal menu, `aria-current` highlighted; links in a `[popover]` in the header nav become a phone menu behind its `popovertarget` button), a skip link (`<a href="#main">` first in `<body>`, shown on focus), `header`, `main`, `footer`, `search`, `article aside` (callout), breadcrumbs (`<nav aria-label="Breadcrumb">` gets `/` separators) |
+| Buttons    | `button`, `input[type=submit/button/reset]`, `.button`, `:disabled`, `aria-disabled`; a chevron on `button[aria-expanded]` that flips when open; `aria-pressed="true"` looks held down; `data-tone="error"` (or any tone) colors a button, solid or `.outline`, for destructive actions |
 | Loading    | `aria-busy="true"` on a button or any element shows a spinner |
-| Forms      | `fieldset`, `legend`, `label` (including inputs wrapped in their label), `textarea` (grows as you type unless it has a `rows` attribute), `select` (consistent arrow in the theme's colors), `select[multiple]`, `optgroup`, every text-like `input` type (including `date`, `time`, `search`, …), `checkbox`, `radio`, toggle switches (`<input type="checkbox" role="switch">`), `range`, `color`, `file`, `image` |
-| Form states | `:focus`, `:disabled`, `readonly`, `::placeholder`, `aria-invalid="true"` / `"false"`, `:user-invalid`, help text via `<small>` after a field. Fields are spaced automatically. |
-| Tables     | `table`, `caption`, `thead`, `tbody`, `tfoot`, `th`, `td`, and the `align` attribute. A table is as wide as its content and scrolls sideways inside itself when it doesn't fit. Wrap it in `<figure>` to make it fill the full width instead |
-| Interactive | `details`, `summary` (neighboring `details` join into an accordion), `dialog` (with `::backdrop`; a `header` with a close button and a `footer` of right-aligned buttons), `[popover]`, `progress`, `meter` (green / amber / red from its `low`, `high`, and `optimum` attributes) |
+| Forms      | `fieldset`, `legend`, `label` (including inputs wrapped in their label), `textarea` (grows as you type unless it has a `rows` attribute), `select` (consistent arrow in the theme's colors; with a mouse, a themed picker where `appearance: base-select` is supported), `select[multiple]`, `optgroup`, every text-like `input` type (including `date`, `time`, `search`, …), `checkbox`, `radio`, toggle switches (`<input type="checkbox" role="switch">`), `range`, `color`, `file`, `image` |
+| Form states | a red asterisk on the label of a `required` field in a form that also has optional fields, `:focus`, `:disabled`, `readonly`, `::placeholder`, `aria-invalid="true"` / `"false"`, `:user-invalid`, `:user-valid` on fields with a rule (`required`, `pattern`, `type="email"`, …), a radio or checkbox label with a `<small>` description as a choice card, help text via `<small>` after a field. Fields are spaced automatically. |
+| Links      | A link in text with `target="_blank"` ends in ↗ ("opens in a new tab" for screen readers); links to `.pdf`, `.doc(x)`, `.xls(x)`, `.csv` and `.zip` files get a small label saying so; `download` links get an arrow. Buttons and nav links are left alone |
+| Tables     | `table`, `caption`, `<data>` values in cells (right-aligned, tabular figures), rows highlighted under the pointer, a row tinted when the checkbox in its first cell is checked, `thead`, `tbody`, `tfoot`, `th`, `td`, and the `align` attribute. A table is as wide as its content and scrolls sideways inside itself when it doesn't fit. Wrap it in `<figure>` to make it fill the full width instead. Wide tables and code blocks show a shadow at an edge with more to scroll to |
+| Interactive | tabs (`role="tablist"`, `role="tab"`, `role="tabpanel"`; TagAction switches the panels), `details`, `summary` (a chevron marker, at the end in an accordion; opening eases where the browser can animate height; neighboring `details` join into an accordion; a `details` in a header nav list is a dropdown menu), `dialog` (with `::backdrop`; the page behind a modal doesn't scroll or shift; a `header` with a close button and a `footer` of right-aligned buttons), `[popover]` (dialogs and popovers fade in and out), `progress`, `meter` (green / amber / red from its `low`, `high`, and `optimum` attributes) |
 
 ### Utility classes
 
@@ -142,7 +143,7 @@ with no classes and no custom CSS, styled by TagBrush.css. Follow
 https://kovirlabs.github.io/tagbrush/llms.txt
 ```
 
-[`llms.txt`](llms.txt) is a short cheat sheet written for AI assistants: which elements to use, the few patterns that turn plain HTML into components (`role="switch"`, `aria-busy`, a `<section>` of `<article>`s), forms, and theming. Assistants that can read links will follow it.
+[`llms.txt`](llms.txt) is an index written for AI assistants: the rules, and every pattern in one line (the HTML to write and what it becomes), grouped by what you're building. Each group links to a detail file in [`llms/`](llms/) with full examples and what each pattern leaves alone, so an assistant reads the one it needs. [`llms-full.txt`](llms-full.txt) has everything in one file. Assistants that can read links will follow them.
 
 For coding agents, install it once and the agent follows it automatically. One command adds a [Claude Code skill, a Cursor rule, or an `AGENTS.md` section](ai/):
 
@@ -150,7 +151,7 @@ For coding agents, install it once and the agent follows it automatically. One c
 npx degit kovirlabs/tagbrush/ai/claude/tagbrush .claude/skills/tagbrush
 ```
 
-The tests render every snippet in `llms.txt`, so the instructions agents follow always match what TagBrush.css actually styles.
+The tests render every snippet in the guide, check that every pattern in a detail file is named in the index (so an agent always knows it exists), and keep the index under 4,000 tokens.
 
 ### Chat apps and AI output
 
@@ -207,11 +208,13 @@ Write the usual page landmarks and TagBrush.css lays them out:
 - A page without `<main>`, such as plain Markdown output, is centered at a comfortable reading width (`--reading-width`, 70 characters), and so is a `<main>` holding a single `<article>`, like a blog post or docs page. Pages with more varied content use the wider `--container-max-width`.
 - A `<section>` of two or more `<article>`s lays them out as a responsive grid of cards. Headings and paragraphs in the section span the full width above them.
 - A wrapper element without a class around the landmarks counts as the page too, so framework wrappers like `<div id="root">`, `<div id="__nuxt">`, and Angular's `<app-root>` work without changes.
-- An `<hgroup>` in the page `<header>` is a hero on a soft tint of the primary color (`--hero-background`). Add a `<figure>`, `<img>`, or `<svg>` after it to put a picture beside the text. An `<img>` first in the header, before the `<nav>`, is a photo behind the hero instead, under a dark wash that keeps the text readable.
+- An `<hgroup>` in the page `<header>` is a hero (`--hero-background` puts a wash behind it; none by default). Add a `<figure>`, `<img>`, or `<svg>` after it to put a picture beside the text. An `<img>` first in the header, before the `<nav>`, is a photo behind the hero instead, under a dark wash that keeps the text readable.
 - An `<aside>` next to `<main>` is a sidebar. Put it before the `<header>` and it runs the full height of the window, with the header as a top bar beside it.
 - A page `<footer>` with two or more `<nav>`s lays them out as columns of links; a last paragraph (the copyright line) spans the width below them.
 - Links in a `<div popover>` inside the header's `<nav>` are a phone menu: they sit in the bar on wide screens, and on phones the `<button popovertarget>` before them opens them as a panel. No JavaScript.
 - A link to an id first in `<body>` (`<a href="#main">Skip to content</a>`) is a skip link, out of sight until it's focused.
+- Pages of the same site cross-fade into each other as you navigate (`@view-transition`), unless the reader prefers reduced motion. To turn it off, add `@view-transition { navigation: none; }` to your CSS.
+- On touch screens, header links are at least 44px tall.
 - Pages that already use `.container` look exactly as before.
 
 To lay out the page yourself, add `data-layout="full"` to `<body>` (or to the wrapper). To let just one landmark go edge to edge, for example a full-width hero, put it on that element: `<header data-layout="full">`. On `<main data-layout="full">`, each `<section>` (and a `<header>`) inside becomes a full-width band whose content is centered in the page column, so landing pages can give a band its own background, such as `<section data-theme="dark">`. Giving the wrapper element a class also tells TagBrush.css it's your own layout.
@@ -335,14 +338,14 @@ Button variants only change a few private variables, so you can add your own in 
 | `--border-width`        | `1px`        | Inputs, buttons, table rules              |
 | `--code-comment`, `--code-keyword`, `--code-string`, `--code-function`, `--code-constant`, `--code-tag` | muted text, then violet, green, blue, amber, rose | Syntax highlighting colors, each with a light and a dark value |
 | `--shadow` / `--shadow-lg` | soft shadows | Available for your components / dialogs; hero images |
-| `--hero-background` | soft primary tint | Background of the page-header hero; `none` turns it off |
+| `--hero-background` | `none` | Background of the page-header hero, for example a gradient |
 | `--tone` | *from `data-tone`* | Color of a badge (`<mark>`), callout, or card icon; set it inline for any color |
 | `--transition-duration` | `0.15s`      | Hover and focus transitions (`0s` with reduced motion) |
 | `--button-padding` / `--button-radius` / `--button-font-weight` | spacing, radius, `500` | Buttons and file-picker buttons |
 | `--input-padding` / `--input-radius` | spacing, radius | Text inputs, selects, textareas |
 | `--card-padding` / `--card-radius` | `1.5rem` / radius | `.card`                       |
 
-Where two defaults are shown, they are the light and dark values. *Tinted* neutrals carry a faint hint of `--color-primary`'s hue (more saturated primaries tint more, grays and black not at all), so changing one color gives the whole page a matching palette. Set any of them to a plain color to opt out, for example `--color-surface: light-dark(#f4f4f5, #27272a)`.
+Where two defaults are shown, they are the light and dark values. *Tinted* neutrals carry a trace of `--color-primary`'s hue (chroma at most 0.012, grays and black not at all), so they stay near-neutral and the brand color shows only where it means something. Set any of them to a plain color to opt out, for example `--color-surface: light-dark(#f4f4f5, #27272a)`.
 
 ### Browser support
 
@@ -401,9 +404,10 @@ Step-by-step guides with copy-paste snippets:
 | `index.html`              | Landing page, live demo, and theme builder           |
 | `starter.html`            | A complete page to copy as a starting point          |
 | `starters/`               | Pandoc, Hugo, Eleventy, and Astro starters (built by CI) |
-| `llms.txt`                | Usage cheat sheet for AI assistants                  |
+| `llms.txt`, `llms/`       | Guide for AI assistants: an index and detail files   |
+| `llms-full.txt`           | The whole guide in one file *(generated)*            |
 | `bin/tagbrush.mjs`        | `npx tagbrush check`, a dependency-free page checker |
-| `ai/`                     | Claude Code skill, Cursor rule, and `AGENTS.md` section *(generated from `llms.txt`)* |
+| `ai/`                     | Claude Code skill, Cursor rules, and `AGENTS.md` section *(generated from the guide)* |
 | `scripts/build.mjs`       | Generates the files above                            |
 | `tests/`                  | Cross-browser tests and screenshot baselines         |
 | `CHANGELOG.md`            | Release history                                      |

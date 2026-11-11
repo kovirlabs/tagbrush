@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Content intent fixture</title>
+    <link rel="stylesheet" href="../../tagbrush.css">
+</head>
+<body>
+    <main>
+        <form>
+            <fieldset id="plans">
+                <legend>Plan</legend>
+                <label id="solo"><input type="radio" name="plan" value="solo"> <strong>Solo</strong> <small>One person, unlimited projects</small></label>
+                <label id="team"><input type="radio" name="plan" value="team" checked> <strong>Team</strong> <small>Up to 10 people, shared reports</small></label>
+            </fieldset>
+            <fieldset id="plain-radios">
+                <legend>Newsletter</legend>
+                <label id="yes"><input type="radio" name="news"> Yes</label>
+                <label><input type="radio" name="news"> No</label>
+            </fieldset>
+            <label>Email <input type="email" id="email" required></label>
+            <label>Nickname <input type="text" id="nickname"></label>
+            <label>Country
+                <select id="country"><option>Canada</option><option>Mexico</option><option>United States</option></select>
+            </label>
+        </form>
+
+        <figure id="pull">
+            <blockquote><p>The grant came through. We could not have written it on our own.</p></blockquote>
+            <figcaption><img id="avatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='120'%3E%3Crect width='200' height='120' fill='%2394a3b8'/%3E%3C/svg%3E" alt="">Ana Ruiz, Director of Harbor Food Bank</figcaption>
+        </figure>
+
+        <blockquote id="plain-quote"><p>A plain quote stays a plain quote.</p></blockquote>
+
+        <figure id="chart"><img id="chart-image" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='100'/%3E" alt="Chart"><figcaption>Revenue by quarter</figcaption></figure>
+
+        <table id="budget">
+            <thead><tr><th>Line</th><th>Amount</th></tr></thead>
+            <tbody>
+                <tr><td>Staff</td><td id="amount"><data value="48000">$48,000</data></td></tr>
+                <tr><td>Rent</td><td id="note">Shared with partner</td></tr>
+            </tbody>
+        </table>
+
+        <iframe id="video" src="about:blank" title="Video"></iframe>
+        <iframe id="sized" src="about:blank" title="Form" height="300"></iframe>
+
+        <div role="tablist" aria-label="Install with" id="tablist"><button role="tab" aria-controls="tab-cdn" aria-selected="true" id="tab-on">CDN</button><button role="tab" aria-controls="tab-npm" id="tab-off">npm</button></div>
+        <section id="tab-cdn" role="tabpanel"><p>Add the script tag.</p></section>
+        <section id="tab-npm" role="tabpanel"><p>npm install tagaction</p></section>
+
+        <p><s id="was">$49</s> <strong>$29</strong> a month</p>
+    </main>
+</body>
+</html>

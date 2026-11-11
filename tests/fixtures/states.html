@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>States fixture</title>
+    <link rel="stylesheet" href="../../tagbrush.css">
+</head>
+<body>
+    <main>
+        <h1>States</h1>
+        <!-- Buttons -->
+        <div role="group" id="buttons">
+            <button id="expand-closed" aria-expanded="false" aria-controls="menu-list">Account</button>
+            <button id="expand-open" class="outline" aria-expanded="true" aria-controls="menu-list">Filters</button>
+            <button id="plain-button">Save</button>
+            <a href="#" class="button" id="link-button">Link</a>
+        </div>
+        <div role="group" id="toggles">
+            <button id="pressed-on" aria-pressed="true">Bold</button>
+            <button id="pressed-off" aria-pressed="false">Italic</button>
+            <button id="outline-on" class="outline" aria-pressed="true">Hide</button>
+            <button id="outline-off" class="outline" aria-pressed="false">Show</button>
+        </div>
+        <div role="group" id="tones">
+            <button id="danger" data-tone="error">Delete</button>
+            <button id="danger-outline" class="outline" data-tone="error">Remove</button>
+            <a href="#" class="button" data-tone="success" id="tone-link">Approve</a>
+            <button id="custom-tone" style="--tone: #db2777">Custom</button>
+        </div>
+        <form id="mixed">
+            <label for="m-name" id="label-name">Name</label>
+            <input id="m-name" required>
+            <label for="m-company" id="label-company">Company</label>
+            <input id="m-company">
+            <label id="label-terms"><input type="checkbox" required> I agree</label>
+            <label id="label-news"><input type="checkbox"> Newsletter</label>
+            <label for="m-password" id="label-password">Password</label>
+            <div role="group"><input type="password" id="m-password" required><button type="button">Show</button></div>
+            <input type="hidden" name="token" value="x">
+            <button>Send</button>
+        </form>
+        <form id="all-required">
+            <label for="r-email" id="label-email">Email</label>
+            <input type="email" id="r-email" required>
+            <label for="r-password">Password</label>
+            <input type="password" id="r-password" required>
+            <input type="hidden" name="token" value="x">
+            <button>Sign in</button>
+        </form>
+        <p role="status" id="saved">Your changes were saved.</p>
+        <div role="alert" id="failed"><p>Couldn't save. Check your connection and try again.</p></div>
+        <p role="status" data-tone="success" id="toned">Published.</p>
+        <div role="status" id="empty-region"></div>
+        <p>Updated <span role="status" id="inline-status">just now</span>.</p>
+        <p role="status" data-tag="filter" id="tagaction-status">3 of 12 shown</p>
+        <table id="select-table">
+            <thead><tr><th><input type="checkbox" aria-label="Select all"></th><th>Name</th><th>Active</th></tr></thead>
+            <tbody>
+                <tr id="row-on"><td><input type="checkbox" aria-label="Select Maya" checked></td><td>Maya</td><td><input type="checkbox" role="switch" aria-label="Active" checked></td></tr>
+                <tr id="row-off"><td><input type="checkbox" aria-label="Select Bo"></td><td>Bo</td><td><input type="checkbox" role="switch" aria-label="Active" checked></td></tr>
+                <tr id="row-done"><td>Ana</td><td><input type="checkbox" aria-label="Done" checked></td><td></td></tr>
+            </tbody>
+        </table>
+        <ul id="menu-list"><li><a href="#">Profile</a></li></ul>
+    </main>
+</body>
+</html>
