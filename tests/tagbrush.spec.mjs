@@ -1614,6 +1614,25 @@ test.describe('tooltips', () => {
   });
 });
 
+test.describe('sidebar menu on phones', () => {
+  test('a sidebar nav in a popover shows in the sidebar on wide screens and behind its button on phones', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 1100, height: 700 });
+    await page.goto(fileUrl('tests/fixtures/sidebar-menu.html'));
+    await expect(page.locator('#sections-button')).toBeHidden();
+    await expect(page.locator('#orders-link')).toBeVisible();
+    await page.setViewportSize({ width: 360, height: 700 });
+    await expect(page.locator('#sections-button')).toBeVisible();
+    await expect(page.locator('#orders-link')).toBeHidden();
+    const [aside, title] = [await page.locator('body > aside').boundingBox(), await page.locator('#title').boundingBox()];
+    expect(aside.height).toBeLessThan(70); // just the button, not the whole list
+    expect(title.y).toBeLessThan(250);
+    await page.click('#sections-button');
+    await expect(page.locator('#orders-link')).toBeVisible();
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(360);
+  });
+});
+
 test.describe('sticky header', () => {
   test('header[data-layout="sticky"] stays at the top and a jumped-to heading lands below it', async ({ page, browserName }) => {
     await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });

@@ -64,6 +64,7 @@ Details: [references/pages.md](references/pages.md)
 Details: [references/apps.md](references/apps.md)
 
 - **Sidebar layout**: an `<aside>` with a `<nav>` next to `<main>` is a sidebar; before the `<header>`, full height.
+- **Sidebar menu on phones**: `<aside><button popovertarget="sections">Sections</button><div popover id="sections"><nav>…</nav></div></aside>`: the nav in the sidebar on wide screens, behind the button on phones.
 - **Docs contents**: `<main><aside><nav>…</nav></aside><article>…</article></main>` keeps the contents in view.
 - **Title with actions**: `<header><h1>Users</h1><button>Invite user</button></header>` in `<main>` is one row.
 - **Search and filters**: `<search><input type="search" aria-label="Search"><button>Filter</button></search>` is a row; the search field shows a magnifier.

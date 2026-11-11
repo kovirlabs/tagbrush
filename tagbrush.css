@@ -913,6 +913,27 @@
     }
   }
 
+  /* Sidebar menu on phones: the sidebar's nav in a popover, behind a button.
+     Wide screens show the nav in the sidebar and hide the button; narrow
+     ones show only the button, so the sidebar doesn't push the page down.
+     <aside><button popovertarget="sections">Sections</button>
+     <div popover id="sections"><nav aria-label="Sections"><ul>…</ul></nav></div></aside> */
+  @media (width > 48rem) {
+    :where(body, body > :not([class])) > aside > [popover] {
+      display: contents;
+    }
+
+    :where(body, body > :not([class])) > aside > button[popovertarget] {
+      display: none;
+    }
+  }
+
+  @media (max-width: 48rem) {
+    :where(body, body > :not([class])) > aside:where(:has(> button[popovertarget] + [popover])) {
+      padding-block: var(--spacing-sm);
+    }
+  }
+
   /* Full-height sidebar: with the <aside> before the <header>, the sidebar
      runs the full height of the window and the header is a top bar beside it.
      <body><aside>…</aside><header>…</header><main>…</main></body> */

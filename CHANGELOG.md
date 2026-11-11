@@ -5,6 +5,7 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 ## Unreleased
 
 ### Added
+- Sidebar menu on phones: a `body > aside` holding a `button[popovertarget]` and its `[popover]` shows the popover's nav in the sidebar on wide screens (the popover is `display: contents`, the button hidden) and only the button on phones, so the sidebar doesn't push the page down; the nav opens as a menu under the button. Checked first: at 360px a plain sidebar stacks its whole list above `<main>`.
 - On a phone (under 30rem) a modal `<dialog>` is a bottom sheet: full width, docked to the bottom edge with its top corners rounded, sliding up instead of growing. Wider screens and non-modal dialogs are unchanged.
 - A search field in a `<search>` (or `form[role="search"]`) shows a magnifier, drawn with gradients in `--color-text-muted` so it follows the theme. Search fields elsewhere are unchanged.
 - Tooltips: a `[popover="hint"]` (opened on hover and focus by an `interestfor` trigger) is small and inverted, placed above its trigger with anchor positioning where supported. CSS only, with no JavaScript fallback: browsers without `interestfor` don't open it (modern-web-guidance `interest-triggered-tooltips`). A link with `interestfor` gets a dotted underline.
