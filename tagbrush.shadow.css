@@ -784,6 +784,31 @@
     margin-bottom: 0;
   }
 
+  /* Status banners: a block with role="status" ("Saved") or role="alert"
+     ("Couldn't save") is a tinted banner, info and error by default;
+     data-tone picks another. Empty live regions waiting for a message, and
+     ones TagAction adds (data-tag), are left alone.
+     <p role="status">Your changes were saved.</p> */
+  :where(:is(div, p, section, aside):is([role="status"], [role="alert"]):not(:empty, [data-tag])) {
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    background-color: color-mix(in oklab, var(--tone) 14%, var(--color-background));
+    color: var(--color-text);
+  }
+
+  :where(:is(div, p, section, aside)[role="status"]:not([data-tone], [style*="--tone"])) {
+    --tone: var(--color-link, light-dark(oklch(from var(--color-primary) min(l, 0.5) c h), oklch(from var(--color-primary) max(l, 0.77) min(c, 0.15) h)));
+  }
+
+  :where(:is(div, p, section, aside)[role="alert"]:not([data-tone], [style*="--tone"])) {
+    --tone: var(--color-error);
+  }
+
+  :where(:is(div, p, section, aside):is([role="status"], [role="alert"])) > :last-child {
+    margin-bottom: 0;
+  }
+
 
   /* ==========================================================================
      Interactive Elements
@@ -802,6 +827,78 @@
 
   summary::marker {
     color: var(--color-marker, var(--color-text-muted));
+  }
+
+  /* The marker is a chevron: at the start of the summary, pointing to the
+     text and turning down when open; in an accordion (neighboring <details>,
+     or a name), at the end, pointing down and turning up. A dropdown in the
+     header nav draws its own. */
+  :where(details:not(header nav li > details)) > summary {
+    position: relative;
+    list-style: none;
+  }
+
+  :where(details:not(header nav li > details)) > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  :where(details:not(header nav li > details)) > summary::before {
+    content: "";
+    display: inline-block;
+    width: 0.45em;
+    height: 0.45em;
+    margin-inline-end: 0.65em;
+    border: solid var(--color-marker, var(--color-text-muted));
+    border-width: 0 0.13em 0.13em 0;
+    rotate: -45deg;
+    translate: 0 -0.1em;
+    transition: rotate var(--transition-duration), translate var(--transition-duration);
+  }
+
+  :where(details:not(header nav li > details)) > summary:dir(rtl)::before {
+    rotate: 135deg;
+  }
+
+  :where(details[open]:not(header nav li > details)) > summary::before {
+    rotate: 45deg;
+    translate: 0 -0.25em;
+  }
+
+  :where(details:is([name], :has(+ details), details + details):not(header nav li > details)) > summary {
+    padding-inline-end: 1.5em;
+  }
+
+  :where(details:is([name], :has(+ details), details + details):not(header nav li > details)) > summary::before {
+    position: absolute;
+    inset-inline-end: 0.25em;
+    top: 0.45em;
+    margin: 0;
+    rotate: 45deg;
+  }
+
+  :where(details[open]:is([name], :has(+ details), details + details):not(header nav li > details)) > summary::before {
+    rotate: -135deg;
+    translate: 0 0.15em;
+  }
+
+  /* Opening eases the content's height where the browser can animate to
+     auto (interpolate-size, ::details-content); elsewhere, and with reduced
+     motion, it opens at once */
+  @supports selector(::details-content) {
+    :where(details) {
+      interpolate-size: allow-keywords;
+    }
+
+    :where(details)::details-content {
+      block-size: 0;
+      overflow: clip;
+      overflow-clip-margin: calc(var(--focus-ring-width) + 2px);
+      transition: block-size var(--transition-duration) ease-out, content-visibility var(--transition-duration) allow-discrete;
+    }
+
+    :where(details[open])::details-content {
+      block-size: auto;
+    }
   }
 
   :where(details[open] > summary) {
@@ -923,6 +1020,51 @@
     margin-bottom: 0;
   }
 
+  /* A tooltip: <button interestfor="tip" aria-describedby="tip">Save</button>
+     <div popover="hint" id="tip" role="tooltip">Saves a draft</div>. The
+     browser opens it on hover and focus (interestfor); it is small and
+     inverted, above its trigger where anchor positioning is supported.
+     No JavaScript fallback: without interestfor it simply doesn't open. */
+  :where([popover="hint"]) {
+    max-width: min(100% - 2 * var(--spacing-md), 20rem);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 0;
+    border-radius: var(--border-radius);
+    background-color: var(--color-text);
+    color: var(--color-background);
+    box-shadow: var(--shadow);
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+  }
+
+  @supports (position-area: block-start) {
+    :where([popover="hint"]) {
+      inset: auto;
+      margin: var(--spacing-xs);
+      position-area: block-start;
+      position-try-fallbacks: flip-block, flip-inline;
+    }
+  }
+
+  /* A link with a tooltip shows there's more to it */
+  :where(a[interestfor]) {
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+  }
+
+  /* A menu in a popover (a user menu) opens next to the button that opened
+     it and stays on screen: below it, flipping up or to the other side near
+     an edge (anchor positioning). Browsers without it keep the popover
+     centered. The phone menu has its own placement. */
+  @supports (position-area: block-end) {
+    :where([popover]:has(> nav, > ul, > ol, > menu):not(header > nav > [popover])) {
+      inset: auto;
+      margin: var(--spacing-xs) 0;
+      position-area: block-end span-inline-start;
+      position-try-fallbacks: flip-inline, flip-block, flip-block flip-inline;
+    }
+  }
+
   /* Tabs: <div role="tablist"><button role="tab" aria-controls="npm" aria-selected="true">npm</button>…</div>
      followed by the role="tabpanel" sections. TagAction shows one panel at a time. */
   :where([role="tablist"]) {
@@ -990,6 +1132,36 @@
   @starting-style {
     :where(dialog[open])::backdrop {
       opacity: 0;
+    }
+  }
+
+  /* On a phone a modal dialog is a sheet from the bottom edge, full width
+     with its top corners rounded, and it slides up instead of growing */
+  @media (max-width: 30rem) {
+    dialog:where(:modal) {
+      width: 100%;
+      max-width: none;
+      max-height: 85dvh;
+      margin: auto 0 0;
+      border-width: var(--border-width) 0 0;
+      border-radius: var(--card-radius) var(--card-radius) 0 0;
+    }
+
+    :where(dialog) {
+      scale: none;
+      translate: 0 100%;
+      transition: opacity var(--transition-duration) ease-out, translate calc(2 * var(--transition-duration)) ease-out,
+                  display calc(2 * var(--transition-duration)) allow-discrete, overlay calc(2 * var(--transition-duration)) allow-discrete;
+    }
+
+    :where(dialog[open]) {
+      translate: none;
+    }
+
+    @starting-style {
+      :where(dialog[open]) {
+        translate: 0 100%;
+      }
     }
   }
 
@@ -1090,6 +1262,14 @@
     letter-spacing: 0.04em;
   }
 
+  /* A link in running text that opens a new tab says so: " ↗", read as
+     "(opens in a new tab)". Not on buttons, nav links, heading links (cards),
+     image links, or document and download links, which have their own label. */
+  :where(:is(p, li, dd, td, th, figcaption, caption, address, blockquote) a[target="_blank"]):where(:not(.button, nav *, :is(h1, h2, h3, h4, h5, h6) *, :has(img), [download], [href$=".pdf" i], [href*=".pdf?" i], [href$=".doc" i], [href$=".docx" i], [href$=".xls" i], [href$=".xlsx" i], [href$=".csv" i], [href$=".zip" i]))::after {
+    content: " ↗";
+    content: " ↗" / " (opens in a new tab)";
+  }
+
   /* Loading: aria-busy="true" on a button or any container shows a spinner
      and tells screen readers the content is updating */
   :where([aria-busy="true"]:not(html, body, input, select, textarea, img, video, iframe, progress, meter))::before {
@@ -1176,6 +1356,26 @@
     gap: 0.5em;
   }
 
+  /* A button that opens something (aria-expanded) shows a chevron that flips
+     while it's open: <button aria-expanded="false" aria-controls="menu">Account</button> */
+  :where(button[aria-expanded])::after {
+    content: "";
+    display: inline-block;
+    width: 0.4em;
+    height: 0.4em;
+    margin-inline-start: 0.5em;
+    border: solid currentColor;
+    border-width: 0 0.12em 0.12em 0;
+    rotate: 45deg;
+    translate: 0 -0.2em;
+    transition: rotate var(--transition-duration), translate var(--transition-duration);
+  }
+
+  :where(button[aria-expanded="true"])::after {
+    rotate: -135deg;
+    translate: 0 0.05em;
+  }
+
   /* After the button rules so a busy button shows the progress cursor */
   :where([aria-busy="true"]) {
     cursor: progress;
@@ -1193,6 +1393,38 @@
     --_btn-bg-hover: color-mix(in srgb, var(--color-primary) 8%, transparent);
     --_btn-color: var(--color-link, light-dark(oklch(from var(--color-primary) min(l, 0.5) c h), oklch(from var(--color-primary) max(l, 0.77) min(c, 0.15) h)));
     --_btn-border: var(--color-primary);
+  }
+
+  /* A button with a tone: <button data-tone="error">Delete</button> is red,
+     solid or .outline. The fill is darkened as far as white text needs. */
+  :where(button, input:is([type="submit"], [type="button"], [type="reset"]), .button):where([data-tone], [style*="--tone"]) {
+    --_btn-bg: oklch(from var(--tone) min(l, 0.5) c h);
+    --_btn-bg-hover: oklch(from var(--tone) calc(min(l, 0.5) - 0.07) c h);
+    --_btn-color: #fff;
+    --_btn-border: transparent;
+  }
+
+  :where(.outline):where([data-tone], [style*="--tone"]) {
+    --_btn-bg: transparent;
+    --_btn-bg-hover: color-mix(in srgb, var(--tone) 8%, transparent);
+    --_btn-color: light-dark(oklch(from var(--tone) min(l, 0.5) c h), oklch(from var(--tone) max(l, 0.77) min(c, 0.15) h));
+    --_btn-border: var(--tone);
+  }
+
+  /* A toggle that is on (aria-pressed="true") looks held down: a solid button
+     takes its hover color and an inset shadow, an outline or secondary one a
+     tint of the primary color. <button aria-pressed="false">Bold</button> */
+  :where(button[aria-pressed="true"]) {
+    --_btn-bg: var(--_btn-bg-hover);
+    box-shadow: inset 0 2px 4px rgb(0 0 0 / 0.2);
+  }
+
+  :where(button:is(.outline, .secondary)[aria-pressed="true"]) {
+    --_btn-bg: color-mix(in oklab, var(--color-primary) 16%, var(--color-background));
+    --_btn-bg-hover: color-mix(in oklab, var(--color-primary) 22%, var(--color-background));
+    --_btn-color: var(--color-text);
+    --_btn-border: var(--color-primary);
+    box-shadow: inset 0 1px 3px rgb(0 0 0 / 0.15);
   }
 
   /* ==========================================================================
@@ -1391,6 +1623,16 @@
   /* A field with a rule to meet turns green once the user has met it */
   :where(input, textarea, select):where(:user-valid):where([required], [pattern], [minlength], [min], [max], [type="email"], [type="url"]) {
     border-color: var(--color-success);
+  }
+
+  /* Required fields: in a form that also has optional fields, a required
+     field's label ends in a red asterisk. It isn't read aloud: the field
+     itself tells screen readers it's required. A form where every field is
+     required (a sign-in) gets none. */
+  :where(form:has(:optional:not(button, [type="hidden"], [type="submit"], [type="button"], [type="reset"], [type="image"])) label:is(:has(+ :required), :has(> :required), :has(+ [role="group"] > :required)))::after {
+    content: " *";
+    content: " *" / "";
+    color: var(--color-error);
   }
 
   /* Help text: <small> directly after a field */
@@ -1634,6 +1876,12 @@
   :where(td:has(> data:only-child)) {
     text-align: end;
     font-variant-numeric: tabular-nums;
+  }
+
+  /* A row whose first cell holds a checked checkbox is selected: tinted.
+     <tr><td><input type="checkbox" aria-label="Select Maya"></td>…</tr> */
+  :where(tbody tr:has(> :first-child > input[type="checkbox"]:not([role="switch"]):checked, > :first-child > label > input[type="checkbox"]:not([role="switch"]):checked)) {
+    background-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
   }
 
   /* Rows light up under the pointer, on devices that can hover */
@@ -1997,6 +2245,19 @@
     color: var(--color-text-muted);
   }
 
+  /* A change in a tile is colored text after an arrow, not an edit mark:
+     <dd><ins>+12%</ins> vs. last month</dd>, <dd><del>−0.4%</del></dd> */
+  :where(dl:has(> div)) > div :is(ins, del) {
+    background: none;
+    text-decoration: none;
+    font-weight: 600;
+  }
+
+  :where(dl:has(> div)) > div ins { color: color-mix(in oklab, var(--color-success) 55%, var(--color-text)); }
+  :where(dl:has(> div)) > div del { color: color-mix(in oklab, var(--color-error) 55%, var(--color-text)); }
+  :where(dl:has(> div)) > div ins::before { content: "▲ "; content: "▲ " / ""; }
+  :where(dl:has(> div)) > div del::before { content: "▼ "; content: "▼ " / ""; }
+
   /* A header with a title and actions: <header><h1>Users</h1><button>Invite</button></header> */
   :where(main, article, section) header:where(:has(> :is(h1, h2, h3, h4, hgroup)):has(> :is(button, .button, [role="group"]))) {
     display: flex;
@@ -2031,6 +2292,22 @@
 
   :where(search, form[role="search"]) :where(input, select) {
     margin-bottom: 0;
+  }
+
+  /* A search field in a search bar shows a magnifier, drawn with two
+     gradients in the muted text color so it follows the theme */
+  :where(search, form[role="search"]) :where(input[type="search"]) {
+    padding-inline-start: 2.25rem;
+    background-image:
+      radial-gradient(circle at 0.4rem 0.4rem, transparent 0.27rem, var(--color-text-muted) 0.29rem 0.37rem, transparent 0.39rem),
+      linear-gradient(45deg, transparent 40%, var(--color-text-muted) 40% 62%, transparent 62%);
+    background-position: 0.8rem calc(50% - 0.1rem), 1.3rem calc(50% + 0.42rem);
+    background-size: 0.8rem 0.8rem, 0.4rem 0.4rem;
+    background-repeat: no-repeat;
+  }
+
+  :where(search, form[role="search"]) :where(input[type="search"]):dir(rtl) {
+    background-position: right 0.8rem center, right 1.3rem top calc(50% + 0.42rem);
   }
 
   /* Hide visually but keep available to screen readers */
@@ -2252,6 +2529,24 @@
 
     :where(pre) {
       white-space: pre-wrap;
+    }
+
+    /* Controls don't print: navigation, search and filter bars, buttons
+       (but a sort button holding a table header's text stays), and tab
+       rows. Cards, tiles, and steps aren't split across pages. */
+    :where(nav, search, form[role="search"], button:not([data-tag="sort"]), [role="tablist"]) {
+      display: none !important;
+    }
+
+    :where(article, dl > div, ol > li, details, aside, [role="status"], [role="alert"]) {
+      break-inside: avoid;
+    }
+
+    /* Closed <details> print their content where the browser can show it
+       (::details-content); TagAction also opens them before printing */
+    :where(details)::details-content {
+      block-size: auto;
+      content-visibility: visible;
     }
   }
 }

@@ -27,9 +27,10 @@ Details: [llms/pages.md](https://kovirlabs.github.io/tagbrush/llms/pages.md)
 - **Skip link**: `<a href="#main">Skip to content</a>` first in `<body>` shows only when focused.
 - **Your own layout**: `<body data-layout="full">` turns the page layout off.
 - **Top bar**: `<header><nav><strong>Site</strong><ul><li><a href="/" aria-current="page">Home</a></li></ul></nav></header>`.
+- **Sticky top bar**: `<header data-layout="sticky">` stays at the top and keeps jumped-to headings below it.
 - **Phone menu**: `<nav><strong>Site</strong><button popovertarget="menu" aria-label="Menu">☰</button><div popover id="menu"><ul>…</ul></div></nav>`: links in the bar on wide screens, behind the button on phones.
 - **Dropdown menu**: `<li><details><summary>Services</summary><ul>…</ul></details></li>` in the header nav.
-- **User menu**: a header-nav button with `popovertarget` opening `<div popover><nav><ul>…</ul></nav></div>`.
+- **User menu**: a header-nav button with `popovertarget` opening `<div popover><nav><ul>…</ul></nav></div>`; it opens under the button and stays on screen.
 - **Pagination**: `<nav aria-label="Pagination">` with `rel="prev"` and `rel="next"` links.
 - **Breadcrumbs**: `<nav aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a aria-current="page">Page</a></li></ol></nav>`.
 - **Footer columns**: a page `<footer>` with two or more `<nav>`s (a heading and a list each).
@@ -56,18 +57,23 @@ Details: [llms/pages.md](https://kovirlabs.github.io/tagbrush/llms/pages.md)
 Details: [llms/apps.md](https://kovirlabs.github.io/tagbrush/llms/apps.md)
 
 - **Sidebar layout**: an `<aside>` with a `<nav>` next to `<main>` is a sidebar; before the `<header>`, full height.
+- **Sidebar menu on phones**: `<aside><button popovertarget="sections">Sections</button><div popover id="sections"><nav>…</nav></div></aside>`: the nav in the sidebar on wide screens, behind the button on phones.
 - **Docs contents**: `<main><aside><nav>…</nav></aside><article>…</article></main>` keeps the contents in view.
 - **Title with actions**: `<header><h1>Users</h1><button>Invite user</button></header>` in `<main>` is one row.
-- **Search and filters**: `<search><input type="search" aria-label="Search"><button>Filter</button></search>` is a row.
+- **Search and filters**: `<search><input type="search" aria-label="Search"><button>Filter</button></search>` is a row; the search field shows a magnifier.
 - **Stat tiles**: `<dl><div><dt>Revenue</dt><dd>$84,312</dd></div></dl>`.
 - **Status badges**: `<mark data-tone="success">Paid</mark>` (also `warning`, `error`, `info`, `neutral`).
-- **Changes**: `<ins>+12%</ins>` and `<del>−3%</del>`.
+- **Changes**: `<ins>+12%</ins>` and `<del>−3%</del>`; in a stat tile, green ▲ and red ▼ text.
 - **Progress and meter**: `<progress value="40" max="100">` and `<meter value="0.7" low="0.5" high="0.8">`.
 - **Loading**: `aria-busy="true"` shows a spinner.
-- **Modal**: `<dialog><form method="dialog"><header><h2>…</h2><button aria-label="Close">✕</button></header>…<footer><button>OK</button></footer></form></dialog>`.
+- **Modal**: `<dialog><form method="dialog"><header><h2>…</h2><button aria-label="Close">✕</button></header>…<footer><button>OK</button></footer></form></dialog>`; the page behind doesn't scroll; on phones it's a bottom sheet.
 - **Tabs**: `<div role="tablist">` of `<button role="tab" aria-controls="…">` and `role="tabpanel"` sections; TagAction switches them.
+- **Tooltip**: `<button interestfor="tip" aria-describedby="tip">Save</button><div popover="hint" id="tip" role="tooltip">Saves a draft</div>`: small and inverted, on hover and focus where supported.
 - **Popover**: `<button popovertarget="tip">?</button><div popover id="tip">…</div>`.
 - **Buttons**: `<button>`, `class="secondary"`, `class="outline"`, and `<a class="button" href="…">`.
+- **Destructive button**: `<button data-tone="error">Delete</button>` is red, solid or `class="outline"`; other tones work too.
+- **Expand buttons**: `<button aria-expanded="false" aria-controls="menu">` shows a chevron that flips when `"true"`.
+- **Toggle buttons**: `<button aria-pressed="true">` looks held down.
 - **Button row**: `<div role="group">` around buttons, or an input and a button.
 - **Icons**: an `<svg viewBox="0 0 24 24" aria-hidden="true">` without width/height in a button, link, or heading is sized to the text.
 
@@ -78,6 +84,7 @@ Details: [llms/forms.md](https://kovirlabs.github.io/tagbrush/llms/forms.md)
 - **Fields**: `<label for="email">Email</label><input type="email" id="email">`, or the input inside its label.
 - **Help text**: a `<small>` right after the field.
 - **Errors**: `aria-invalid="true"`; native validation shows after the user interacts.
+- **Required fields**: in a form that also has optional fields, a `required` field's label gets a red asterisk.
 - **Valid fields**: fields with `required`, `pattern` or `type="email"` turn green once met.
 - **Checkboxes and radios**: `<label><input type="checkbox"> Text</label>`.
 - **Choice cards**: `<label><input type="radio" name="plan"> <strong>Team</strong> <small>Up to 10 people</small></label>`.
@@ -93,18 +100,23 @@ Details: [llms/content.md](https://kovirlabs.github.io/tagbrush/llms/content.md)
 
 - **Headings and subtitles**: `<hgroup><h1>Title</h1><p>Subtitle</p></hgroup>`.
 - **Inline text**: `<mark>`, `<kbd>`, `<code>`, `<abbr title="…">`, `<del>`, `<ins>`, `<small>`; `<s>` for an old price.
+- **Status banners**: `<p role="status">Saved.</p>` and `<p role="alert">Couldn't save.</p>` are tinted banners; `data-tone` recolors.
 - **Callouts**: `<aside>` inside an `<article>`, starting with a bold word; `data-tone` colors it.
 - **Quotes**: `<blockquote><p>…</p><footer>Author</footer></blockquote>`.
 - **Pull quote**: `<figure><blockquote>…</blockquote><figcaption>Name</figcaption></figure>`.
 - **Avatars**: an `<img>` in a figcaption, an article footer, or an `<address>` is round.
 - **Addresses**: `<address>` for contact details.
+- **New-tab links**: a link in text with `target="_blank"` gets " ↗".
 - **Document links**: links to `.pdf`, `.docx`, `.xlsx`, `.csv`, `.zip` get a label; `download` links an arrow.
 - **Images**: `<figure><img src="…" alt="…"><figcaption>Caption</figcaption></figure>`.
 - **Video embeds**: an `<iframe>` without a height is 16:9.
 - **Tables**: `<table>` with `<thead>`/`<tbody>`; wide ones scroll; `<figure>` around one fills the width; `class="striped"`.
+- **Selectable rows**: a checkbox first in each row (`<td><input type="checkbox" aria-label="Select Maya"></td>`) tints the row when checked.
 - **Numbers in tables**: a `<data>` value alone in a cell aligns right.
 - **Code**: `<pre><code>`; common highlighters' classes are colored.
 - **Accordion**: neighboring `<details>` with the same `name` join into one.
+- **Disclosure**: `<details><summary>…</summary>…</details>` has a chevron marker (at the end in an accordion) and eases open.
+- **Printing**: navigation, search, and buttons are left out; cards stay whole; `<details>` content prints.
 - **Motion**: dialogs, popovers, and page changes animate on their own.
 
 ## Chat and AI output
@@ -167,12 +179,13 @@ The page frame, navigation, heroes, sections, and cards. Every pattern here come
 ### Navigation
 
 - **Top bar**: `<header><nav><strong>Site name</strong><ul><li><a href="/" aria-current="page">Home</a></li><li><a href="/about">About</a></li></ul></nav></header>`. Lists inside any `<nav>` are horizontal rows (top bar, footer links, pagination), except inside an `<aside>`, where they're vertical. `aria-current="page"` marks the current page. Put the site name in `<strong>` or a link with a logo `<img>`.
+- **Sticky top bar**: `<header data-layout="sticky"><nav>…</nav></header>` (the page header, a direct child of `<body>`) stays at the top while the page scrolls, on the page background. The page keeps 5rem of room when you jump to a heading or tab to a field, so nothing lands under the bar, and once it's stuck a soft shadow appears where the browser supports scroll-state queries (Chromium; elsewhere the hairline alone). Use it for a bar that is just navigation, not a hero. Opt-in: headers without it scroll away as before.
 - **Phone menu**: put the links in a popover inside the header's `<nav>`, after a button that opens it: `<nav><strong>Site</strong><button popovertarget="menu" aria-label="Menu">☰</button><div popover id="menu"><ul><li><a href="/about">About</a></li></ul></div></nav>`. Wide screens show the links in the bar and hide the button; phones show the button, which opens the links as a panel under the bar. No JavaScript. Only a popover that is a direct child of the page header's `<nav>` works this way.
 - **Dropdown menu**: a `<details>` in a list in the page header's nav: `<li><details><summary>Services</summary><ul><li><a href="/grants">Grant writing</a></li><li><a href="/coaching">Coaching</a></li></ul></details></li>`. It opens below its label (toward the left for the last item), and in the phone menu panel it opens in place. No JavaScript. A `<details>` anywhere else stays an ordinary disclosure.
-- **User menu**: a button in the header nav that opens a popover holding a nav: `<li><button class="outline" popovertarget="account">Maya</button></li>` and `<div popover id="account"><nav aria-label="Account"><ul><li><a href="/profile">Profile</a></li><li><a href="/logout">Sign out</a></li></ul></nav></div>`. A menu in a popover is a vertical list.
+- **User menu**: a button in the header nav that opens a popover holding a nav: `<li><button class="outline" popovertarget="account">Maya</button></li>` and `<div popover id="account"><nav aria-label="Account"><ul><li><a href="/profile">Profile</a></li><li><a href="/logout">Sign out</a></li></ul></nav></div>`. A menu in a popover is a vertical list, and it opens next to its button and stays on screen (it flips up or to the other side near an edge) where the browser supports anchor positioning; elsewhere it is centered. A popover without a nav or list (a note) stays centered.
 - **Pagination**: `<nav aria-label="Pagination"><ul><li><a rel="prev" href="/page/1">← Previous</a></li><li><a rel="next" href="/page/3">Next →</a></li></ul></nav>`. The `rel="next"` link sits at the far end of the row. Add numbered page links between them if needed.
 - **Breadcrumbs**: `<nav aria-label="Breadcrumb"><ol><li><a href="/">Home</a></li><li><a href="/docs">Docs</a></li><li><a aria-current="page">Install</a></li></ol></nav>`. Separators are added between items.
-- **Footer columns**: a page footer with two or more `<nav>`s, each a heading and a list, lays them out as columns, and a last paragraph spans the width: `<footer><p>About the site</p><nav aria-label="Product"><h2>Product</h2><ul><li><a href="/pricing">Pricing</a></li></ul></nav><nav aria-label="Company"><h2>Company</h2><ul><li><a href="/about">About</a></li></ul></nav><p>© 2026 Acme</p></footer>`. A footer with one nav or none is muted, small text.
+- **Footer columns**: a page footer with two or more `<nav>`s, each a heading and a list, lays them out as columns at the end of the row, a first paragraph takes the space before them, and a last paragraph spans the width: `<footer><p>About the site</p><nav aria-label="Product"><h2>Product</h2><ul><li><a href="/pricing">Pricing</a></li></ul></nav><nav aria-label="Company"><h2>Company</h2><ul><li><a href="/about">About</a></li></ul></nav><p>© 2026 Acme</p></footer>`. A footer with one nav or none is muted, small text.
 
 ### Heroes
 
@@ -207,6 +220,7 @@ Layouts and components for pages people operate rather than read top to bottom.
 ### Layout
 
 - **Sidebar layout**: an `<aside>` next to `<main>` becomes a sidebar column (stacked on phones), and `<main>` uses the full width: `<body><header>…</header><aside><nav aria-label="Sections"><ul><li><a href="/" aria-current="page">Dashboard</a></li><li><a href="/orders">Orders</a></li></ul></nav></aside><main>…</main><footer>…</footer></body>`. Navigation in an aside is a vertical list with the current page highlighted. Put the `<aside>` before the `<header>` for a full-height sidebar with the header as a top bar beside it.
+- **Sidebar menu on phones**: on a phone the sidebar stacks above `<main>` and pushes the page down. To fold it away, put its nav in a popover behind a button: `<aside><button class="secondary" popovertarget="sections">Sections</button><div popover id="sections"><nav aria-label="Sections"><ul><li><a href="/" aria-current="page">Dashboard</a></li>…</ul></nav></div></aside>`. Wide screens show the nav in the sidebar and hide the button; phones show only the button, and the nav opens as a menu under it. No JavaScript; TagAction adds arrow keys and closes it when a link is followed.
 - **Docs contents**: `<main><aside><nav aria-label="On this page"><ul><li><a href="#install">Install</a></li></ul></nav></aside><article>…</article></main>`. The aside stays in view beside the article, which keeps its reading width. An aside whose content is all `hidden` (such as TagAction's `<nav data-tag-toc hidden>` before it's filled) takes no column.
 - **Title with actions**: `<header><h1>Users</h1><button>Invite user</button></header>` inside `<main>`, an `<article>`, or a `<section>` puts the buttons on the same row as the heading.
 - **Search and filters**: `<search><input type="search" aria-label="Search users"><select aria-label="Role"><option>All roles</option></select><button>Filter</button></search>` lays the fields out in a row above a list or table.
@@ -215,19 +229,23 @@ Layouts and components for pages people operate rather than read top to bottom.
 
 - **Stat tiles**: a `<dl>` whose items are wrapped in `<div>`s becomes a row of tiles: `<dl><div><dt>Revenue</dt><dd>$84,312</dd><dd><ins>+12%</ins> vs. last month</dd></div><div><dt>Orders</dt><dd>1,148</dd></div></dl>`. A plain `<dl>` stays a list.
 - **Status badges**: `<mark data-tone="success">Paid</mark>` is a tinted pill whose text stays readable in both schemes. Tones: `success`, `warning`, `error`, `info`, `neutral`, or any color with `style="--tone: #db2777"`. A plain `<mark>` is a highlight.
-- **Changes**: `<ins>+12%</ins>` and `<del>−3%</del>` for changes up or down; they keep full-contrast text inside muted tiles.
+- **Changes**: `<ins>+12%</ins>` and `<del>−3%</del>` for changes up or down. In a stat tile they are green and red text after ▲ and ▼; elsewhere they stay highlighted edit marks.
 - **Progress and meter**: `<progress value="40" max="100">`; a meter turns green, amber, or red from its attributes: `<meter value="0.7" low="0.5" high="0.8" optimum="0.2">`.
 - **Loading**: `aria-busy="true"` on a button or any element shows a spinner.
 
 ### Overlays
 
-- **Modal**: `<dialog><form method="dialog"><header><h2>Delete user?</h2><button aria-label="Close">✕</button></header><p>This can't be undone.</p><footer><button class="secondary" value="cancel">Cancel</button><button value="ok">Delete</button></footer></form></dialog>`, opened with `dialog.showModal()`. The header puts the title and close button on one row; footer buttons align right. It fades in and out.
+- **Modal**: `<dialog><form method="dialog"><header><h2>Delete user?</h2><button aria-label="Close">✕</button></header><p>This can't be undone.</p><footer><button class="secondary" value="cancel">Cancel</button><button value="delete" data-tone="error">Delete</button></footer></form></dialog>`, opened with `dialog.showModal()`. The header puts the title and close button on one row; footer buttons align right. It fades in and out, and the page behind it doesn't scroll or shift while it's open. On a phone (under 30rem) it is a sheet that slides up from the bottom edge, full width.
 - **Tabs**: `<div role="tablist" aria-label="Install with"><button role="tab" aria-controls="npm" aria-selected="true">npm</button><button role="tab" aria-controls="cdn">CDN</button></div><section id="npm" role="tabpanel">…</section><section id="cdn" role="tabpanel">…</section>`. The tabs are a row with the selected one underlined. TagAction shows one panel at a time and adds the arrow keys; without it every panel shows, one after another.
+- **Tooltip**: `<button interestfor="save-tip" aria-describedby="save-tip">Save</button><div popover="hint" id="save-tip" role="tooltip">Saves a draft you can finish later.</div>`. The browser opens it on hover and focus (`interestfor`, Chromium today) and it sits above the trigger, small and inverted. Elsewhere it doesn't open, so only put in it what a reader can do without; for something they need, use a `?` button with `popovertarget` (a toggletip) or inline text. `aria-describedby` makes screen readers read it. A link with `interestfor` gets a dotted underline.
 - **Popover**: `<button popovertarget="tip">?</button><div popover id="tip">…</div>`. It fades in and out.
 
 ### Buttons and icons
 
 - **Buttons**: `<button>`. Secondary: `class="secondary"`. Outline: `class="outline"`. A link styled as a button: `<a class="button" href="…">`. These are the only classes buttons need.
+- **Destructive button**: `data-tone` colors a button: `<button data-tone="error">Delete</button>` is solid red, `<button class="outline" data-tone="error">Remove</button>` red-bordered. Use it for the action that destroys something, above all in a confirm dialog: `<footer><button value="cancel" class="secondary">Cancel</button><button value="delete" data-tone="error">Delete</button></footer>`. `success`, `warning`, `info`, `neutral` and `style="--tone: …"` work too; the fill darkens as far as white text needs.
+- **Expand buttons**: a `<button aria-expanded="false" aria-controls="menu">Account</button>` shows a chevron after its label, pointing up while `aria-expanded="true"`. TagAction's dropdown buttons get it. Buttons without `aria-expanded` (and links styled as buttons) are left alone; the browser's own popover state doesn't count, so a phone-menu `popovertarget` button stays plain.
+- **Toggle buttons**: `<button aria-pressed="false">Bold</button>` is a toggle; with `aria-pressed="true"` it looks held down (a solid button darkens with an inset shadow; an `outline` or `secondary` one fills with a tint). TagAction's Show/Hide and theme buttons use it. Update the attribute yourself (or with TagAction) when it changes.
 - **Button row**: wrap buttons, or an input with a button (a search bar), in `<div role="group">`. Inputs and `<select>`s in the group share the row.
 - **Icons**: an inline `<svg viewBox="0 0 24 24" aria-hidden="true">` without `width`/`height` inside a button, link, heading, label, list item, table cell, or `<mark>` is sized to the text and lined up with it. Give the SVG its own `fill`/`stroke` attributes (for example `fill="none" stroke="currentColor"`).
 
@@ -238,6 +256,7 @@ Fields are full width and spaced automatically. Use real labels; nothing needs a
 - **Fields**: `<label for="email">Email</label><input type="email" id="email">`, or wrap the input in its label: `<label>Email <input type="email"></label>`. Every text-like input type, `<select>` and `<textarea>` gets the same look.
 - **Help text**: a `<small>` directly after the field: `<input type="password" id="password"><small>At least 12 characters.</small>`.
 - **Errors**: `aria-invalid="true"` on the field turns it and its `<small>` red. Native validation does the same once the user has interacted with the field (`:user-invalid`), never before.
+- **Required fields**: write `required` on the field. In a form that also has optional fields, its label (`<label for>` right before it or before a `role="group"` row holding it, or a label wrapping it) ends in a red asterisk, hidden from screen readers since the field already says it's required. A form where every field is required (a sign-in) shows none, and nothing is added to optional fields, buttons, or hidden inputs. Don't type your own `*`.
 - **Valid fields**: a field with a rule to meet (`required`, `pattern`, `minlength`, `min`, `max`, `type="email"` or `type="url"`) turns green once the user has met it. Fields without a rule stay neutral. `aria-invalid="false"` marks a field valid yourself.
 - **Checkboxes and radios**: `<label><input type="checkbox"> Remember me</label>`.
 - **Choice cards**: a radio or checkbox label with a `<small>` description is a card, outlined when chosen, and a fieldset of them lays them in a row: `<fieldset><legend>Plan</legend><label><input type="radio" name="plan" value="solo"> <strong>Solo</strong> <small>One person</small></label><label><input type="radio" name="plan" value="team"> <strong>Team</strong> <small>Up to 10 people</small></label></fieldset>`. Labels without a `<small>` stay plain.
@@ -255,6 +274,7 @@ Text, media, tables, and code, including Markdown output.
 
 - **Headings and subtitles**: `<hgroup><h1>Title</h1><p>Subtitle</p></hgroup>` gives a heading a muted subtitle. Headings wrap in balanced lines.
 - **Inline text**: `<mark>`, `<kbd>`, `<code>`, `<abbr title="…">`, `<del>`, `<ins>`, `<small>`, `<q>`, `<dfn>`, and `<output>` are all styled. `<s>` is muted, so `<s>$49</s> <strong>$29</strong>` reads as a sale price.
+- **Status banners**: a message after an action, rendered by the server or swapped in by htmx: `<p role="status">Your changes were saved.</p>` is an info-tinted banner, `<div role="alert"><p>Couldn't save. Try again.</p></div>` a red one; `data-tone="success"` (or another tone) recolors either. It works on a `<p>`, `<div>`, `<section>` or `<aside>`. It stays until the page changes; there's no auto-dismiss. Left alone: an empty live region waiting for a message, a `role="status"` `<span>` or `<output>` inside text, and regions TagAction adds.
 - **Callouts**: an `<aside>` anywhere inside an `<article>` (also between its sections) is a highlighted callout: `<article><aside><strong>Note:</strong> Back up first.</aside></article>`. Start it with a bold word to label it; `data-tone="warning"` (or `error`, `success`, `info`) colors it.
 - **Quotes**: `<blockquote><p>…</p><footer>Author</footer></blockquote>`.
 - **Pull quote**: a quote with a caption in a figure stands out at a larger size: `<figure><blockquote><p>The grant came through.</p></blockquote><figcaption>Ana Ruiz, Director</figcaption></figure>`.
@@ -263,6 +283,7 @@ Text, media, tables, and code, including Markdown output.
 
 ### Links
 
+- **New-tab links**: a link in running text with `target="_blank"` ends in " ↗", read aloud as "(opens in a new tab)". Buttons, nav links, links in headings (cards), image links, and document or download links (which have their own label) don't get it.
 - **Document links**: a link to a document gets a small muted label saying what it is: `<a href="report.pdf">Annual report</a>` shows "PDF" (also DOC, XLS, CSV, ZIP), and a link with `download` gets an arrow. Buttons, nav links, and image links are left alone. Don't also write "(PDF)" in the link text.
 
 ### Media
@@ -273,12 +294,15 @@ Text, media, tables, and code, including Markdown output.
 ### Tables and code
 
 - **Tables**: plain `<table>` with `<thead>` and `<tbody>`. A table is as wide as its content, and a wide one scrolls inside itself with a shadow at the edge that has more. Wrap it in `<figure>` to fill the width. Zebra rows: `class="striped"`. Rows highlight under the pointer.
+- **Selectable rows**: put a checkbox first in each row, `<tr><td><input type="checkbox" name="user" value="42" aria-label="Select Maya Lin"></td><td>Maya Lin</td>…</tr>`, and a checked row is tinted. A checkbox in the header cell above them is a select-all box with TagAction (indeterminate when some rows are checked; Shift-click checks a range). A toggle switch, or a checkbox in a later cell (data such as "Done"), doesn't select its row.
 - **Numbers in tables**: a cell holding only a `<data>` value aligns right in tabular figures: `<table><tr><td>Staff</td><td><data value="48000">$48,000</data></td></tr></table>`.
 - **Code**: `<pre><code>`. Highlighting classes from Prism, highlight.js, Shiki, Hugo, Jekyll, and Pandoc are colored automatically. Wide code scrolls with a shadow at the edge.
 - **Accordion**: neighboring `<details><summary>Question</summary><p>Answer</p></details>` join into one group. Give them the same `name="…"` so only one opens at a time.
+- **Disclosure**: a `<details>`'s marker is a chevron instead of the browser's triangle: at the start of the `<summary>`, turning down when open; in an accordion (neighboring `<details>`, or any with a `name`), at the end, turning up when open. Opening eases the height where the browser can animate to `auto` (Chromium); elsewhere, and with reduced motion, it opens at once. A dropdown `<details>` in the header nav keeps its own chevron. Don't add your own arrow to the summary.
 
 ### Automatic
 
+- **Printing**: a printout leaves out navigation, search bars, buttons, and tabs, keeps cards, tiles, steps, and callouts whole, prints link addresses, and prints closed `<details>` content (in Chromium; TagAction opens them everywhere).
 - **Motion**: dialogs and popovers fade in, pages of the same site cross-fade as you navigate, and hover effects only appear on devices that hover. All of it stops for readers who prefer reduced motion. Nothing to add.
 
 ## Chat and AI output
