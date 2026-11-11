@@ -1571,6 +1571,22 @@ test.describe('menus stay on screen', () => {
   });
 });
 
+test.describe('tooltips', () => {
+  test('a popover="hint" is a small inverted tooltip above its trigger; a plain popover keeps its look', async ({ page, browserName }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'light' });
+    await page.goto(fileUrl('tests/fixtures/menus.html'));
+    expect(await style(page, '#save-tip', 'backgroundColor')).toBe(await token(page, 'var(--color-text)'));
+    expect(await style(page, '#save-tip', 'color')).toBe(await token(page, 'var(--color-background)'));
+    expect(await style(page, '#save-tip', 'fontSize')).toBe('14px');
+    expect(await style(page, '#tip', 'backgroundColor')).toBe(await token(page, 'var(--color-background)')); // false match
+    test.skip(!(await page.evaluate(() => 'interestForElement' in HTMLButtonElement.prototype)), `${browserName}: no interestfor; the tooltip doesn't open (no JS fallback, by design)`);
+    await page.hover('#save');
+    await expect(page.locator('#save-tip')).toBeVisible();
+    const [button, tip] = [await page.locator('#save').boundingBox(), await page.locator('#save-tip').boundingBox()];
+    expect(tip.y + tip.height).toBeLessThanOrEqual(button.y);
+  });
+});
+
 test.describe('sticky header', () => {
   test('header[data-layout="sticky"] stays at the top and a jumped-to heading lands below it', async ({ page, browserName }) => {
     await page.emulateMedia({ colorScheme: 'light', reducedMotion: 'reduce' });

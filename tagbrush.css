@@ -1430,6 +1430,38 @@
     margin-bottom: 0;
   }
 
+  /* A tooltip: <button interestfor="tip" aria-describedby="tip">Save</button>
+     <div popover="hint" id="tip" role="tooltip">Saves a draft</div>. The
+     browser opens it on hover and focus (interestfor); it is small and
+     inverted, above its trigger where anchor positioning is supported.
+     No JavaScript fallback: without interestfor it simply doesn't open. */
+  :where([popover="hint"]) {
+    max-width: min(100% - 2 * var(--spacing-md), 20rem);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border: 0;
+    border-radius: var(--border-radius);
+    background-color: var(--color-text);
+    color: var(--color-background);
+    box-shadow: var(--shadow);
+    font-size: var(--font-size-sm);
+    line-height: 1.4;
+  }
+
+  @supports (position-area: block-start) {
+    :where([popover="hint"]) {
+      inset: auto;
+      margin: var(--spacing-xs);
+      position-area: block-start;
+      position-try-fallbacks: flip-block, flip-inline;
+    }
+  }
+
+  /* A link with a tooltip shows there's more to it */
+  :where(a[interestfor]) {
+    text-decoration-line: underline;
+    text-decoration-style: dotted;
+  }
+
   /* A menu in a popover (a user menu) opens next to the button that opened
      it and stays on screen: below it, flipping up or to the other side near
      an edge (anchor positioning). Browsers without it keep the popover
