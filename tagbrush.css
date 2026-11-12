@@ -1180,15 +1180,13 @@
       box-shadow: none;
     }
   }
-  /* While a modal dialog is open the page behind it doesn't scroll, and the
-     scrollbar's space is always kept, so nothing shifts sideways when the
-     scrollbar goes away. Non-modal dialogs (show()) leave the page alone. */
-  :root {
-    scrollbar-gutter: stable;
-  }
-
+  /* While a modal dialog is open the page behind it doesn't scroll. The
+     scrollbar's space is kept only then, so a long page doesn't shift
+     sideways when its scrollbar goes away, and pages never carry an empty
+     strip the rest of the time. Non-modal dialogs (show()) leave the page alone. */
   :root:has(dialog:modal) {
     overflow: hidden;
+    scrollbar-gutter: stable;
   }
 
   /* A top bar that stays: <header data-layout="sticky"><nav>…</nav></header>.
@@ -1572,7 +1570,7 @@
      with its top corners rounded, and it slides up instead of growing */
   @media (max-width: 30rem) {
     dialog:where(:modal) {
-      width: 100%;
+      width: 100vw; /* the whole screen, over the gutter kept for the page's scrollbar */
       max-width: none;
       max-height: 85dvh;
       margin: auto 0 0;

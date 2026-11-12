@@ -424,12 +424,17 @@ test.describe('semantic components', () => {
   test('a modal dialog stops the page behind it from scrolling, without shifting it; a non-modal one does not', async ({ page }) => {
     const width = () => page.evaluate(() => document.body.getBoundingClientRect().width);
     const overflow = () => page.evaluate(() => getComputedStyle(document.documentElement).overflowY);
-    expect(await style(page, 'html', 'scrollbarGutter')).toBe('stable');
+    // No scrollbar space is reserved until a modal opens (no empty strip with classic scrollbars)
+    expect(await style(page, 'html', 'scrollbarGutter')).toBe('auto');
     const before = await width();
+    // A painted classic scrollbar takes width; overlay scrollbars and headless runners take none
+    const bar = await page.evaluate(() => innerWidth - document.documentElement.clientWidth);
     expect(await overflow()).toBe('visible');
     await page.evaluate(() => document.querySelector('#demo-dialog').showModal());
     expect(await overflow()).toBe('hidden');
-    expect(await width()).toBe(before);
+    expect(await style(page, 'html', 'scrollbarGutter')).toBe('stable');
+    // The page keeps the scrollbar's space, so it doesn't shift where a scrollbar was showing
+    if (bar > 0) expect(await width()).toBe(before);
     await page.mouse.wheel(0, 600);
     await page.waitForTimeout(100);
     expect(await page.evaluate(() => scrollY)).toBe(0);
@@ -443,6 +448,7 @@ test.describe('semantic components', () => {
     await page.setViewportSize({ width: 390, height: 800 });
     await page.evaluate(() => document.querySelector('#demo-dialog').showModal());
     let box = await page.locator('#demo-dialog').boundingBox();
+    // The whole screen width, over any gutter kept for the page's scrollbar
     expect(Math.round(box.width)).toBe(390);
     expect(Math.round(box.y + box.height)).toBe(800);
     expect(await style(page, '#demo-dialog', 'borderBottomLeftRadius')).toBe('0px');
@@ -1033,6 +1039,11 @@ test.describe('content intent', () => {
   test('readers who ask for more contrast get darker borders and full-contrast muted text', async ({ page }) => {
     const before = await style(page, '#solo', 'borderTopColor');
     await page.emulateMedia({ contrast: 'more' });
+    // Load the page again with the query already matching: Firefox under Playwright
+    // matches it in matchMedia without restyling a page that is already open
+    await page.reload();
+    const emulated = await page.evaluate(() => matchMedia('(prefers-contrast: more)').matches);
+    test.skip(!emulated, 'this browser does not emulate prefers-contrast, so the query never matches');
     expect(await style(page, '#solo', 'borderTopColor')).not.toBe(before);
     expect(await style(page, '#solo > small', 'color')).toBe(await token(page, 'var(--color-text)'));
   });
@@ -1732,7 +1743,8 @@ test.describe('the 2.0 look', () => {
           document.body.append(probe);
           const value = getComputedStyle(probe).color;
           probe.remove();
-          const match = value.match(/oklch\(([\d.]+) ([\d.]+)/);
+          // Firefox can print a near-zero chroma in exponent form (5.96046e-8)
+          const match = value.match(/oklch\(([\d.e+-]+) ([\d.e+-]+)/);
           return match ? Number(match[2]) : 0;
         }, name);
         expect(chroma, `${scheme} ${name}`).toBeLessThanOrEqual(0.0121);
