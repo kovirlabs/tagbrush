@@ -39,7 +39,7 @@ class ProfileCard extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' }).innerHTML = `
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.shadow.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@2/tagbrush.shadow.min.css">
       <h2>Ada Lovelace</h2>
       <button>Follow</button>
     `;

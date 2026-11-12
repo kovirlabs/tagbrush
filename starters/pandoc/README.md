@@ -5,7 +5,7 @@ Turn any Markdown file into a styled web page.
 ## One command, no template
 
 ```sh
-pandoc notes.md --standalone --css https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css -o notes.html
+pandoc notes.md --standalone --css https://cdn.jsdelivr.net/npm/tagbrush@2/tagbrush.min.css -o notes.html
 ```
 
 Passing `--css` also turns off Pandoc's built-in page styles, so TagBrush.css takes over. Add `--metadata title="My notes"` if the file has no title.

@@ -17,7 +17,7 @@ When you do want to customize, a few CSS variables re-theme everything, and any 
 Add one line to your `<head>`:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@2/tagbrush.min.css">
 ```
 
 Then write ordinary HTML:
@@ -44,7 +44,7 @@ The content is centered and the footer stays at the bottom of the window, with n
 
 ### Versioning
 
-The `@1` in the URL gets fixes and new features, but never breaking changes. To lock to one exact release, use the full version, for example `tagbrush@1.0.0`.
+The `@2` in the URL gets fixes and new features, but never breaking changes. To lock to one exact release, use the full version, for example `tagbrush@2.0.0`.
 
 ### Install with npm
 
@@ -158,7 +158,7 @@ The tests render every snippet in the guide, check that every pattern in a detai
 Chat interfaces render a model's Markdown as HTML. Load the scoped build and wrap each message, so only messages are styled and the rest of the app is untouched:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.scoped.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@2/tagbrush.scoped.min.css">
 
 <div class="tagbrush" data-density="compact">
   <!-- the rendered Markdown of one message -->
@@ -356,7 +356,7 @@ TagBrush.css uses modern CSS (`@layer`, `light-dark()`, `color-mix()`, `:has()`,
 `tagbrush.css` styles the whole page. To use it inside part of an existing site (a docs section, a CMS block, a widget) without touching anything else, use the scoped build and wrap that part in `class="tagbrush"`:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.scoped.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@2/tagbrush.scoped.min.css">
 
 <div class="tagbrush">
   <h2>Only this part is styled by TagBrush.css</h2>

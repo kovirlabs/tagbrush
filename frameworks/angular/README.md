@@ -63,5 +63,5 @@ Angular Material buttons and form fields are native `<button>` and `<input>` ele
 AngularJS has no build pipeline to hook into, so link the file in `index.html`:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@2/tagbrush.min.css">
 ```

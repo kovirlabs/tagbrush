@@ -33,7 +33,7 @@ jobs:
           grep -q 'tagbrush' with-template.html
           grep -q 'class="kw"' with-template.html
           ! grep -q '<style' with-template.html
-          pandoc notes.md --standalone --css https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css -o one-liner.html
+          pandoc notes.md --standalone --css https://cdn.jsdelivr.net/npm/tagbrush@2/tagbrush.min.css -o one-liner.html
           grep -q 'tagbrush' one-liner.html
           ! grep -q 'max-width: 36em' one-liner.html
 

@@ -1246,7 +1246,7 @@ test.describe('agent-written pages', () => {
 
   // Serve the CDN stylesheet from this checkout, so the pages test the current CSS.
   const open = async (page, name, { width = 1280, scheme = 'light' } = {}) => {
-    await page.route(/cdn\.jsdelivr\.net\/npm\/tagbrush@1\/tagbrush(\.min)?\.css/, (route) =>
+    await page.route(/cdn\.jsdelivr\.net\/npm\/tagbrush@2\/tagbrush(\.min)?\.css/, (route) =>
       route.fulfill({ path: 'tagbrush.css', contentType: 'text/css' }));
     await page.setViewportSize({ width, height: 900 });
     await page.emulateMedia({ colorScheme: scheme, reducedMotion: 'reduce' });

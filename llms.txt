@@ -5,7 +5,7 @@
 Add this to `<head>`:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@2/tagbrush.min.css">
 ```
 
 This file lists every pattern in one line. Each group links to a detail file with full examples and what each pattern leaves alone; read the one for what you're building. Everything in one file: [llms-full.txt](https://kovirlabs.github.io/tagbrush/llms-full.txt).
