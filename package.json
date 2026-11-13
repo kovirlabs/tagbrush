@@ -1,6 +1,6 @@
 {
   "name": "tagbrush",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A tiny, no-build CSS library that makes plain semantic HTML look clean and modern. Dark mode built in, themeable with CSS variables.",
   "keywords": [
     "css",
