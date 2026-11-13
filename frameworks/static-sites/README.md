@@ -3,7 +3,7 @@
 No install needed. Add the CDN link to your base template's `<head>`:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tagbrush@2/tagbrush.min.css">
 ```
 
 To self-host, put `tagbrush.css` in the folder your generator copies as-is:

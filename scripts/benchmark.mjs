@@ -75,7 +75,7 @@ const browser = await chromium.launch();
 const measure = async (file) => {
   const html = readFileSync(`${DIR}/${file}`, 'utf8');
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
-  await page.route(/cdn\.jsdelivr\.net\/npm\/tagbrush@1\/tagbrush(\.min)?\.css/, (route) =>
+  await page.route(/cdn\.jsdelivr\.net\/npm\/tagbrush@2\/tagbrush(\.min)?\.css/, (route) =>
     route.fulfill({ path: 'tagbrush.css', contentType: 'text/css' }));
   const url = pathToFileURL(resolve(DIR, file)).href;
   const render = async (scheme, width) => {

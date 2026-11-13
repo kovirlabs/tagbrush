@@ -2,7 +2,7 @@
 
 For Markdown a model writes, shown in a chat window.
 
-- **Chat messages**: wrap each rendered message in an element with the scoped build's class, `<div class="tagbrush" data-density="compact">…</div>`, and load `https://cdn.jsdelivr.net/npm/tagbrush@1/tagbrush.scoped.min.css` instead of the full stylesheet, so only messages are styled and the app around them is untouched.
+- **Chat messages**: wrap each rendered message in an element with the scoped build's class, `<div class="tagbrush" data-density="compact">…</div>`, and load `https://cdn.jsdelivr.net/npm/tagbrush@2/tagbrush.scoped.min.css` instead of the full stylesheet, so only messages are styled and the app around them is untouched.
 - **Transcripts**: a page that is only a conversation (a shared transcript or an export) is an ordinary page: load the full stylesheet as usual and put `data-density="compact"` on `<html>`.
 - **Compact density**: `data-density="compact"` on any element (a message, or `<html>`) tightens spacing and makes headings smaller for a chat column. The last element of a compact message has no space below it, so a reply that is still streaming in doesn't jump.
 - **Reasoning**: a model's reasoning, collapsed and muted: `<details data-reasoning><summary>Thought for 4 seconds</summary><p>…</p></details>`.
