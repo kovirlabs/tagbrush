@@ -2,6 +2,10 @@
 
 All notable changes to TagBrush.css are listed here. This project follows [Semantic Versioning](https://semver.org/): variable names and the selectors you can rely on only change in a major release.
 
+## 2.0.1 (2026-11-12)
+
+- The guide (`llms.txt`), the README, and the agent files load `tagbrush@2` from the CDN. 2.0.0 was published with the 1.x lines, which load TagBrush.css 1.2.0. The CSS is unchanged.
+
 ## 2.0.0 (2026-11-12)
 
 A major release: the default look changes (roadmap chunk 23's open question, decided November 10, 2026). Pages read as designed rather than generated: boxes by role, near-neutral grays, the brand color only where it means something, and more room between sections. Everything else below (Added, Fixed) is new since 1.2.0 and changes nothing you rely on.
