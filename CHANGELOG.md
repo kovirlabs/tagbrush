@@ -2,6 +2,10 @@
 
 All notable changes to TagBrush.css are listed here. This project follows [Semantic Versioning](https://semver.org/): variable names and the selectors you can rely on only change in a major release.
 
+## Unreleased
+
+- The demo page shows the 2.0 patterns it was missing: the page's own top bar is a sticky header (`<header data-layout="sticky">`) with a `<details>` dropdown, and the page starts with a skip link; Typography gains a label above a heading, a pull quote with an avatar, and new-tab, PDF, and download links; Lists gains steps; Navigation gains a user menu (a popover holding a nav) and pagination; Media gains a picture beside text and a row of logos; Buttons gains an icon button with a tooltip (`popover="hint"`, `interestfor`); Forms gains choice cards; Article grids gains plans with prices and a featured card, feature cards with icons, testimonials, and a post list with card pictures and clickable cards; App patterns gains tabs and status badges; Tables gains selectable rows and right-aligned `<data>` numbers; and a new Chat and AI output part shows compact density, a reasoning `<details>`, and citations. The size it states is about 12 KB gzipped.
+
 ## 2.0.1 (2026-11-12)
 
 - The guide (`llms.txt`), the README, and the agent files load `tagbrush@2` from the CDN. 2.0.0 was published with the 1.x lines, which load TagBrush.css 1.2.0. The CSS is unchanged.
