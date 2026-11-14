@@ -10,6 +10,8 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 
 - Menu items stay on one line. A user menu (a popover holding a nav) was squeezed into the room beside its button, so "Sign out" wrapped to two lines (an 83px-wide menu at 360px), and a header `<details>` dropdown was 12rem wide, so "Tabs, copy, and theme" wrapped. Both are now as wide as their longest item, up to 24rem and never wider than the screen. Where anchor positioning is supported, the dropdown opens under its summary and flips to the other side, or centers, to stay on screen; at 360px one in the middle of the bar ran 29px off the right edge.
 
+- The header cell over a column of `<data>` values is right-aligned like the values, without TagAction. It stayed left-aligned unless TagAction marked it `data-tag="num"`. CSS can't select a column, so a `<th>` is matched to the first body row's cell in the same place: columns 1–8 of a table with one header row and no `colspan` in it or in the first body row. An `align` attribute on the `<th>` wins.
+
 ### Added
 - `--tag-header-height`: the sticky bar's height, which the scroll padding follows (plus 1rem) when it is set. TagAction (its next release) sets it to the bar's measured height, so the room is exact for any bar; without TagAction you can set it yourself for a taller bar.
 

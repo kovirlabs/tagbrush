@@ -2356,6 +2356,27 @@
     font-variant-numeric: tabular-nums;
   }
 
+  /* ...and so does the header over them, without TagAction: CSS can't select
+     a column, so a header cell is matched to the first body row's cell in
+     the same place (columns 1-8, one header row). A colspan in the header row
+     or first body row leaves the headers alone; an align attribute wins. */
+  :where(
+    table:has(> tbody > tr:first-child > td:nth-child(1) > data:only-child) > thead > tr:only-child > th:nth-child(1),
+    table:has(> tbody > tr:first-child > td:nth-child(2) > data:only-child) > thead > tr:only-child > th:nth-child(2),
+    table:has(> tbody > tr:first-child > td:nth-child(3) > data:only-child) > thead > tr:only-child > th:nth-child(3),
+    table:has(> tbody > tr:first-child > td:nth-child(4) > data:only-child) > thead > tr:only-child > th:nth-child(4),
+    table:has(> tbody > tr:first-child > td:nth-child(5) > data:only-child) > thead > tr:only-child > th:nth-child(5),
+    table:has(> tbody > tr:first-child > td:nth-child(6) > data:only-child) > thead > tr:only-child > th:nth-child(6),
+    table:has(> tbody > tr:first-child > td:nth-child(7) > data:only-child) > thead > tr:only-child > th:nth-child(7),
+    table:has(> tbody > tr:first-child > td:nth-child(8) > data:only-child) > thead > tr:only-child > th:nth-child(8)
+  ):where(:not([align])) {
+    text-align: end;
+  }
+
+  :where(table:has(> thead [colspan], > tbody > tr:first-child > [colspan]) > thead th:not([align])) {
+    text-align: start;
+  }
+
   /* A row whose first cell holds a checked checkbox is selected: tinted.
      <tr><td><input type="checkbox" aria-label="Select Maya"></td>…</tr> */
   :where(tbody tr:has(> :first-child > input[type="checkbox"]:not([role="switch"]):checked, > :first-child > label > input[type="checkbox"]:not([role="switch"]):checked)) {

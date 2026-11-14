@@ -115,7 +115,7 @@ Details: [llms/content.md](https://kovirlabs.github.io/tagbrush/llms/content.md)
 - **Video embeds**: an `<iframe>` without a height is 16:9.
 - **Tables**: `<table>` with `<thead>`/`<tbody>`; wide ones scroll; `<figure>` around one fills the width; `class="striped"`.
 - **Selectable rows**: a checkbox first in each row (`<td><input type="checkbox" aria-label="Select Maya"></td>`) tints the row when checked.
-- **Numbers in tables**: a `<data>` value alone in a cell aligns right.
+- **Numbers in tables**: a `<data>` value alone in a cell aligns right, and so does its column's header cell.
 - **Code**: `<pre><code>`; common highlighters' classes are colored.
 - **Accordion**: neighboring `<details>` with the same `name` join into one.
 - **Disclosure**: `<details><summary>…</summary>…</details>` has a chevron marker (at the end in an accordion) and eases open.
@@ -299,7 +299,7 @@ Text, media, tables, and code, including Markdown output.
 
 - **Tables**: plain `<table>` with `<thead>` and `<tbody>`. A table is as wide as its content, and a wide one scrolls inside itself with a shadow at the edge that has more. Wrap it in `<figure>` to fill the width. Zebra rows: `class="striped"`. Rows highlight under the pointer.
 - **Selectable rows**: put a checkbox first in each row, `<tr><td><input type="checkbox" name="user" value="42" aria-label="Select Maya Lin"></td><td>Maya Lin</td>…</tr>`, and a checked row is tinted. A checkbox in the header cell above them is a select-all box with TagAction (indeterminate when some rows are checked; Shift-click checks a range). A toggle switch, or a checkbox in a later cell (data such as "Done"), doesn't select its row.
-- **Numbers in tables**: a cell holding only a `<data>` value aligns right in tabular figures: `<table><tr><td>Staff</td><td><data value="48000">$48,000</data></td></tr></table>`.
+- **Numbers in tables**: a cell holding only a `<data>` value aligns right in tabular figures: `<table><tr><td>Staff</td><td><data value="48000">$48,000</data></td></tr></table>`. The `<th>` over that column aligns right too, matched to the first body row (columns 1–8, one `<thead>` row, no `colspan` in it or in the first body row); otherwise give the `<th>` `align="right"`. TagAction aligns any numeric column's header.
 - **Code**: `<pre><code>`. Highlighting classes from Prism, highlight.js, Shiki, Hugo, Jekyll, and Pandoc are colored automatically. Wide code scrolls with a shadow at the edge.
 - **Accordion**: neighboring `<details><summary>Question</summary><p>Answer</p></details>` join into one group. Give them the same `name="…"` so only one opens at a time.
 - **Disclosure**: a `<details>`'s marker is a chevron instead of the browser's triangle: at the start of the `<summary>`, turning down when open; in an accordion (neighboring `<details>`, or any with a `name`), at the end, turning up when open. Opening eases the height where the browser can animate to `auto` (Chromium); elsewhere, and with reduced motion, it opens at once. A dropdown `<details>` in the header nav keeps its own chevron. Don't add your own arrow to the summary.

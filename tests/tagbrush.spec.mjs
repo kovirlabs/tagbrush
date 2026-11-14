@@ -1037,6 +1037,27 @@ test.describe('content intent', () => {
     expect(await style(page, '#note', 'textAlign')).toBe('start');
   });
 
+  test('a header cell over a column of <data> values lines up with them, without TagAction', async ({ page }) => {
+    await page.evaluate(() => {
+      document.querySelector('main').insertAdjacentHTML('beforeend', `
+        <table id="orders"><thead><tr><th><span>Select</span></th><th>Customer</th><th>Status</th><th>Total</th></tr></thead>
+          <tbody><tr><td><input type="checkbox" aria-label="Select Maya"></td><td>Maya</td><td><mark>Paid</mark></td><td><data value="1240">$1,240.00</data></td></tr>
+          <tr><td><input type="checkbox" aria-label="Select Bo"></td><td>Bo</td><td><mark>Refunded</mark></td><td><data value="18">$18.00</data></td></tr></tbody></table>
+        <table id="middle"><thead><tr><th>Item</th><th>Qty</th><th>Note</th></tr></thead>
+          <tbody><tr><th scope="row">Desk</th><td><data value="2">2</data></td><td>Oak</td></tr></tbody></table>
+        <table id="own-align"><thead><tr><th>Item</th><th align="center">Qty</th></tr></thead>
+          <tbody><tr><td>Desk</td><td><data value="2">2</data></td></tr></tbody></table>
+        <table id="spanned"><thead><tr><th colspan="2">Item</th><th>Note</th></tr></thead>
+          <tbody><tr><td>Desk</td><td>Oak</td><td><data value="2">2</data></td></tr></tbody></table>`);
+    });
+    const aligns = (id) => page.locator(`#${id} thead th`).evaluateAll((els) => els.map((el) => getComputedStyle(el).textAlign));
+    expect(await aligns('budget')).toEqual(['start', 'end']);
+    expect(await aligns('orders')).toEqual(['start', 'start', 'start', 'end']);
+    expect(await aligns('middle')).toEqual(['start', 'end', 'start']);
+    expect((await aligns('own-align'))[1]).toMatch(/center/); // the align attribute wins
+    expect(await aligns('spanned')).toEqual(['start', 'start']); // a colspan in the header row: columns can't be matched, left alone
+  });
+
   test('an embed without a height is 16:9 at full width; one with a height keeps it', async ({ page }) => {
     const box = await page.locator('#video').boundingBox();
     const main = await page.locator('main').evaluate((el) => el.clientWidth - parseFloat(getComputedStyle(el).paddingLeft) - parseFloat(getComputedStyle(el).paddingRight));
