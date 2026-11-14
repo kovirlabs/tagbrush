@@ -227,7 +227,18 @@ The CSS size ceiling follows the project's purpose too: it's raised when coverag
 
 ## Open questions
 
-None right now.
+### Unequal columns: a main part and a smaller part beside it
+
+Asked for while prototyping TagDraft (kovirlabs/tagdraft), whose "add columns" writes a `<section>` of `<article>`s. That grid is always equal columns; people also want one wide column with a narrower one beside it, at about the golden ratio (1.618 to 1).
+
+- [ ] Decide the hook, then build it. Candidates, in the order the guiding principle prefers:
+  1. **From what the HTML means (preferred):** a `<section>` holding one `<article>` and one `<aside>` lays them out side by side, the article about 1.618 times as wide as the aside, in the order they're written (aside first puts the narrow column on the left). An `<aside>` already means "related, secondary", so nothing new to learn and nothing for an agent to invent.
+  2. **An attribute:** something like `data-layout="lead"` on the section, widening its first `<article>`. Works for two articles of equal standing, but it is a new thing to learn, and `data-layout` already means something else (`full`).
+  3. **Not a width system.** No `2:1`, `3:1`, or per-column widths: that is the column grid system listed under "Out of scope".
+- [ ] False matches to test before shipping: a section with an article followed by a callout-style `<aside>` (today it stacks; would it be wrong side by side?), the sidebar layouts (`<aside>` with a `<nav>` beside `<main>`), and the docs contents pattern (`<main><aside><nav>`), which must all stay as they are.
+- [ ] Stacks to one column on phones, the wide part first, at the same breakpoint as the card grid.
+- [ ] One or two lines in `llms.txt`, a fixture with assertions, and TagCheck's vocabulary if an attribute is added.
+- [ ] Afterwards: TagDraft offers it as "wide and narrow" columns, and TagKit gets a snippet.
 
 ## Out of scope
 
