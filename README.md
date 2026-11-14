@@ -211,7 +211,7 @@ Write the usual page landmarks and TagBrush.css lays them out:
 - An `<hgroup>` in the page `<header>` is a hero (`--hero-background` puts a wash behind it; none by default). Add a `<figure>`, `<img>`, or `<svg>` after it to put a picture beside the text. An `<img>` first in the header, before the `<nav>`, is a photo behind the hero instead, under a dark wash that keeps the text readable.
 - An `<aside>` next to `<main>` is a sidebar. Put it before the `<header>` and it runs the full height of the window, with the header as a top bar beside it.
 - A page `<footer>` with two or more `<nav>`s lays them out as columns of links; a last paragraph (the copyright line) spans the width below them.
-- Links in a `<div popover>` inside the header's `<nav>` are a phone menu: they sit in the bar on wide screens, and on phones the `<button popovertarget>` before them opens them as a panel. No JavaScript.
+- Links in a `<div popover>` inside the header's `<nav>` are a phone menu: they sit in the bar on wide screens, and on phones the `<button popovertarget>` before them opens them as a panel right under the button, whatever sits above the header (where anchor positioning is supported). No JavaScript.
 - A link to an id first in `<body>` (`<a href="#main">Skip to content</a>`) is a skip link, out of sight until it's focused.
 - Pages of the same site cross-fade into each other as you navigate (`@view-transition`), unless the reader prefers reduced motion. To turn it off, add `@view-transition { navigation: none; }` to your CSS.
 - On touch screens, header links are at least 44px tall.

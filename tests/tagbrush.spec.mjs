@@ -781,6 +781,27 @@ test.describe('landing patterns', () => {
     await expect.poll(async () => Math.round((await page.locator('#menu').boundingBox()).width)).toBe(390);
   });
 
+  test('the phone menu opens right under its button, whatever sits above the header', async ({ page, browserName }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 360, height: 700 });
+    test.skip(!(await page.evaluate(() => CSS.supports('position-area: block-end'))), `${browserName}: no anchor positioning, the panel opens at a fixed 4.5rem`);
+    // A banner and a second nav (a family bar) above the menu's own row
+    await page.evaluate(() => {
+      document.body.insertAdjacentHTML('afterbegin', '<p id="banner" style="margin: 0; padding: 2rem 1rem">TagBrush.css 2 is out. Read what changed.</p>');
+      document.querySelector('header').insertAdjacentHTML('afterbegin', '<nav aria-label="Family"><a href="#">Family</a><ul><li><a href="#">One</a></li><li><a href="#">Two</a></li></ul></nav>');
+    });
+    for (const sticky of [false, true]) {
+      if (sticky) await page.evaluate(() => { document.querySelector('header').dataset.layout = 'sticky'; scrollTo(0, 300); });
+      await page.click('#menu-button');
+      const [button, panel] = [await page.locator('#menu-button').boundingBox(), await page.locator('#menu').boundingBox()];
+      expect(panel.y, 'the panel starts below the button').toBeGreaterThanOrEqual(button.y + button.height - 1);
+      expect(panel.y - (button.y + button.height), 'and right under it').toBeLessThan(40);
+      expect(Math.round(panel.width)).toBe(360);
+      expect(panel.y + panel.height).toBeLessThanOrEqual(700);
+      await page.keyboard.press('Escape');
+    }
+  });
+
   test('an ordered list of headed items is a numbered timeline', async ({ page }) => {
     expect(await style(page, '#steps', 'listStyleType')).toBe('none');
     expect(await style(page, '#steps > li', 'display')).toBe('grid');

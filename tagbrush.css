@@ -1179,6 +1179,18 @@
       border: 0;
       box-shadow: none;
     }
+
+    /* Where anchor positioning is supported the panel opens right under its
+       button, wherever the bar is (a banner or family bar above it, scrolled
+       or sticky); elsewhere at 4.5rem from the top. */
+    @supports (position-area: block-end) {
+      :where(body, body > :not([class])) > header > nav > [popover] {
+        inset: auto;
+        margin-top: var(--spacing-sm);
+        position-area: block-end span-all;
+        max-height: calc(100% - var(--spacing-sm));
+      }
+    }
   }
   /* While a modal dialog is open the page behind it doesn't scroll. The
      scrollbar's space is kept only then, so a long page doesn't shift

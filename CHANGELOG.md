@@ -2,6 +2,11 @@
 
 All notable changes to TagBrush.css are listed here. This project follows [Semantic Versioning](https://semver.org/): variable names and the selectors you can rely on only change in a major release.
 
+## Unreleased
+
+### Fixed
+- The phone menu's panel opens right under its ☰ button, wherever the header is: a banner or a family bar above the header, a sticky header, or a scrolled page. It opened at a fixed 4.5rem from the top of the window, covering whatever sat above the header and the button that opened it. Uses anchor positioning (the popover's implicit anchor); browsers without it keep the 4.5rem placement.
+
 ## 2.0.1 (2026-11-12)
 
 - The guide (`llms.txt`), the README, and the agent files load `tagbrush@2` from the CDN. 2.0.0 was published with the 1.x lines, which load TagBrush.css 1.2.0. The CSS is unchanged.

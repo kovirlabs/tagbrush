@@ -36,7 +36,7 @@ Details: [tagbrush-pages.mdc](tagbrush-pages.mdc)
 - **Your own layout**: `<body data-layout="full">` turns the page layout off.
 - **Top bar**: `<header><nav><strong>Site</strong><ul><li><a href="/" aria-current="page">Home</a></li></ul></nav></header>`.
 - **Sticky top bar**: `<header data-layout="sticky">` stays at the top and keeps jumped-to headings below it.
-- **Phone menu**: `<nav><strong>Site</strong><button popovertarget="menu" aria-label="Menu">☰</button><div popover id="menu"><ul>…</ul></div></nav>`: links in the bar on wide screens, behind the button on phones.
+- **Phone menu**: `<nav><strong>Site</strong><button popovertarget="menu" aria-label="Menu">☰</button><div popover id="menu"><ul>…</ul></div></nav>`: links in the bar on wide screens, behind the button on phones (a panel right under it).
 - **Dropdown menu**: `<li><details><summary>Services</summary><ul>…</ul></details></li>` in the header nav.
 - **User menu**: a header-nav button with `popovertarget` opening `<div popover><nav><ul>…</ul></nav></div>`; it opens under the button and stays on screen.
 - **Pagination**: `<nav aria-label="Pagination">` with `rel="prev"` and `rel="next"` links.
