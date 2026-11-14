@@ -8,6 +8,8 @@ All notable changes to TagBrush.css are listed here. This project follows [Seman
 - The phone menu's panel opens right under its ☰ button, wherever the header is: a banner or a family bar above the header, a sticky header, or a scrolled page. It opened at a fixed 4.5rem from the top of the window, covering whatever sat above the header and the button that opened it. Uses anchor positioning (the popover's implicit anchor); browsers without it keep the 4.5rem placement.
 - A heading you jump to is no longer hidden under `<header data-layout="sticky">`. The bar had a plain header's 1.5rem block padding, so even one row was about 75–88px against the page's 5rem (80px) of scroll padding, and on phones a bar whose links wrap to two rows was about 116px. The sticky bar now has `--spacing-sm` block padding (one row is about 43–58px, two rows on a phone about 84px), and the scroll padding is 5rem, or 7.5rem at 48rem and narrower.
 
+- Menu items stay on one line. A user menu (a popover holding a nav) was squeezed into the room beside its button, so "Sign out" wrapped to two lines (an 83px-wide menu at 360px), and a header `<details>` dropdown was 12rem wide, so "Tabs, copy, and theme" wrapped. Both are now as wide as their longest item, up to 24rem and never wider than the screen. Where anchor positioning is supported, the dropdown opens under its summary and flips to the other side, or centers, to stay on screen; at 360px one in the middle of the bar ran 29px off the right edge.
+
 ### Added
 - `--tag-header-height`: the sticky bar's height, which the scroll padding follows (plus 1rem) when it is set. TagAction (its next release) sets it to the bar's measured height, so the room is exact for any bar; without TagAction you can set it yourself for a taller bar.
 

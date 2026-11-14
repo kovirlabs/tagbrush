@@ -1513,6 +1513,8 @@
   @supports (position-area: block-end) {
     :where([popover]:has(> nav, > ul, > ol, > menu):not(header > nav > [popover])) {
       inset: auto;
+      width: max-content; /* items on one line, not squeezed into the room beside the button */
+      max-width: min(100vw - 2 * var(--spacing-md), 24rem);
       margin: var(--spacing-xs) 0;
       position-area: block-end span-inline-start;
       position-try-fallbacks: flip-inline, flip-block, flip-block flip-inline;
@@ -1660,7 +1662,9 @@
     z-index: 20;
     top: calc(100% + var(--spacing-sm));
     left: 0;
+    width: max-content; /* items on one line, up to the width of a phone screen */
     min-width: 12rem;
+    max-width: min(100vw - 2 * var(--container-padding), 24rem);
     flex-direction: column;
     align-items: stretch;
     gap: var(--spacing-xs);
@@ -1674,6 +1678,27 @@
   header nav li:last-child > details > :is(ul, ol, menu) {
     right: 0;
     left: auto;
+  }
+
+  /* Where anchor positioning is supported the list opens under its summary
+     and flips to the other side, or centers, to stay on screen */
+  @supports (position-area: block-end) and (anchor-scope: all) {
+    header nav li > details {
+      position: static;
+      anchor-scope: --tagbrush-dropdown;
+    }
+
+    header nav li > details > summary {
+      anchor-name: --tagbrush-dropdown;
+    }
+
+    header nav li > details > :is(ul, ol, menu) {
+      inset: auto;
+      margin-top: var(--spacing-sm);
+      position-anchor: --tagbrush-dropdown;
+      position-area: block-end span-inline-end;
+      position-try-fallbacks: flip-inline, block-end span-all;
+    }
   }
 
   /* Wide tables and code blocks show a shadow at an edge with more to scroll

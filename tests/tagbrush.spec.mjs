@@ -1647,6 +1647,39 @@ test.describe('menus stay on screen', () => {
   });
 });
 
+test.describe('menu items stay on one line', () => {
+  // Lines a link's text takes: distinct tops of its text's line boxes
+  const lines = (page, selector) => page.locator(selector).evaluate((el) => {
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    return new Set([...range.getClientRects()].map((r) => Math.round(r.top))).size;
+  });
+  for (const width of [360, 1280]) {
+    test(`a user menu and a header dropdown fit their items on one line and stay on screen at ${width}px`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setViewportSize({ width, height: 700 });
+      await page.goto(fileUrl('tests/fixtures/menus.html'));
+      await page.evaluate(() => {
+        document.body.insertAdjacentHTML('afterbegin', `<header><nav><strong>TagAction</strong><ul>
+          <li><a href="#">Install</a></li>
+          <li><details id="examples"><summary>Examples</summary><ul><li><a href="#">Tables</a></li><li><a href="#" id="long-item">Tabs, copy, and theme</a></li></ul></details></li>
+          <li><a href="#">Guides</a></li></ul></nav></header>`);
+      });
+      await page.click('#left-button');
+      expect(await lines(page, '#left-menu li:last-child a'), '"Sign out" on one line').toBe(1);
+      let menu = await page.locator('#left-menu').boundingBox();
+      expect(menu.x).toBeGreaterThanOrEqual(0);
+      expect(menu.x + menu.width, JSON.stringify(menu)).toBeLessThanOrEqual(width);
+      await page.keyboard.press('Escape');
+      await page.click('#examples > summary');
+      expect(await lines(page, '#long-item'), '"Tabs, copy, and theme" on one line').toBe(1);
+      menu = await page.locator('#examples > ul').boundingBox();
+      expect(menu.x).toBeGreaterThanOrEqual(0);
+      expect(menu.x + menu.width, JSON.stringify(menu)).toBeLessThanOrEqual(width);
+    });
+  }
+});
+
 test.describe('tooltips', () => {
   test('a popover="hint" is a small inverted tooltip above its trigger; a plain popover keeps its look', async ({ page, browserName }) => {
     await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'light' });
