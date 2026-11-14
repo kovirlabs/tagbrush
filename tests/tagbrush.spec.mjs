@@ -467,11 +467,12 @@ test.describe('semantic components', () => {
     expect(await style(page, first, 'marginBottom')).toBe('0px');
     expect(await style(page, first, 'borderBottomLeftRadius')).toBe('0px');
     expect(await style(page, 'details + details', 'borderTopWidth')).toBe('0px');
-    expect(await style(page, 'details:not(:has(+ details)):not(details + details)', 'marginBottom')).toBe('16px');
+    expect(await style(page, '#showcase ~ details:not(:has(+ details)):not(details + details)', 'marginBottom')).toBe('16px');
   });
 
   test('a details marker is a chevron: at the start, or at the end in an accordion', async ({ page }) => {
-    const single = 'details:not(:has(+ details)):not(details + details)';
+    // The disclosure in "What you get"; the demo's top bar has a <details> dropdown before it.
+    const single = '#showcase ~ details:not(:has(+ details)):not(details + details)';
     const accordion = 'details[name=faq]';
     await page.emulateMedia({ reducedMotion: 'reduce' });
     expect(await style(page, `${single} > summary`, 'listStyleType')).toBe('none');

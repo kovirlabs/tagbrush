@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TagBrush.css — a tiny, no-build CSS library</title>
-    <meta name="description" content="TagBrush.css is a ~8.5 KB gzipped, no-build CSS library that makes plain semantic HTML look clean and modern. Theme it with CSS variables, with dark mode built in. Works with static sites and any framework.">
+    <meta name="description" content="TagBrush.css is a ~12 KB gzipped, no-build CSS library that makes plain semantic HTML look clean and modern. Theme it with CSS variables, with dark mode built in. Works with static sites and any framework.">
     <link rel="icon" href="https://kovirlabs.github.io/tagstack/mark.svg" type="image/svg+xml">
     <link rel="stylesheet" href="tagbrush.css">
     <!-- The Tag family brand: the violet theme every family site wears. TagBrush.css's
@@ -17,6 +17,9 @@
          * by TagBrush.css itself.
          */
         [data-brand="bar"] { padding-top: var(--spacing-md); }
+        body > header { padding-top: 0; padding-bottom: 0; }
+        /* On phones the sticky bar wraps to two rows, taller than TagBrush.css's 5rem scroll padding */
+        @media (max-width: 48rem) { :root { scroll-padding-top: 7.5rem; } }
         .site-nav { padding: var(--spacing-md) 0; border-bottom: var(--border-width) solid var(--color-border); }
         .demo-nav { margin-bottom: var(--spacing-lg); }
         .site-nav .brand { font-family: var(--font-family-mono); font-weight: 600; color: var(--color-text); }
@@ -37,8 +40,8 @@
     </style>
 </head>
 <body>
+    <a href="#why">Skip to content</a>
     <div class="container">
-
         <nav aria-label="Tag family" data-brand="bar">
             <a href="https://kovirlabs.github.io/tagstack/"><img src="https://kovirlabs.github.io/tagstack/mark.svg" alt="" width="24" height="24">Tag family</a>
             <ul>
@@ -49,14 +52,25 @@
                 <li><a href="https://github.com/kovirlabs/tagbrush">GitHub</a></li>
             </ul>
         </nav>
+    </div>
 
+    <!-- The page's own top bar shows two patterns: data-layout="sticky" keeps it
+         in view, and the <details> in its list is a dropdown menu. -->
+    <header data-layout="sticky">
+        <div class="container">
         <nav class="site-nav" aria-label="Main">
             <a class="brand" href="#">&lt;tagbrush&gt;</a>
             <ul>
-                <li><a href="#why">Why</a></li>
-                <li><a href="#theming">Theme builder</a></li>
+                <li><a href="#theming">Theme</a></li>
                 <li><a href="#showcase">Elements</a></li>
-                <li><a href="#get-started">Get started</a></li>
+                <li><details><summary>Guides</summary>
+                    <ul>
+                        <li><a href="#get-started">Get started</a></li>
+                        <li><a href="https://github.com/kovirlabs/tagbrush#readme">README</a></li>
+                        <li><a href="llms.txt">llms.txt, for AI agents</a></li>
+                        <li><a href="https://github.com/kovirlabs/tagbrush/blob/main/CHANGELOG.md">Changelog</a></li>
+                    </ul>
+                </details></li>
                 <li>
                     <label class="visually-hidden" for="theme-select">Color scheme</label>
                     <select id="theme-select">
@@ -67,6 +81,10 @@
                 </li>
             </ul>
         </nav>
+        </div>
+    </header>
+
+    <div class="container">
 
         <header class="hero">
             <h1 aria-label="TagBrush.css"><span class="bracket">&lt;</span>tagbrush<span class="bracket">&gt;</span></h1>
@@ -103,7 +121,7 @@
                 </div>
                 <div class="card">
                     <h3>Tiny</h3>
-                    <p>About 8.5&nbsp;KB gzipped, with zero dependencies and zero JavaScript.</p>
+                    <p>About 12&nbsp;KB gzipped, with zero dependencies and zero JavaScript.</p>
                 </div>
                 <div class="card">
                     <h3>Works with any framework</h3>
@@ -206,14 +224,24 @@
             <p>Body text is set in your system font with a comfortable line height. It supports <a href="#showcase">links</a>, <strong>bold</strong>, <em>italics</em> and <code>inline code</code>.</p>
             <p>Inline elements are covered too: <mark>highlighted text</mark>, keyboard shortcuts like <kbd>Ctrl</kbd> + <kbd>K</kbd>, <abbr title="Cascading Style Sheets">CSS</abbr> abbreviations, H<sub>2</sub>O, E = mc<sup>2</sup>, sample output like <samp>Build succeeded</samp>, and <small>small print</small>.</p>
             <p>Edits show up as <del>removed</del> and <ins>inserted</ins> text, <s>outdated</s> text is muted, a <dfn>definition</dfn> stands out, and <q>inline quotes</q> get curly quote marks. <output>42</output> is an <code>&lt;output&gt;</code>.</p>
+            <p>Links say where they go: the <a href="https://html.spec.whatwg.org/" target="_blank">HTML standard</a> opens in a new tab, the <a href="https://github.com/kovirlabs/tagbrush/raw/main/docs/style-guide.pdf">style guide</a> is a PDF, and <a href="tagbrush.min.css" download>tagbrush.min.css</a> downloads.</p>
             <hgroup>
                 <h4>A heading with a subtitle</h4>
                 <p>Wrap them in <code>&lt;hgroup&gt;</code> and the subtitle is muted automatically.</p>
             </hgroup>
+            <hgroup>
+                <p>Release notes</p>
+                <h4>What's new in TagBrush.css 2</h4>
+            </hgroup>
+            <p>A <code>&lt;p&gt;</code> before the heading is a short label above it.</p>
             <blockquote>
-                <p>Blockquotes are great for callouts, notes, and quotes worth highlighting.</p>
-                <footer><cite>Someone wise</cite></footer>
+                <p>A quote is text set off by a rule. Callouts keep their fill, so the two don't look alike.</p>
+                <footer><cite>The TagBrush.css 2.0 notes</cite></footer>
             </blockquote>
+            <figure>
+                <blockquote><p>We deleted four hundred lines of CSS and the site looks better than it did.</p></blockquote>
+                <figcaption><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%230d9488'/%3E%3Ctext x='20' y='26' font-family='sans-serif' font-size='16' fill='white' text-anchor='middle'%3EPS%3C/text%3E%3C/svg%3E" alt="" width="40" height="40">Priya Shah, front-end lead at Larkspur</figcaption>
+            </figure>
             <address>Kovir Labs<br>123 Example Street<br><a href="mailto:hello@example.com">hello@example.com</a></address>
             <pre><code class="language-js"><span class="token comment">// Code blocks scroll horizontally when they overflow, and highlighted</span>
 <span class="token comment">// code from Prism, highlight.js, Hugo, Jekyll, or Shiki gets theme colors</span>
@@ -246,6 +274,12 @@
                     <dd>No class names needed.</dd>
                 </dl>
             </div>
+            <p>An ordered list whose items start with a heading is a numbered timeline:</p>
+            <ol>
+                <li><h4>Link the stylesheet</h4><p>One <code>&lt;link&gt;</code> in <code>&lt;head&gt;</code>.</p></li>
+                <li><h4>Write plain HTML</h4><p>Headings, lists, forms, and tables, with no classes.</p></li>
+                <li><h4>Pick a color</h4><p>Set <code>--color-primary</code> and the rest follows.</p></li>
+            </ol>
 
             <h3>Navigation and menus</h3>
             <p>Lists inside <code>&lt;nav&gt;</code> become a horizontal row. Mark the current page with <code>aria-current="page"</code>:</p>
@@ -272,6 +306,27 @@
                     <li><button type="button" class="secondary">Share</button></li>
                     <li><button type="button" class="outline">Delete</button></li>
                 </menu>
+            </nav>
+            <p>A button that opens a popover holding a nav is a menu. It opens under the button and flips to stay on screen. In the top bar above, a <code>&lt;details&gt;</code> in the nav's list is a dropdown, and <code>&lt;header data-layout="sticky"&gt;</code> keeps the bar in view as you scroll.</p>
+            <p><button type="button" class="outline" popovertarget="account-menu">Maya Lin</button></p>
+            <div popover id="account-menu">
+                <nav aria-label="Account">
+                    <ul>
+                        <li><a href="#nav-demo">Profile</a></li>
+                        <li><a href="#nav-demo">Billing</a></li>
+                        <li><a href="#nav-demo">Sign out</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <p>Links with <code>rel="prev"</code> and <code>rel="next"</code> make pagination:</p>
+            <nav aria-label="Pagination">
+                <ul>
+                    <li><a rel="prev" href="#nav-demo">← Newer posts</a></li>
+                    <li><a href="#nav-demo">1</a></li>
+                    <li><a href="#nav-demo" aria-current="page">2</a></li>
+                    <li><a href="#nav-demo">3</a></li>
+                    <li><a rel="next" href="#nav-demo">Older posts →</a></li>
+                </ul>
             </nav>
 
             <h3>Articles and asides</h3>
@@ -303,6 +358,22 @@
                 </svg>
                 <figcaption>Inline SVG scales down the same way and can use theme variables, so it follows your colors and dark mode.</figcaption>
             </figure>
+            <section>
+                <figure><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='500' viewBox='0 0 800 500'%3E%3Crect width='800' height='500' fill='%23e7e5e4'/%3E%3Crect x='80' y='80' width='640' height='340' rx='16' fill='%23ffffff'/%3E%3Crect x='120' y='130' width='280' height='28' rx='6' fill='%237c3aed'/%3E%3Crect x='120' y='190' width='520' height='14' rx='7' fill='%23a8a29e'/%3E%3Crect x='120' y='220' width='460' height='14' rx='7' fill='%23a8a29e'/%3E%3Crect x='120' y='300' width='140' height='44' rx='8' fill='%237c3aed'/%3E%3C/svg%3E" width="800" height="500" alt="A page sketch: a heading, two lines of text, and a button"></figure>
+                <div>
+                    <h4>Picture beside text</h4>
+                    <p>A section holding just a <code>&lt;figure&gt;</code> and a <code>&lt;div&gt;</code> puts them side by side, and stacks them on phones. Put the figure last for the picture on the right.</p>
+                </div>
+            </section>
+            <p>A list of only images is a centered row of logos:</p>
+            <section>
+                <ul>
+                    <li><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='32'%3E%3Ctext x='0' y='24' font-family='Georgia,serif' font-size='24' fill='%2378716c'%3ELarkspur%3C/text%3E%3C/svg%3E" alt="Larkspur" height="32"></li>
+                    <li><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='32'%3E%3Ctext x='0' y='24' font-family='monospace' font-size='22' font-weight='bold' fill='%2378716c'%3EBYTEFIELD%3C/text%3E%3C/svg%3E" alt="Bytefield" height="32"></li>
+                    <li><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='32'%3E%3Ctext x='0' y='24' font-family='sans-serif' font-size='24' font-style='italic' fill='%2378716c'%3EOakline%3C/text%3E%3C/svg%3E" alt="Oakline" height="32"></li>
+                    <li><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='32'%3E%3Ctext x='0' y='24' font-family='sans-serif' font-size='24' font-weight='300' fill='%2378716c'%3Enorthwind%3C/text%3E%3C/svg%3E" alt="Northwind" height="32"></li>
+                </ul>
+            </section>
             <hr>
 
             <h3>Buttons</h3>
@@ -313,6 +384,11 @@
                 <a href="#showcase" class="button">Link styled as button</a>
                 <button type="button" disabled>Disabled</button>
                 <a href="#showcase" class="button outline" aria-disabled="true">Disabled link</a>
+            </div>
+            <p>An icon <code>&lt;svg&gt;</code> in a button is sized to the text. A <code>popover="hint"</code> opened by <code>interestfor</code> is a tooltip, on hover and focus where the browser supports it:</p>
+            <div role="group">
+                <button type="button" class="secondary" interestfor="save-tip" aria-describedby="save-tip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 3h11l3 3v15H5z"/><path d="M8 3v6h8V3M8 21v-7h8v7"/></svg> Save draft</button>
+                <div popover="hint" id="save-tip" role="tooltip">Saves without publishing</div>
             </div>
             <p>A button with <code>aria-expanded</code> shows a chevron that flips while it's open:</p>
             <div role="group">
@@ -461,6 +537,12 @@
                         </div>
                     </div>
                 </fieldset>
+                <fieldset>
+                    <legend>Plan</legend>
+                    <label><input type="radio" name="contact-plan" checked> <strong>Hobby</strong> <small>One site, community support</small></label>
+                    <label><input type="radio" name="contact-plan"> <strong>Team</strong> <small>Up to 10 people, email support</small></label>
+                    <label><input type="radio" name="contact-plan"> <strong>Business</strong> <small>Unlimited sites, a named contact</small></label>
+                </fieldset>
                 <div role="group">
                     <button type="submit">Send message</button>
                     <button type="reset">Reset</button>
@@ -491,6 +573,7 @@
             <p role="alert">Couldn't save. Check your connection and try again.</p>
 
             <h3>Disclosure and dialogs</h3>
+            <p>The marker is a chevron, and a <code>&lt;details&gt;</code> eases open where the browser can animate its height. Closed ones still print their content.</p>
             <details>
                 <summary>What is a &lt;details&gt; element?</summary>
                 <p>A native, accessible collapsible section with no JavaScript. Great for FAQs.</p>
@@ -521,7 +604,7 @@
                         <h3>Native &lt;dialog&gt;</h3>
                         <button class="secondary" aria-label="Close">✕</button>
                     </header>
-                    <p>Opened with <code>showModal()</code>. A <code>&lt;header&gt;</code> with a button puts the close button beside the title, and a <code>&lt;footer&gt;</code> lines its buttons up on the right. Press <kbd>Esc</kbd> to close.</p>
+                    <p>Opened with <code>showModal()</code>. The page behind doesn't scroll, and on a phone it's a sheet from the bottom edge. A <code>&lt;header&gt;</code> with a button puts the close button beside the title, and a <code>&lt;footer&gt;</code> lines its buttons up on the right. Press <kbd>Esc</kbd> to close.</p>
                     <footer>
                         <button class="secondary" value="cancel">Cancel</button>
                         <button value="delete" data-tone="error">Delete</button>
@@ -536,6 +619,74 @@
                 <article><h4>Plans</h4><p><strong>$12</strong> <small>per month</small></p><p><a class="button outline" href="#article-grid-demo">Choose</a></p></article>
                 <article><h4>Features</h4><p>A card of only text is open, set apart by space.</p></article>
             </section>
+            <p>Plans: a paragraph that starts with <code>&lt;strong&gt;</code> and a <code>&lt;small&gt;</code> is a price, the last paragraph of buttons sits at the bottom of each card, and the card with the only solid button is featured.</p>
+            <section id="pricing-demo">
+                <article>
+                    <h4>Hobby</h4>
+                    <p><strong>$0</strong> <small>forever</small></p>
+                    <p>One site and community support.</p>
+                    <p><a class="button outline" href="#pricing-demo">Start free</a></p>
+                </article>
+                <article>
+                    <h4>Team</h4>
+                    <p><strong>$12</strong> <small>per month</small></p>
+                    <p>Up to 10 people, shared themes, and email support within a day.</p>
+                    <p><a class="button" href="#pricing-demo">Start a trial</a></p>
+                </article>
+                <article>
+                    <h4>Business</h4>
+                    <p><strong>$49</strong> <small>per month</small></p>
+                    <p>Unlimited sites and a named contact.</p>
+                    <p><a class="button outline" href="#pricing-demo">Talk to us</a></p>
+                </article>
+            </section>
+            <p>Features: an icon <code>&lt;svg&gt;</code> first in a card is a plain icon at heading size.</p>
+            <section id="features-demo">
+                <article>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>
+                    <h4>Fast</h4>
+                    <p>One stylesheet, cached once, and nothing to run.</p>
+                </article>
+                <article>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"/></svg>
+                    <h4>Dark mode</h4>
+                    <p>Follows the system setting with no extra CSS.</p>
+                </article>
+                <article>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m8 6-6 6 6 6M16 6l6 6-6 6"/></svg>
+                    <h4>Plain HTML</h4>
+                    <p>No classes to learn and nothing to unlearn later.</p>
+                </article>
+            </section>
+            <p>Testimonials: a <code>&lt;blockquote&gt;</code> in a card is its text, and an image in its footer is a round avatar.</p>
+            <section id="testimonials-demo">
+                <article>
+                    <blockquote><p>Our docs went from a pile of overrides to one link and plain Markdown.</p></blockquote>
+                    <footer><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%23b45309'/%3E%3Ctext x='20' y='26' font-family='sans-serif' font-size='16' fill='white' text-anchor='middle'%3EAR%3C/text%3E%3C/svg%3E" alt="" width="40" height="40">Ana Ruiz, docs lead at Oakline</footer>
+                </article>
+                <article>
+                    <blockquote><p>The admin pages took an afternoon. The tables and forms were already done.</p></blockquote>
+                    <footer><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' fill='%231d4ed8'/%3E%3Ctext x='20' y='26' font-family='sans-serif' font-size='16' fill='white' text-anchor='middle'%3EDK%3C/text%3E%3C/svg%3E" alt="" width="40" height="40">Dev Kapoor, founder of Bytefield</footer>
+                </article>
+            </section>
+            <p>Posts: a <code>&lt;ul&gt;</code> of <code>&lt;li&gt;&lt;article&gt;</code> is a grid of cards, a picture first in a card runs to its edges, and a card whose heading holds its only link is clickable all over.</p>
+            <ul id="posts-demo">
+                <li><article>
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='400'%3E%3Crect width='640' height='400' fill='%23c4b5fd'/%3E%3Ccircle cx='470' cy='130' r='70' fill='%23fde68a'/%3E%3Cpath d='M0 400 220 170l140 140 90-80 190 170z' fill='%235b21b6'/%3E%3C/svg%3E" width="640" height="400" alt="">
+                    <h4><a href="#posts-demo">Frame by role</a></h4>
+                    <p>Why only some cards are boxes in 2.0.</p>
+                </article></li>
+                <li><article>
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='400'%3E%3Crect width='640' height='400' fill='%2399f6e4'/%3E%3Crect x='120' y='90' width='400' height='220' rx='18' fill='%23ffffff'/%3E%3Crect x='160' y='140' width='200' height='22' rx='6' fill='%230f766e'/%3E%3Crect x='160' y='190' width='320' height='12' rx='6' fill='%2394a3b8'/%3E%3C/svg%3E" width="640" height="400" alt="">
+                    <h4><a href="#posts-demo">Sticky bars that behave</a></h4>
+                    <p>Jumped-to headings land below the bar.</p>
+                </article></li>
+                <li><article>
+                    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='640' height='400'%3E%3Crect width='640' height='400' fill='%23fecaca'/%3E%3Crect x='170' y='120' width='300' height='70' rx='14' fill='%23dc2626'/%3E%3Crect x='170' y='220' width='300' height='70' rx='14' fill='none' stroke='%23dc2626' stroke-width='6'/%3E%3C/svg%3E" width="640" height="400" alt="">
+                    <h4><a href="#posts-demo">Buttons that mean it</a></h4>
+                    <p>Red for a delete, held down for a toggle.</p>
+                </article></li>
+            </ul>
 
             <h3>App patterns</h3>
             <p>Dashboards and admin pages need no classes either. A <code>&lt;dl&gt;</code> of <code>&lt;div&gt;</code>s becomes stat tiles, a <code>&lt;header&gt;</code> with a heading and a button puts them on one row, and <code>&lt;search&gt;</code> lays out filters. An <code>&lt;aside&gt;</code> next to <code>&lt;main&gt;</code> becomes a sidebar layout.</p>
@@ -555,6 +706,15 @@
                     <button type="button" class="secondary">Filter</button>
                 </search>
             </article>
+            <p>A <code>role="tablist"</code> of <code>role="tab"</code> buttons is a row with the selected tab underlined. TagAction shows one panel at a time; without it, as here, every panel shows.</p>
+            <div role="tablist" aria-label="Order details">
+                <button type="button" role="tab" aria-controls="order-summary" aria-selected="true">Summary</button>
+                <button type="button" role="tab" aria-controls="order-shipping" aria-selected="false">Shipping</button>
+                <button type="button" role="tab" aria-controls="order-history" aria-selected="false">History</button>
+            </div>
+            <div id="order-summary" role="tabpanel"><p>Order #1042: 3 items, <strong>$310.50</strong>, paid by card. <mark data-tone="success">Paid</mark></p></div>
+            <div id="order-shipping" role="tabpanel"><p>Ships from Portland by ground, arriving Nov 18. <mark data-tone="warning">Packing</mark></p></div>
+            <div id="order-history" role="tabpanel"><p>Placed Nov 12, paid Nov 12. <mark data-tone="info">2 events</mark></p></div>
 
             <h3>Layout helpers</h3>
             <p>A few optional classes cover the layouts almost every site needs: <code>.grid</code> for responsive columns, <code>.card</code> for boxed content, and <code>role="group"</code> for rows of buttons.</p>
@@ -586,7 +746,7 @@
                 </thead>
                 <tbody>
                     <tr><td><code>--color-primary</code></td><td><code>#2563eb</code></td><td>Links, buttons, focus states</td></tr>
-                    <tr><td><code>--color-surface</code></td><td>light gray, tinted by the primary</td><td>Code, blockquotes, cards</td></tr>
+                    <tr><td><code>--color-surface</code></td><td>near-neutral light gray</td><td>Code, blockquotes, cards</td></tr>
                     <tr><td><code>--font-family-base</code></td><td><code>system-ui, …</code></td><td>All body text</td></tr>
                     <tr><td><code>--border-radius</code></td><td><code>0.375rem</code></td><td>Buttons, inputs, code</td></tr>
                 </tbody>
@@ -595,6 +755,33 @@
                 </tfoot>
             </table>
             </figure>
+            <p>A checkbox first in a row selects it, and the row is tinted while it's checked. A <code>&lt;data&gt;</code> value alone in a cell lines up on the right, and <code>&lt;mark data-tone&gt;</code> is a status badge:</p>
+            <figure>
+            <table>
+                <thead>
+                    <tr><th><span class="visually-hidden">Select</span></th><th>Customer</th><th>Status</th><th>Total</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><input type="checkbox" aria-label="Select Maya Lin" checked></td><td>Maya Lin</td><td><mark data-tone="success">Paid</mark></td><td><data value="1240">$1,240.00</data></td></tr>
+                    <tr><td><input type="checkbox" aria-label="Select Alex Chen"></td><td>Alex Chen</td><td><mark data-tone="warning">Pending</mark></td><td><data value="95">$95.00</data></td></tr>
+                    <tr><td><input type="checkbox" aria-label="Select Bo Ito" checked></td><td>Bo Ito</td><td><mark data-tone="error">Refunded</mark></td><td><data value="18">$18.00</data></td></tr>
+                </tbody>
+            </table>
+            </figure>
+
+            <h3>Chat and AI output</h3>
+            <p>An answer from a model, with <code>data-density="compact"</code> for a chat column, its reasoning collapsed in <code>&lt;details data-reasoning&gt;</code>, and numbered citations:</p>
+            <article data-density="compact">
+                <details data-reasoning><summary>Thought for 4 seconds</summary><p>The question is about the gzipped size. The release notes give the current figure.</p></details>
+                <p>TagBrush.css is about 12 KB gzipped, with no JavaScript.<sup><a href="#source-1">1</a></sup> Dark mode follows the system setting.<sup><a href="#source-2">2</a></sup></p>
+                <footer>
+                    <h4>Sources</h4>
+                    <ol>
+                        <li id="source-1"><a href="https://github.com/kovirlabs/tagbrush/blob/main/CHANGELOG.md">TagBrush.css changelog</a></li>
+                        <li id="source-2"><a href="https://github.com/kovirlabs/tagbrush#readme">TagBrush.css README</a></li>
+                    </ol>
+                </footer>
+            </article>
         </section>
 
         <section aria-labelledby="get-started">
