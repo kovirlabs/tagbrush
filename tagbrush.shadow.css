@@ -50,6 +50,8 @@
      *   --color-primary-hover   (default: primary, darker under white text / lighter under black text)
      *   --focus-ring-color      (default: primary at 50% opacity)
      *   --color-marker          (default: --color-text-muted; list bullets and numbers)
+     *   --tag-header-height     (default: unset; a sticky header's height, which TagAction measures,
+     *                            for the room kept above headings you jump to)
      */
 
     /* Typography */

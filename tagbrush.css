@@ -46,6 +46,8 @@
      *   --color-primary-hover   (default: primary, darker under white text / lighter under black text)
      *   --focus-ring-color      (default: primary at 50% opacity)
      *   --color-marker          (default: --color-text-muted; list bullets and numbers)
+     *   --tag-header-height     (default: unset; a sticky header's height, which TagAction measures,
+     *                            for the room kept above headings you jump to)
      */
 
     /* Typography */
@@ -1209,6 +1211,7 @@
     position: sticky;
     top: 0;
     z-index: 30;
+    padding-block: var(--spacing-sm);
     background-color: var(--color-background);
     container: tagbrush-sticky-header / scroll-state;
   }
@@ -1230,9 +1233,17 @@
     }
   }
 
-  /* Headings you jump to land below the bar, as do focused fields (WCAG 2.4.11) */
+  /* Headings you jump to land below the bar, as do focused fields (WCAG 2.4.11).
+     The bar is slim (one row is under 4rem); on phones its links may wrap to a
+     second row. TagAction sets --tag-header-height to the bar's real height. */
   :root:has(> body > header[data-layout="sticky"], > body > :not([class]) > header[data-layout="sticky"]) {
-    scroll-padding-top: 5rem;
+    scroll-padding-top: calc(var(--tag-header-height, 4rem) + 1rem);
+  }
+
+  @media (max-width: 48rem) {
+    :root:has(> body > header[data-layout="sticky"], > body > :not([class]) > header[data-layout="sticky"]) {
+      scroll-padding-top: calc(var(--tag-header-height, 6.5rem) + 1rem);
+    }
   }
 
   /* Pages of the same site cross-fade into each other (Chromium, Safari) */

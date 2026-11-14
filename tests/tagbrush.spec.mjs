@@ -1703,6 +1703,26 @@ test.describe('sticky header', () => {
     else expect(await shadow(), `${browserName}: no scroll-state queries, hairline only`).toBe('0');
   });
 
+  test('a jumped-to heading lands below the sticky bar on phones and wide screens, one row or two', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    for (const width of [360, 1280]) {
+      await page.setViewportSize({ width, height: 700 });
+      await page.goto(fileUrl('tests/fixtures/sticky.html'));
+      // One row with a button in it, and five links that wrap to a second row on a phone
+      for (const links of [['Pricing', 'Sign in'], ['Pricing', 'Features', 'Docs', 'Blog', 'Sign in']]) {
+        await page.evaluate((links) => {
+          document.querySelector('header ul').innerHTML = links.map((text, i) => `<li><a ${links.length === 2 && i === 1 ? 'class="button" ' : ''}href="${i ? '#' : '#pricing'}">${text}</a></li>`).join('');
+          scrollTo(0, 0);
+        }, links);
+        await page.click('a[href="#pricing"]');
+        await page.waitForTimeout(100);
+        const [header, heading] = [await page.locator('body > header').boundingBox(), await page.locator('#pricing-heading').boundingBox()];
+        expect(heading.y, `${width}px, ${links.length} links, bar ${Math.round(header.height)}px tall`).toBeGreaterThanOrEqual(header.y + header.height);
+        expect(header.height, 'the sticky bar is a slim bar').toBeLessThan(width === 360 && links.length > 1 ? 120 : 72);
+      }
+    }
+  });
+
   test('a field focused right under the sticky bar (an invalid field on submit) scrolls out from under it', async ({ page, browserName }) => {
     // Measured: WebKit's focus() scroll stops about 5px short of scroll-padding-top,
     // so TagAction scrolls the first invalid field to the middle itself.
