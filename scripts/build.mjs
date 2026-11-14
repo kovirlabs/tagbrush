@@ -74,8 +74,10 @@ scoped = scoped.replace(
   ' * Generated from tagbrush.css by scripts/build.mjs. Do not edit directly.\n *\n * TagBrush.css'
 );
 
+// (\bbody >, not tbody >: a table's body rows are fine)
+const contains = (css, leftover) => (leftover === 'body >' ? /\bbody >/.test(css) : css.includes(leftover));
 for (const leftover of [':root', '\n  html', '\n  body', 'body >']) {
-  if (scoped.includes(leftover)) {
+  if (contains(scoped, leftover)) {
     throw new Error(`Scoped build still contains "${leftover.trim()}". Update scripts/build.mjs.`);
   }
 }
@@ -109,7 +111,7 @@ shadow = shadow.replace(
 );
 
 for (const leftover of ['\n  html', '\n  body', 'body >']) {
-  if (shadow.includes(leftover)) {
+  if (contains(shadow, leftover)) {
     throw new Error(`Shadow build still contains "${leftover.trim()}". Update scripts/build.mjs.`);
   }
 }

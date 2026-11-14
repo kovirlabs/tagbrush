@@ -35,8 +35,8 @@ Details: [tagbrush-pages.mdc](tagbrush-pages.mdc)
 - **Skip link**: `<a href="#main">Skip to content</a>` first in `<body>` shows only when focused.
 - **Your own layout**: `<body data-layout="full">` turns the page layout off.
 - **Top bar**: `<header><nav><strong>Site</strong><ul><li><a href="/" aria-current="page">Home</a></li></ul></nav></header>`.
-- **Sticky top bar**: `<header data-layout="sticky">` stays at the top and keeps jumped-to headings below it.
-- **Phone menu**: `<nav><strong>Site</strong><button popovertarget="menu" aria-label="Menu">☰</button><div popover id="menu"><ul>…</ul></div></nav>`: links in the bar on wide screens, behind the button on phones.
+- **Sticky top bar**: `<header data-layout="sticky">` stays at the top, slim, and keeps jumped-to headings below it (room for two rows on phones; TagAction measures the bar into `--tag-header-height`).
+- **Phone menu**: `<nav><strong>Site</strong><button popovertarget="menu" aria-label="Menu">☰</button><div popover id="menu"><ul>…</ul></div></nav>`: links in the bar on wide screens, behind the button on phones (a panel right under it).
 - **Dropdown menu**: `<li><details><summary>Services</summary><ul>…</ul></details></li>` in the header nav.
 - **User menu**: a header-nav button with `popovertarget` opening `<div popover><nav><ul>…</ul></nav></div>`; it opens under the button and stays on screen.
 - **Pagination**: `<nav aria-label="Pagination">` with `rel="prev"` and `rel="next"` links.
@@ -121,7 +121,7 @@ Details: [tagbrush-content.mdc](tagbrush-content.mdc)
 - **Video embeds**: an `<iframe>` without a height is 16:9.
 - **Tables**: `<table>` with `<thead>`/`<tbody>`; wide ones scroll; `<figure>` around one fills the width; `class="striped"`.
 - **Selectable rows**: a checkbox first in each row (`<td><input type="checkbox" aria-label="Select Maya"></td>`) tints the row when checked.
-- **Numbers in tables**: a `<data>` value alone in a cell aligns right.
+- **Numbers in tables**: a `<data>` value alone in a cell aligns right, and so does its column's header cell.
 - **Code**: `<pre><code>`; common highlighters' classes are colored.
 - **Accordion**: neighboring `<details>` with the same `name` join into one.
 - **Disclosure**: `<details><summary>…</summary>…</details>` has a chevron marker (at the end in an accordion) and eases open.

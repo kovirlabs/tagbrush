@@ -46,6 +46,8 @@
      *   --color-primary-hover   (default: primary, darker under white text / lighter under black text)
      *   --focus-ring-color      (default: primary at 50% opacity)
      *   --color-marker          (default: --color-text-muted; list bullets and numbers)
+     *   --tag-header-height     (default: unset; a sticky header's height, which TagAction measures,
+     *                            for the room kept above headings you jump to)
      */
 
     /* Typography */
@@ -1179,6 +1181,18 @@
       border: 0;
       box-shadow: none;
     }
+
+    /* Where anchor positioning is supported the panel opens right under its
+       button, wherever the bar is (a banner or family bar above it, scrolled
+       or sticky); elsewhere at 4.5rem from the top. */
+    @supports (position-area: block-end) {
+      :where(body, body > :not([class])) > header > nav > [popover] {
+        inset: auto;
+        margin-top: var(--spacing-sm);
+        position-area: block-end span-all;
+        max-height: calc(100% - var(--spacing-sm));
+      }
+    }
   }
   /* While a modal dialog is open the page behind it doesn't scroll. The
      scrollbar's space is kept only then, so a long page doesn't shift
@@ -1197,6 +1211,7 @@
     position: sticky;
     top: 0;
     z-index: 30;
+    padding-block: var(--spacing-sm);
     background-color: var(--color-background);
     container: tagbrush-sticky-header / scroll-state;
   }
@@ -1218,9 +1233,17 @@
     }
   }
 
-  /* Headings you jump to land below the bar, as do focused fields (WCAG 2.4.11) */
+  /* Headings you jump to land below the bar, as do focused fields (WCAG 2.4.11).
+     The bar is slim (one row is under 4rem); on phones its links may wrap to a
+     second row. TagAction sets --tag-header-height to the bar's real height. */
   :root:has(> body > header[data-layout="sticky"], > body > :not([class]) > header[data-layout="sticky"]) {
-    scroll-padding-top: 5rem;
+    scroll-padding-top: calc(var(--tag-header-height, 4rem) + 1rem);
+  }
+
+  @media (max-width: 48rem) {
+    :root:has(> body > header[data-layout="sticky"], > body > :not([class]) > header[data-layout="sticky"]) {
+      scroll-padding-top: calc(var(--tag-header-height, 6.5rem) + 1rem);
+    }
   }
 
   /* Pages of the same site cross-fade into each other (Chromium, Safari) */
@@ -1490,6 +1513,8 @@
   @supports (position-area: block-end) {
     :where([popover]:has(> nav, > ul, > ol, > menu):not(header > nav > [popover])) {
       inset: auto;
+      width: max-content; /* items on one line, not squeezed into the room beside the button */
+      max-width: min(100vw - 2 * var(--spacing-md), 24rem);
       margin: var(--spacing-xs) 0;
       position-area: block-end span-inline-start;
       position-try-fallbacks: flip-inline, flip-block, flip-block flip-inline;
@@ -1637,7 +1662,9 @@
     z-index: 20;
     top: calc(100% + var(--spacing-sm));
     left: 0;
+    width: max-content; /* items on one line, up to the width of a phone screen */
     min-width: 12rem;
+    max-width: min(100vw - 2 * var(--container-padding), 24rem);
     flex-direction: column;
     align-items: stretch;
     gap: var(--spacing-xs);
@@ -1651,6 +1678,27 @@
   header nav li:last-child > details > :is(ul, ol, menu) {
     right: 0;
     left: auto;
+  }
+
+  /* Where anchor positioning is supported the list opens under its summary
+     and flips to the other side, or centers, to stay on screen */
+  @supports (position-area: block-end) and (anchor-scope: all) {
+    header nav li > details {
+      position: static;
+      anchor-scope: --tagbrush-dropdown;
+    }
+
+    header nav li > details > summary {
+      anchor-name: --tagbrush-dropdown;
+    }
+
+    header nav li > details > :is(ul, ol, menu) {
+      inset: auto;
+      margin-top: var(--spacing-sm);
+      position-anchor: --tagbrush-dropdown;
+      position-area: block-end span-inline-end;
+      position-try-fallbacks: flip-inline, block-end span-all;
+    }
   }
 
   /* Wide tables and code blocks show a shadow at an edge with more to scroll
@@ -2306,6 +2354,27 @@
   :where(td:has(> data:only-child)) {
     text-align: end;
     font-variant-numeric: tabular-nums;
+  }
+
+  /* ...and so does the header over them, without TagAction: CSS can't select
+     a column, so a header cell is matched to the first body row's cell in
+     the same place (columns 1-8, one header row). A colspan in the header row
+     or first body row leaves the headers alone; an align attribute wins. */
+  :where(
+    table:has(> tbody > tr:first-child > td:nth-child(1) > data:only-child) > thead > tr:only-child > th:nth-child(1),
+    table:has(> tbody > tr:first-child > td:nth-child(2) > data:only-child) > thead > tr:only-child > th:nth-child(2),
+    table:has(> tbody > tr:first-child > td:nth-child(3) > data:only-child) > thead > tr:only-child > th:nth-child(3),
+    table:has(> tbody > tr:first-child > td:nth-child(4) > data:only-child) > thead > tr:only-child > th:nth-child(4),
+    table:has(> tbody > tr:first-child > td:nth-child(5) > data:only-child) > thead > tr:only-child > th:nth-child(5),
+    table:has(> tbody > tr:first-child > td:nth-child(6) > data:only-child) > thead > tr:only-child > th:nth-child(6),
+    table:has(> tbody > tr:first-child > td:nth-child(7) > data:only-child) > thead > tr:only-child > th:nth-child(7),
+    table:has(> tbody > tr:first-child > td:nth-child(8) > data:only-child) > thead > tr:only-child > th:nth-child(8)
+  ):where(:not([align])) {
+    text-align: end;
+  }
+
+  :where(table:has(> thead [colspan], > tbody > tr:first-child > [colspan]) > thead th:not([align])) {
+    text-align: start;
   }
 
   /* A row whose first cell holds a checked checkbox is selected: tinted.

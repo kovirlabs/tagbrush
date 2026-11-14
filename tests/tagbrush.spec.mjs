@@ -782,6 +782,27 @@ test.describe('landing patterns', () => {
     await expect.poll(async () => Math.round((await page.locator('#menu').boundingBox()).width)).toBe(390);
   });
 
+  test('the phone menu opens right under its button, whatever sits above the header', async ({ page, browserName }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.setViewportSize({ width: 360, height: 700 });
+    test.skip(!(await page.evaluate(() => CSS.supports('position-area: block-end'))), `${browserName}: no anchor positioning, the panel opens at a fixed 4.5rem`);
+    // A banner and a second nav (a family bar) above the menu's own row
+    await page.evaluate(() => {
+      document.body.insertAdjacentHTML('afterbegin', '<p id="banner" style="margin: 0; padding: 2rem 1rem">TagBrush.css 2 is out. Read what changed.</p>');
+      document.querySelector('header').insertAdjacentHTML('afterbegin', '<nav aria-label="Family"><a href="#">Family</a><ul><li><a href="#">One</a></li><li><a href="#">Two</a></li></ul></nav>');
+    });
+    for (const sticky of [false, true]) {
+      if (sticky) await page.evaluate(() => { document.querySelector('header').dataset.layout = 'sticky'; scrollTo(0, 300); });
+      await page.click('#menu-button');
+      const [button, panel] = [await page.locator('#menu-button').boundingBox(), await page.locator('#menu').boundingBox()];
+      expect(panel.y, 'the panel starts below the button').toBeGreaterThanOrEqual(button.y + button.height - 1);
+      expect(panel.y - (button.y + button.height), 'and right under it').toBeLessThan(40);
+      expect(Math.round(panel.width)).toBe(360);
+      expect(panel.y + panel.height).toBeLessThanOrEqual(700);
+      await page.keyboard.press('Escape');
+    }
+  });
+
   test('an ordered list of headed items is a numbered timeline', async ({ page }) => {
     expect(await style(page, '#steps', 'listStyleType')).toBe('none');
     expect(await style(page, '#steps > li', 'display')).toBe('grid');
@@ -1015,6 +1036,27 @@ test.describe('content intent', () => {
     expect(await style(page, '#amount', 'textAlign')).toBe('end');
     expect(await style(page, '#amount', 'fontVariantNumeric')).toBe('tabular-nums');
     expect(await style(page, '#note', 'textAlign')).toBe('start');
+  });
+
+  test('a header cell over a column of <data> values lines up with them, without TagAction', async ({ page }) => {
+    await page.evaluate(() => {
+      document.querySelector('main').insertAdjacentHTML('beforeend', `
+        <table id="orders"><thead><tr><th><span>Select</span></th><th>Customer</th><th>Status</th><th>Total</th></tr></thead>
+          <tbody><tr><td><input type="checkbox" aria-label="Select Maya"></td><td>Maya</td><td><mark>Paid</mark></td><td><data value="1240">$1,240.00</data></td></tr>
+          <tr><td><input type="checkbox" aria-label="Select Bo"></td><td>Bo</td><td><mark>Refunded</mark></td><td><data value="18">$18.00</data></td></tr></tbody></table>
+        <table id="middle"><thead><tr><th>Item</th><th>Qty</th><th>Note</th></tr></thead>
+          <tbody><tr><th scope="row">Desk</th><td><data value="2">2</data></td><td>Oak</td></tr></tbody></table>
+        <table id="own-align"><thead><tr><th>Item</th><th align="center">Qty</th></tr></thead>
+          <tbody><tr><td>Desk</td><td><data value="2">2</data></td></tr></tbody></table>
+        <table id="spanned"><thead><tr><th colspan="2">Item</th><th>Note</th></tr></thead>
+          <tbody><tr><td>Desk</td><td>Oak</td><td><data value="2">2</data></td></tr></tbody></table>`);
+    });
+    const aligns = (id) => page.locator(`#${id} thead th`).evaluateAll((els) => els.map((el) => getComputedStyle(el).textAlign));
+    expect(await aligns('budget')).toEqual(['start', 'end']);
+    expect(await aligns('orders')).toEqual(['start', 'start', 'start', 'end']);
+    expect(await aligns('middle')).toEqual(['start', 'end', 'start']);
+    expect((await aligns('own-align'))[1]).toMatch(/center/); // the align attribute wins
+    expect(await aligns('spanned')).toEqual(['start', 'start']); // a colspan in the header row: columns can't be matched, left alone
   });
 
   test('an embed without a height is 16:9 at full width; one with a height keeps it', async ({ page }) => {
@@ -1627,6 +1669,39 @@ test.describe('menus stay on screen', () => {
   });
 });
 
+test.describe('menu items stay on one line', () => {
+  // Lines a link's text takes: distinct tops of its text's line boxes
+  const lines = (page, selector) => page.locator(selector).evaluate((el) => {
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    return new Set([...range.getClientRects()].map((r) => Math.round(r.top))).size;
+  });
+  for (const width of [360, 1280]) {
+    test(`a user menu and a header dropdown fit their items on one line and stay on screen at ${width}px`, async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: 'reduce' });
+      await page.setViewportSize({ width, height: 700 });
+      await page.goto(fileUrl('tests/fixtures/menus.html'));
+      await page.evaluate(() => {
+        document.body.insertAdjacentHTML('afterbegin', `<header><nav><strong>TagAction</strong><ul>
+          <li><a href="#">Install</a></li>
+          <li><details id="examples"><summary>Examples</summary><ul><li><a href="#">Tables</a></li><li><a href="#" id="long-item">Tabs, copy, and theme</a></li></ul></details></li>
+          <li><a href="#">Guides</a></li></ul></nav></header>`);
+      });
+      await page.click('#left-button');
+      expect(await lines(page, '#left-menu li:last-child a'), '"Sign out" on one line').toBe(1);
+      let menu = await page.locator('#left-menu').boundingBox();
+      expect(menu.x).toBeGreaterThanOrEqual(0);
+      expect(menu.x + menu.width, JSON.stringify(menu)).toBeLessThanOrEqual(width);
+      await page.keyboard.press('Escape');
+      await page.click('#examples > summary');
+      expect(await lines(page, '#long-item'), '"Tabs, copy, and theme" on one line').toBe(1);
+      menu = await page.locator('#examples > ul').boundingBox();
+      expect(menu.x).toBeGreaterThanOrEqual(0);
+      expect(menu.x + menu.width, JSON.stringify(menu)).toBeLessThanOrEqual(width);
+    });
+  }
+});
+
 test.describe('tooltips', () => {
   test('a popover="hint" is a small inverted tooltip above its trigger; a plain popover keeps its look', async ({ page, browserName }) => {
     await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'light' });
@@ -1681,6 +1756,26 @@ test.describe('sticky header', () => {
     const supported = await page.evaluate(() => CSS.supports('container-type: scroll-state'));
     if (supported) await expect.poll(shadow).toBe('1'); // stuck: a soft shadow
     else expect(await shadow(), `${browserName}: no scroll-state queries, hairline only`).toBe('0');
+  });
+
+  test('a jumped-to heading lands below the sticky bar on phones and wide screens, one row or two', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    for (const width of [360, 1280]) {
+      await page.setViewportSize({ width, height: 700 });
+      await page.goto(fileUrl('tests/fixtures/sticky.html'));
+      // One row with a button in it, and five links that wrap to a second row on a phone
+      for (const links of [['Pricing', 'Sign in'], ['Pricing', 'Features', 'Docs', 'Blog', 'Sign in']]) {
+        await page.evaluate((links) => {
+          document.querySelector('header ul').innerHTML = links.map((text, i) => `<li><a ${links.length === 2 && i === 1 ? 'class="button" ' : ''}href="${i ? '#' : '#pricing'}">${text}</a></li>`).join('');
+          scrollTo(0, 0);
+        }, links);
+        await page.click('a[href="#pricing"]');
+        await page.waitForTimeout(100);
+        const [header, heading] = [await page.locator('body > header').boundingBox(), await page.locator('#pricing-heading').boundingBox()];
+        expect(heading.y, `${width}px, ${links.length} links, bar ${Math.round(header.height)}px tall`).toBeGreaterThanOrEqual(header.y + header.height);
+        expect(header.height, 'the sticky bar is a slim bar').toBeLessThan(width === 360 && links.length > 1 ? 120 : 72);
+      }
+    }
   });
 
   test('a field focused right under the sticky bar (an invalid field on submit) scrolls out from under it', async ({ page, browserName }) => {
